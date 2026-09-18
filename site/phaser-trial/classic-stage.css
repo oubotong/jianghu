@@ -1,0 +1,136 @@
+/* A compact, continuous RPG battle frame; original game pages are unaffected. */
+body.classic-stage-page{background:#101c20!important;background-image:radial-gradient(ellipse at 50% 0,#314548,#101c20 80%)!important;padding:0 14px 24px;color:#ded8bc}
+.classic-stage-page .jianghu-masthead,.classic-stage-page #hud,.classic-stage-page .lab-toolbar,.classic-stage-page .lab-combat-lab{display:none!important}
+.classic-stage-page #app{max-width:1180px!important;width:100%;margin:0 auto!important;padding:0!important}
+.classic-stage-page #sound-controls{max-width:1180px;margin:8px auto 0!important;padding:0 8px!important;background:transparent!important;border:0!important;min-height:28px}
+.classic-stage-page #sound-controls button{min-height:28px;padding:4px 8px!important;font-size:12px!important}
+.classic-stage-page .phaser-trial-bar{max-width:1180px;margin:4px auto 12px;padding:10px 0;background:transparent;border:0;box-shadow:none;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.classic-stage-page .phaser-trial-bar>strong{font-size:20px;letter-spacing:3px;color:#ead5a6}
+.classic-stage-page .phaser-trial-bar>p{font-size:12px;margin:0;color:#9fabac}
+.classic-stage-page .phaser-trial-bar nav{margin-left:auto;gap:6px;display:flex;flex-wrap:wrap}
+.classic-stage-page .phaser-trial-bar nav button{width:auto!important;min-width:0!important;min-height:32px;padding:5px 9px!important;font-size:12px!important;margin:0!important;border:1px solid #64736b;border-radius:2px;background:#1a2b2b;color:#d8d1b8}
+.classic-stage-page .phaser-trial-bar nav a{font-size:12px;margin-left:8px;white-space:nowrap}
+.classic-stage-page #trial-new,.classic-stage-page #trial-old{display:none}
+.classic-stage-page #cbt-card{padding:0!important;border:1px solid #a39a78;border-radius:3px!important;background:#16272b!important;box-shadow:0 12px 55px #0008,0 0 0 4px #25373c,0 0 0 5px #6d7868;overflow:visible}
+.classic-stage-page #cbt-card>.event-title{display:none}
+.classic-stage-page .motion-settings{margin:0!important;padding:7px 14px!important;background:#1a2c31;border-bottom:1px solid #78817366;min-height:34px;box-sizing:border-box;font-size:12px!important}
+.classic-stage-page #motion-status{color:#dbc797;font-size:13px;letter-spacing:1px}
+.classic-stage-page .motion-settings select{padding:3px 8px!important;min-height:25px;font-size:12px}
+.classic-stage-page .lab-duel-layout{gap:0!important;margin:0!important}
+.classic-stage-page .lab-duel-scene{position:relative}
+.classic-stage-page #stage{height:480px!important;margin:0!important;border:0!important;border-radius:0!important;box-shadow:inset 0 0 35px #11242366;background:#8a9991}
+.classic-stage-page #initiative-track{left:4%!important;right:4%!important;top:12px!important;opacity:.95}
+.classic-stage-page .initiative-rail{background:#273d38c9!important;border-color:#d5c18a!important;box-shadow:0 1px 4px #142624}
+.classic-stage-page #stage .trial-move-name{top:76px;padding:7px 24px;background:linear-gradient(90deg,transparent,#153031db 20%,#153031db 80%,transparent);border-block:1px solid #f0d9a766;text-shadow:0 2px 2px #16262b;max-width:76%}
+.classic-stage-page #stage .trial-move-name.enemy{top:126px}
+.classic-stage-page .cbt-head{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:0!important;background:linear-gradient(#21373d,#17292f);border-top:2px solid #c5ad73;margin:0!important;padding:0!important;overflow:visible;position:relative;z-index:25}
+.classic-stage-page .cbt-head.party-head{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.classic-stage-page .cbt-head .vs{display:none!important}
+.classic-stage-page .cbt-side{padding:10px 14px 10px 74px!important;position:relative;text-align:left!important;min-width:0;border-right:1px solid #71807166;background:transparent!important;box-sizing:border-box;transition:background .18s;min-height:107px}
+.classic-stage-page .cbt-side[data-classic-side=e]{order:0}.classic-stage-page .cbt-side[data-classic-side=c]{order:1}.classic-stage-page .cbt-side[data-classic-side=p]{order:2}
+.classic-stage-page .cbt-side.classic-active{background:linear-gradient(110deg,#85734840,#29444344)!important;box-shadow:inset 0 -2px #e2ca8d}
+.classic-stage-page .classic-portrait{position:absolute;left:13px;top:25px;width:48px;height:48px;image-rendering:pixelated;background:#13242b;border:1px solid #c3ad76;box-shadow:0 0 0 3px #20343a,0 0 0 4px #697269;pointer-events:none}
+.classic-stage-page .cbt-name{font-size:15px!important;margin:0 0 5px!important;line-height:1.25;color:#ebd7a5!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.classic-stage-page .bar-label{font:11px/1.5 Consolas,monospace!important;color:#b8c7c4!important;margin:3px 0 1px!important;letter-spacing:0!important}
+.classic-stage-page .bar{height:6px!important;margin:0 0 4px!important;border:1px solid #102326;border-radius:0;box-shadow:0 1px #81958b44;background:#101f23!important}
+.classic-stage-page .bar.hp i{background:linear-gradient(90deg,#985b47,#d59672)!important}.classic-stage-page .bar.mp i{background:linear-gradient(90deg,#315971,#82b8c6)!important}
+.classic-stage-page .cbt-side>.tip-hint{display:none!important}
+.classic-stage-page .combat-statuses{margin:3px 0 0!important;min-height:0!important}
+.classic-stage-page .combat-statuses:empty{display:none}
+.classic-stage-page #round-hint,.classic-stage-page #skill-warn{display:none!important}
+.classic-stage-page .cbt-side .stat-tip{z-index:100!important;background:#15292f!important;border-color:#c3ad76;max-width:min(420px,90vw);max-height:70vh;overflow:auto;text-align:left!important;top:auto!important;bottom:calc(100% + 8px)!important}
+.classic-stage-page .cbt-side[data-classic-side=e] .stat-tip{left:0!important;right:auto!important;transform:none!important}.classic-stage-page .cbt-side[data-classic-side=p] .stat-tip{right:0!important;left:auto!important;transform:none!important}
+.classic-stage-page .lab-duel-console{display:flex!important;flex-direction:column;gap:0!important;background:linear-gradient(100deg,#20363a,#192d32)}
+.classic-stage-page #cbt-bottom{width:100%;min-height:224px!important;box-sizing:border-box;padding:10px 16px!important;position:relative;border-top:1px solid #b8ac7760}
+.classic-stage-page .party-turn-heading{border:0!important;padding:0!important;margin:0 0 8px!important;font-size:12px!important;line-height:24px;color:#acbdb4}
+.classic-stage-page .party-turn-heading b{color:#ead1a0;font-weight:normal}
+.classic-stage-page #move-filters,.classic-stage-page #party-move-filters{display:flex!important;gap:8px;margin:0 120px 10px 0!important;width:auto!important}
+.classic-stage-page #move-filters button,.classic-stage-page #party-move-filters button{width:auto!important;min-height:30px!important;min-width:70px;padding:5px 14px!important;font-size:13px!important;border:1px solid #718174!important;background:#192e32;color:#d2d3bb;box-shadow:none!important;margin:0!important}
+.classic-stage-page #move-filters button[aria-pressed=true],.classic-stage-page #party-move-filters button[aria-pressed=true]{background:#5c6750!important;color:#fff0c4!important;border-color:#c4b078!important}
+.classic-stage-page #moves-grid,.classic-stage-page #party-moves{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:8px!important;max-height:290px;overflow:auto;padding:1px 1px 5px;margin:0!important}
+.classic-stage-page .lab-move-card,.classic-stage-page .party-move{min-width:0;margin:0!important;background:#132a30!important;border:1px solid #7c876b!important;border-top:2px solid var(--move,#849886)!important;box-shadow:1px 2px #102024!important;border-radius:0!important;align-self:start}
+.classic-stage-page .lab-move-card[hidden],.classic-stage-page .party-move[hidden]{display:none!important}
+.classic-stage-page .lab-move-cast,.classic-stage-page .party-move>button{display:flex!important;flex-direction:column;gap:5px;padding:10px!important;min-height:91px!important;text-align:left!important;border:0!important;margin:0!important;background:transparent!important;width:100%!important}
+.classic-stage-page .lab-move-cast:hover:not(:disabled),.classic-stage-page .party-move>button:hover:not(:disabled){background:#58604e66!important;box-shadow:inset 0 0 0 1px #d7c28b!important}
+.classic-stage-page .lab-move-heading{display:flex;gap:5px;align-items:center;justify-content:space-between;width:100%}
+.classic-stage-page .lab-move-heading strong,.classic-stage-page .party-move strong{font-size:16px!important;line-height:1.4!important;font-weight:normal;color:var(--move,#d7dcca)}
+.classic-stage-page .lab-move-heading small,.classic-stage-page .party-move>button>small{display:none}
+.classic-stage-page .lab-move-metric{display:flex;align-items:baseline;gap:6px;margin:0!important}.classic-stage-page .lab-move-metric>span{font-size:10px!important;color:#8ea6a6}
+.classic-stage-page .lab-move-metric b,.classic-stage-page .party-move b{font:18px/1.2 Consolas,monospace!important;color:#e1d5ac}
+.classic-stage-page .lab-move-footer{font-size:10px!important;margin:0!important;display:flex;justify-content:space-between;width:100%;color:#94b3b6}.classic-stage-page .party-move>button>span{font-size:11px;color:#93bac4}
+.classic-stage-page .lab-move-info,.classic-stage-page .party-move details{border-top:1px solid #82917833!important;padding:0!important}
+.classic-stage-page .lab-move-info summary,.classic-stage-page .party-move summary{font-size:10px!important;min-height:22px!important;line-height:1.4!important;padding:5px 9px!important;color:#8da69f!important;background:transparent!important}
+.classic-stage-page .lab-move-info ul,.classic-stage-page .party-move details p{font-size:12px!important;line-height:1.6!important;margin:8px!important}
+.classic-stage-page .cbt-actions{position:absolute;top:8px;right:16px;margin:0!important;display:flex;gap:6px}
+.classic-stage-page .cbt-actions button{min-height:29px!important;padding:4px 10px!important;font-size:12px!important;width:auto!important;margin:0!important}
+.classic-stage-page #cbt-bottom>.tip{font-size:13px!important;color:#9bb2b2;margin:36px 0 0!important;text-align:center}
+.classic-stage-page .lab-chronicle{width:100%;height:auto!important;min-height:0!important;order:2!important;background:#13272c!important;border:0!important;border-top:1px solid #7e8f7255!important;box-shadow:none!important;box-sizing:border-box}
+.classic-stage-page .lab-chronicle header{padding:6px 14px!important;min-height:32px;border:0!important;display:flex;align-items:center;justify-content:space-between}.classic-stage-page .lab-chronicle header>strong{font-size:12px!important;letter-spacing:1px}
+.classic-stage-page .lab-chronicle header>strong:before{display:none!important}
+.classic-stage-page #lab-log-toggle{display:block!important;font-size:11px!important;padding:3px 8px!important;min-height:26px!important}
+.classic-stage-page #lab-log-brief{display:block!important;height:auto!important;min-height:50px;max-height:90px;overflow:hidden;padding:0 14px 10px!important}
+.classic-stage-page #lab-log-brief p{font-size:13px!important;line-height:1.6!important;margin:3px 0!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.classic-stage-page .lab-brief-impact{display:flex;align-items:center;gap:14px}.classic-stage-page .lab-brief-impact>strong{font-size:13px!important}.classic-stage-page .lab-result-value{font-size:17px!important}
+.classic-stage-page .lab-chronicle[data-expanded=false] #lab-chronicle-feed{display:none!important}.classic-stage-page .lab-chronicle[data-expanded=true] #lab-log-brief{display:none!important}.classic-stage-page .lab-chronicle[data-expanded=true] #lab-chronicle-feed{display:block!important;height:240px!important;max-height:240px!important;min-height:0!important;overflow:auto}
+@media(min-width:1450px){.classic-stage-page #stage{height:540px!important}}
+@media(max-width:700px){body.classic-stage-page{padding:0 6px 16px}.classic-stage-page .phaser-trial-bar{padding:7px 3px;gap:7px;margin:3px auto 7px}.classic-stage-page .phaser-trial-bar>strong{font-size:17px;letter-spacing:1px}.classic-stage-page .phaser-trial-bar>p{display:none}.classic-stage-page .phaser-trial-bar nav{margin-left:0;gap:4px}.classic-stage-page .phaser-trial-bar nav button{font-size:11px!important;padding:5px 6px!important}.classic-stage-page .phaser-trial-bar nav a{font-size:11px;margin-left:4px}.classic-stage-page .phaser-trial-bar nav a[href="index.html"]{display:none}.classic-stage-page #sound-controls{margin-top:3px!important}.classic-stage-page #stage{height:350px!important}.classic-stage-page .motion-settings{padding:5px 8px!important}.classic-stage-page #motion-status{font-size:11px}.classic-stage-page .motion-settings label{font-size:10px!important}.classic-stage-page #stage .trial-move-name{top:81px;padding:5px 12px}.classic-stage-page #stage .trial-move-name.enemy{top:121px}.classic-stage-page .cbt-side{padding:7px 7px 7px 7px!important;min-height:99px!important}.classic-stage-page .classic-portrait{width:24px;height:24px;left:8px;top:7px;box-shadow:0 0 0 1px #566d6e;border-color:#9c9e7c}.classic-stage-page .cbt-name{font-size:11px!important;line-height:28px!important;margin:0 0 4px 30px!important}.classic-stage-page .bar-label{font:9px/1.35 Consolas,monospace!important;white-space:nowrap!important}.classic-stage-page .bar{height:5px!important;margin-bottom:4px!important}.classic-stage-page .cbt-side .stat-tip{position:fixed!important;left:4vw!important;right:auto!important;bottom:10vh!important;top:auto!important;transform:none!important;width:92vw!important;max-width:92vw!important;max-height:75vh!important;z-index:110!important}.classic-stage-page .cbt-side[data-classic-side=e] .stat-tip,.classic-stage-page .cbt-side[data-classic-side=p] .stat-tip{left:4vw!important;right:auto!important}.classic-stage-page #cbt-bottom{padding:8px!important;min-height:250px!important}.classic-stage-page .party-turn-heading{font-size:11px!important;max-width:70%}.classic-stage-page #move-filters,.classic-stage-page #party-move-filters{margin-right:0!important;gap:5px}.classic-stage-page #move-filters button,.classic-stage-page #party-move-filters button{flex:1;min-width:0!important;font-size:12px!important;padding:5px 6px!important}.classic-stage-page #moves-grid,.classic-stage-page #party-moves{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important;max-height:276px}.classic-stage-page .lab-move-cast,.classic-stage-page .party-move>button{min-height:80px!important;padding:8px!important;gap:3px}.classic-stage-page .lab-move-heading strong,.classic-stage-page .party-move strong{font-size:14px!important}.classic-stage-page .cbt-actions{top:6px;right:8px}.classic-stage-page .cbt-actions button{font-size:11px!important;padding:4px 6px!important}.classic-stage-page #lab-log-brief p{font-size:12px!important}.classic-stage-page .lab-chronicle header{padding:5px 9px!important}.classic-stage-page #lab-log-brief{padding:0 9px 8px!important}}
+/* Detail sheets stay top-anchored when the six-axis chart expands. */
+.classic-stage-page #cbt-card{animation:none!important;transform:none!important}
+.classic-stage-page .cbt-side[data-classic-side] .stat-tip{position:fixed!important;top:14vh!important;bottom:auto!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(420px,92vw)!important;min-width:0!important;max-width:92vw!important;max-height:74vh!important;box-sizing:border-box;z-index:110!important}
+.classic-stage-page .cbt-side[data-classic-side=e]>.bar-label:not(#e-hp-label){display:none!important}
+/* Two-level classic RPG command window. Actors and status panels remain visible. */
+#stage-commands,#stage-command-edges{display:none}
+.classic-stage-page #cbt-bottom.stage-command-source{display:none!important}
+.classic-stage-page #stage-commands{display:block;position:absolute;z-index:20;left:50%;top:48%;transform:translate(-50%,-50%);width:240px;box-sizing:border-box;padding:8px 12px 10px;background:linear-gradient(110deg,#273c35d9,#162c29d6);border:1px solid #cfb272;box-shadow:0 0 0 2px #263629,0 0 0 3px #9a8354,0 5px 14px #07150f55,inset 0 0 18px #b0ac5830;color:#efe3c7;text-align:left;isolation:isolate}
+.classic-stage-page #stage-commands[data-view=arts]{width:320px;top:50%;background:linear-gradient(110deg,#25392ff0,#152a28ec)}
+.classic-stage-page #stage-commands[hidden],.classic-stage-page #stage-command-edges[hidden],#stage-command-edges button[hidden]{display:none!important}
+#stage-commands:before,#stage-commands:after{content:'';position:absolute;left:-6px;right:-6px;height:5px;border:1px solid #7f6538;background:linear-gradient(90deg,#574329,#b49252 12%,#514829 50%,#b49252 88%,#574329);box-shadow:0 1px 2px #0006;pointer-events:none}
+#stage-commands:before{top:-5px}#stage-commands:after{bottom:-5px}
+#stage-commands header{display:flex;align-items:center;gap:9px;min-height:34px;padding-bottom:6px;margin-bottom:4px;border-bottom:1px solid #bba96599}
+#stage-commands header strong{font-size:17px;font-weight:normal;line-height:1.3;color:#f3df85;letter-spacing:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#stage-commands .command-portrait{width:30px;height:30px;image-rendering:pixelated;flex-shrink:0}
+#stage-commands button,#stage-command-edges button{position:relative;font-family:inherit!important;cursor:pointer;border-radius:0!important;box-shadow:none!important;letter-spacing:0;transform:none!important;margin:0!important;min-width:0!important;background:transparent!important;border:0!important;color:inherit}
+#stage-commands button:before,#stage-commands button:after,#stage-command-edges button:before,#stage-command-edges button:after{display:none!important}
+#stage-commands button:focus-visible,#stage-command-edges button:focus-visible{outline:1px solid #ffe6a1!important;outline-offset:-2px}
+#stage-commands button:disabled,#stage-command-edges button:disabled{opacity:.38!important;cursor:not-allowed}
+#stage-commands .command-root-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 9px}
+#stage-commands .command-root-grid button{display:flex;align-items:center;gap:6px;width:100%!important;min-height:43px!important;padding:5px 0!important;font-size:22px!important;font-weight:normal;text-align:left!important;line-height:1.2;text-shadow:1px 2px 1px #101b16}
+#stage-commands .command-root-grid button>span{font:9px/1 serif;color:#e9d27b;visibility:hidden}
+#stage-commands .command-root-grid button:hover:not(:disabled),#stage-commands .command-root-grid button:focus-visible{color:#ffdf87;background:linear-gradient(90deg,#b49b4c22,transparent)!important}
+#stage-commands .command-root-grid button:hover:not(:disabled)>span,#stage-commands .command-root-grid button:focus-visible>span{visibility:visible}
+#stage-commands .command-back{margin-left:auto!important;flex-shrink:0;width:auto!important;min-height:30px!important;padding:4px 6px!important;font-size:12px!important;color:#c8c6a1;border:1px solid #b7a26455!important}
+#stage-commands nav{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:4px;margin:0 0 5px;padding:0;border-bottom:1px solid #a28e4b55}
+#stage-commands nav button{width:100%!important;min-height:30px!important;padding:4px!important;font-size:13px!important;line-height:1.4;color:#bbc1a9}
+#stage-commands nav button[aria-pressed=true]{color:#ffe09b;box-shadow:inset 0 -2px #cfb56e!important;background:#b9a45818!important}
+#stage-commands .command-art-list{max-height:120px;min-height:40px;overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#9e945f #20312b}
+#stage-commands .command-art-row{--art-color:#dee0cc;display:flex;align-items:center;gap:7px;min-height:39px!important;width:100%!important;padding:5px 4px!important;text-align:left!important;border-bottom:1px solid #b4b99716!important}
+#stage-commands .gr2{--art-color:#9fd7eb}#stage-commands .gr3{--art-color:#d8b4ff}#stage-commands .gr4{--art-color:#ffdb84}
+#stage-commands .command-art-row strong{font-size:16px;line-height:1.35;color:var(--art-color);font-weight:normal;overflow-wrap:anywhere}
+#stage-commands .command-art-row small{margin-left:auto;white-space:nowrap;color:#c0c9b8;font:11px/1.3 system-ui,sans-serif}
+#stage-commands .command-pointer{font:9px/1 serif;color:#f6d47f;visibility:hidden}
+#stage-commands .command-art-row[aria-pressed=true]{background:linear-gradient(90deg,#b29a543f,#b29a540a)!important}
+#stage-commands .command-art-row[aria-pressed=true] .command-pointer{visibility:visible}
+#stage-commands .command-art-row.unaffordable strong,#stage-commands .command-art-row.unaffordable small{opacity:.45}
+#stage-commands .command-art-detail{height:66px;overflow:auto;box-sizing:border-box;border-top:1px solid #b9a56677;padding:6px 4px;margin-top:5px;font:11px/1.55 system-ui,sans-serif;color:#becbb7;scrollbar-width:thin;overscroll-behavior:contain}
+#stage-commands .command-art-detail>strong{font-size:12px;color:#e6d59b;font-weight:normal}
+#stage-commands .command-art-detail p,#stage-commands .command-art-detail ul{margin:2px 0 0;padding:0;list-style:none}#stage-commands .command-art-detail li+li{margin-top:2px}
+#stage-commands footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:5px}
+#stage-commands .command-art-count{font:10px/1.4 system-ui,sans-serif;color:#a9b29a}
+#stage-commands .command-confirm{width:auto!important;min-height:32px!important;padding:4px 17px!important;border:1px solid #b6a063!important;background:#a58b4533!important;font-size:15px!important;color:#f7e1a0}
+#stage-commands .command-empty{font-size:13px;text-align:center;color:#b6c1ad;margin:12px 0}
+.classic-stage-page #stage-command-edges{display:flex;justify-content:space-between;position:absolute;left:16%;right:16%;bottom:12px;z-index:20;pointer-events:none}
+#stage-command-edges button{pointer-events:auto;width:auto!important;min-height:36px!important;padding:5px 18px!important;background:linear-gradient(#d2c28ed9,#a39467e6)!important;border:1px solid #6c5a36!important;box-shadow:0 0 0 2px #c9b579,inset 0 0 0 1px #ebe0b6!important;color:#312f20;text-shadow:0 1px #e9ddb2;font-size:17px!important}
+#stage-command-edges button:last-child{margin-left:auto!important}
+@media(max-width:700px){
+ .classic-stage-page #stage{height:390px!important}
+ .classic-stage-page #stage-commands{width:176px;top:48%;padding:6px 8px 8px}
+ .classic-stage-page #stage-commands[data-view=arts]{width:min(284px,calc(100% - 32px));top:49%}
+ #stage-commands header{gap:5px;min-height:28px;padding-bottom:4px}#stage-commands header strong{font-size:14px}
+ #stage-commands .command-portrait{width:25px;height:25px}
+ #stage-commands .command-root-grid{gap:2px 3px}#stage-commands .command-root-grid button{font-size:19px!important;min-height:40px!important;gap:4px}
+ #stage-commands nav button{min-height:32px!important;font-size:12px!important}
+ #stage-commands .command-art-list{max-height:112px}#stage-commands .command-art-row{min-height:37px!important}
+ #stage-commands .command-art-row strong{font-size:14px}#stage-commands .command-art-detail{height:58px}
+ #stage-commands .command-confirm{min-height:34px!important}#stage-commands .command-back{min-height:32px!important}
+ .classic-stage-page #stage-command-edges{left:11%;right:11%;bottom:13px}#stage-command-edges button{min-height:34px!important;font-size:15px!important;padding:5px 14px!important}
+}

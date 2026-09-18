@@ -1,0 +1,35 @@
+.phaser-trial-bar{max-width:1160px;margin:12px auto;padding:14px 18px;border:1px solid #797954;background:#142722;color:#dacb9d;box-sizing:border-box}
+.phaser-trial-bar strong{color:#e7cd85;font-size:18px}.phaser-trial-bar p{margin:6px 0 10px;font-size:14px;line-height:1.7}
+.phaser-trial-bar nav{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.phaser-trial-bar button{margin:0;min-height:40px;font-size:14px}
+.phaser-trial-bar button[aria-pressed=true]{background:#385045;border-color:#dcc082;color:#fff0b9}
+.phaser-trial-bar a{font-size:14px;color:#bfd4ba;margin-left:auto}
+.phaser-trial-page .lab-toolbar{display:none}
+.phaser-trial-page #stage{height:420px!important;isolation:isolate}
+.phaser-trial-page #stage.phaser-rendering>.sprite-wrap,.phaser-trial-page #stage.phaser-rendering>.companion-actor{visibility:hidden!important}
+.phaser-trial-page #stage.phaser-loading>.sprite-wrap,.phaser-trial-page #stage.phaser-loading>.companion-actor{visibility:hidden!important}
+#stage.phaser-loading:before,#stage.phaser-loading:after{display:none!important}
+#stage.phaser-loading #phaser-stage{visibility:hidden}
+.battle-scene-loading{position:absolute;inset:0;z-index:17;display:flex;align-items:flex-end;justify-content:center;box-sizing:border-box;padding:28px 16px;color:#f3e4bf;text-shadow:0 2px 4px #000;font-size:15px;letter-spacing:2px;background:#172a2d url('bamboo-stage.png') center/cover no-repeat}
+.classic-stage-page .battle-scene-loading{background-image:linear-gradient(0deg,#102328b0,transparent 30%),url('river-stage.webp')}
+#stage.phaser-rendering:before,#stage.phaser-rendering:after{display:none!important}
+#phaser-stage{position:absolute;inset:0;z-index:1;overflow:hidden}
+#phaser-stage canvas{display:block;width:100%!important;height:100%!important;image-rendering:pixelated}
+.battle-scene-retry{position:absolute;z-index:19;bottom:10px;left:50%;transform:translateX(-50%);width:max-content!important;max-width:90%;padding:8px 14px!important;min-height:36px;font-size:13px!important;background:#253b3a!important;color:#f1dfb5!important;border:1px solid #b9a875!important}
+#stage>#initiative-track{z-index:15!important}
+.phaser-trial-page #stage .tech-banner{top:60px!important;z-index:10;font-size:22px;max-width:75%;white-space:normal;line-height:1.4}
+.phaser-trial-page .lab-combat-lab details{margin-bottom:0}
+@media(max-width:600px){.phaser-trial-page #stage{height:330px!important}.phaser-trial-bar{margin:8px;padding:12px}.phaser-trial-bar a{margin-left:0}}
+/* Names remain legible for a wall-clock reading window, independent of speed. */
+.phaser-trial-page #stage .trial-move-name{position:absolute;top:51px;left:50%;transform:translateX(-50%);z-index:11;pointer-events:none;display:flex;align-items:center;justify-content:center;gap:10px;max-width:90%;width:max-content;box-sizing:border-box;padding:7px 18px;border-block:1px solid color-mix(in srgb,var(--name-color) 50%,transparent);background:linear-gradient(90deg,transparent,#102622ee 15%,#102622ee 85%,transparent);color:var(--name-color);text-shadow:0 2px 2px #071510;animation:trial-name-read var(--name-time) linear both}
+.phaser-trial-page #stage .trial-move-name.enemy{top:99px}
+.phaser-trial-page #stage .trial-move-name small{font-size:12px;color:#c1c9bf;white-space:nowrap;max-width:9em;overflow:hidden;text-overflow:ellipsis}
+.phaser-trial-page #stage .trial-move-name strong{font-size:21px;line-height:1.25;letter-spacing:2px;font-weight:normal;overflow-wrap:anywhere}
+.phaser-trial-page #stage .trial-move-name[data-tier="3"] strong{font-size:24px}
+.phaser-trial-page #stage .trial-move-name[data-tier="4"] strong{font-size:27px;text-shadow:0 2px 2px #071510,0 0 10px #e7b84577}
+@keyframes trial-name-read{0%{opacity:0;translate:0 4px}7%,81%{opacity:1;translate:0 0}100%{opacity:0;translate:0 -3px}}
+@media(max-width:600px){.phaser-trial-page #stage .trial-move-name{top:49px;gap:6px;padding:6px 10px}.phaser-trial-page #stage .trial-move-name.enemy{top:91px}.phaser-trial-page #stage .trial-move-name strong{font-size:18px}.phaser-trial-page #stage .trial-move-name[data-tier="3"] strong{font-size:20px}.phaser-trial-page #stage .trial-move-name[data-tier="4"] strong{font-size:22px}.phaser-trial-page #stage .trial-move-name small{max-width:5em;font-size:11px}}
+@media(prefers-reduced-motion:reduce){.phaser-trial-page #stage .trial-move-name{animation-name:trial-name-read-still}@keyframes trial-name-read-still{0%{opacity:0}7%,81%{opacity:1}100%{opacity:0}}}
+/* Leave room for stacked portraits beneath the initiative rail. */
+.phaser-trial-page #stage .trial-move-name{top:80px}
+.phaser-trial-page #stage .trial-move-name.enemy{top:128px}
+@media(max-width:600px){.phaser-trial-page #stage .trial-move-name{top:78px}.phaser-trial-page #stage .trial-move-name.enemy{top:120px}}
