@@ -1,8 +1,9 @@
 /* Full-game battle presentation; does not create or alter a party. */
 (()=>{'use strict';
- const heroPortrait=new Image();heroPortrait.src='phaser-trial/hero-v2/portrait.webp';
+ const heroPortrait=new Image();let heroPortraitPath='';
+ function syncHeroPortrait(){const src=window.playerHeroPortrait?.()||'phaser-trial/hero-v2/portrait.webp';if(src!==heroPortraitPath){heroPortraitPath=src;heroPortrait.src=src;}return heroPortrait.complete&&heroPortrait.naturalWidth;}
  const originalPortraits=partyTrackPortraits;partyTrackPortraits=async function(){await originalPortraits.apply(this,arguments);paintHeroPortrait();};
- function paintHeroPortrait(){if(!heroPortrait.complete||!heroPortrait.naturalWidth)return;const token=document.querySelector('[data-initiative="p"] canvas');if(token){const ctx=token.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,40,40);ctx.drawImage(heroPortrait,2,2,36,36);}}
+ function paintHeroPortrait(){if(!syncHeroPortrait())return;const token=document.querySelector('[data-initiative="p"] canvas');if(token){token.dataset.heroGender=S.gender==='女'?'female':'male';const ctx=token.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.clearRect(0,0,40,40);ctx.drawImage(heroPortrait,2,2,36,36);}}
  heroPortrait.onload=()=>{paintHeroPortrait();decorate();};
  // The original controls retain ownership of combat rules and settlement.
  // This two-level view only delegates to their live buttons.

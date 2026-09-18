@@ -77,7 +77,7 @@
   const owner=C,token=++mountId,stage=C.stage,host=document.createElement('div');host.id='phaser-stage';stage.prepend(host);
   const wasBusy=owner.busy;owner._trialLoading=true;owner.busy=true;controls();label('载入竹林与人物动作');
   const width=Math.max(300,Math.round(stage.clientWidth)),height=stage.clientHeight;
-  const modernHero=classicStage&&window.CLASSIC_HERO_ATLASES;
+  const modernHero=classicStage&&(window.playerHeroAtlas?.()||window.CLASSIC_HERO_ATLASES);
   const atlas={p:modernHero||{...HERO_MARTIAL_ATLASES,claw:HERO_CLAW_ATLAS},e:{}};
   const idlePack=classicStage&&window.ACTOR_IDLE_V3,sizePack=classicStage&&window.ACTOR_SIZE_V3,enemyIdentity=hdFoe(owner.e.name);
   for(const style of ['sword','cleave','spear','palm','finger','cast','claw','kick','step','guard','heal','poison','pounce','charge','coil','bite']){const a=enemyAtlas(style);if(a){const key=Object.keys(ENEMY_MARTIAL_ATLASES).find(k=>ENEMY_MARTIAL_ATLASES[k]===a);atlas.e[style]={...a,bodyHeight:sizePack?.enemy?.[key]||a.height};}}

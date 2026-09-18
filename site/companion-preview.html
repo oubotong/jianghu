@@ -885,7 +885,7 @@ dialog::backdrop{background:#061a22cf;}
 // Back up existing public saves before any migration. Keep the original save keys and origin.
 if(!/-preview(?:\.html)?\/?$/.test(location.pathname))try{const key='jhfsl-before-classic-combat-v1',life=localStorage.getItem('wuxia-life-v1'),meta=localStorage.getItem('jhfsl_meta_v1'),labLife=localStorage.getItem('wuxia-lab-life-v2'),labMeta=localStorage.getItem('jhfsl_lab_meta_v2');if((life||meta||labLife||labMeta)&&!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify({life,meta,labLife,labMeta,savedAt:Date.now()}));if(!life&&!meta){if(labLife){JSON.parse(labLife);localStorage.setItem('wuxia-life-v1',labLife);}if(labMeta){JSON.parse(labMeta);localStorage.setItem('jhfsl_meta_v1',labMeta);}}}catch(_){}
 </script>
-<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260918-panel-details"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260918-panel-details">
+<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260918-female-hero"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260918-female-hero">
 <link rel="icon" href="data:,">
 </head>
 <body>
@@ -18422,10 +18422,12 @@ advance=()=>{if(C?.busy)return;cancelCombatMotion();C=null;S.age+=4;renderEvent(
 const workshopParams=new URLSearchParams(location.search);if(COMPANIONS[workshopParams.get('person')])workshopPerson.value=workshopParams.get('person');if(['first','joint','invite','failed','replace','travel','battle'].includes(workshopParams.get('phase')))workshopStage.value=workshopParams.get('phase');visitCompanionWorkshop();
 </script>
 <script src="bonus-art/atlases.js?v=1"></script><script src="bonus-art/effects.js?v=2"></script>
-<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-panel-details"></script>
-<script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-panel-details"></script>
-<script src="phaser-trial/idle-v3/atlases.js?v=production-20260918-panel-details"></script>
-<script src="phaser-trial/production.js?v=production-20260918-panel-details"></script>
-<script src="phaser-trial/production-ui.js?v=production-20260918-panel-details"></script>
+<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-female-hero"></script>
+<script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-female-hero"></script>
+<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260918-female-hero"></script>
+<script src="phaser-trial/hero-appearance.js?v=production-20260918-female-hero"></script>
+<script src="phaser-trial/idle-v3/atlases.js?v=production-20260918-female-hero"></script>
+<script src="phaser-trial/production.js?v=production-20260918-female-hero"></script>
+<script src="phaser-trial/production-ui.js?v=production-20260918-female-hero"></script>
 </body>
 </html>
