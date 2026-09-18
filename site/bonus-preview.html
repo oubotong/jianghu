@@ -13767,6 +13767,160 @@ function renderEnding(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Equipment illustrations: display only; equipment bonuses remain in the game rules. */
 const EQUIPMENT_ART={
  chaidao:'cleaver',tiejian:'iron-sword',lagan:'spear',tiechi:'ruler',yanling:'saber',qingfeng:'sword',diangang:'spear',bintie:'staff',bailian:'saber',longquan:'sword',hutou:'spear',xuantie:'heavy-sword',zhanlu:'zhanlu',xuemo:'xuemo',pojun:'pojun',
@@ -14766,7 +14920,7 @@ function continueLife(){
   else if(saved.kind==='result'){
    const restoredState=JSON.parse(JSON.stringify(saved.state));
    renderEvent({title:'江湖续卷',art:'travel',text:'上回行程已经记下，继续走自己的江湖路。',choices:[]});
-   const result=document.getElementById('result');const paragraph=document.createElement('div');paragraph.className='result';paragraph.innerHTML=formatEventResult(storyEscape(saved.text||'这一段行程已经结束。'));
+   const result=document.getElementById('result');const paragraph=document.createElement('div');paragraph.className='result';const resumeText=typeof decisionResumeText==='function'?decisionResumeText(saved.text):saved.text;paragraph.innerHTML=formatEventResult(storyEscape(resumeText||'这一段行程已经结束。'));
    const button=document.createElement('button');button.className='primary';button.textContent='继续 →';button.onclick=advance;result.replaceChildren(paragraph,button);
    S=restoredState; // Rendering the recap must not count as an additional life event.
   }else{app.innerHTML='';lifeReplaySeed=saved.seed;nextEvent();}
@@ -18095,6 +18249,14 @@ const DECISION_PLANS={};
 function decisionPlan(title,recipes,context){DECISION_PLANS[title]={recipes:recipes.split('|'),context};}
 function decisionState(){return S.flags.decisions||={version:1,settled:{},memories:[],arcs:{},lastAge:-10,total:0,history:[]};}
 function decisionKey(ev){return ev.id||ev.title;}
+function decisionResumeText(text){
+ if(!/^这段抉择已经结算，不能(?:改选或)?重复领取。$/.test(String(text||'').trim()))return text;
+ const last=S.flags.decisions?.history?.at(-1);
+ if(!last||last.age!==S.age)return text;
+ // Older saves may contain the wrapper error instead of the result narrative.
+ // The original choice already changed the character; never execute it again.
+ return '上回在「'+last.title+'」，你选择了“'+last.choice+'”。这一步的结果已经记入角色，可以继续旅程。';
+}
 function decisionParse(code){return {kind:code.replace(/[^FPTKRNX]/g,''),time:code.includes('!')};}
 function decisionHeld(kind){return (S.flags.decisions?.memories||[]).filter(m=>m.kind===kind&&!m.spent);}
 function decisionRemember(kind,ev,index,phase){
@@ -18115,8 +18277,11 @@ const decisionPrepared=new WeakSet();
 function decisionRefreshHints(ev){for(const c of ev.choices||[]){const info=c.decisionHint;if(!info)continue;const age=Number.isFinite(ev.age)?ev.age:S?.age??30;
  c.hint=[info.original,info.time&&age>=7&&age<=60&&!/本年|占去|练功|耽误习武/.test(info.original||'')?'占用本年日常练功':'',info.kind&&age>=7?(age>=94?'决定此生最后留下的心愿':DECISION_HELP[info.kind]):''].filter(Boolean).join('；');}}
 function decisionPrepare(ev,plan=DECISION_PLANS[ev?.title]){
- if(!ev||!plan||decisionPrepared.has(ev))return ev;decisionPrepared.add(ev);ev.decisionPlan=plan;
+ // replayWrap clones the event and choices while retaining their wrapped runs.
+ // Carry preparation with that clone; object identity alone wraps settlement twice.
+ if(!ev||!plan||decisionPrepared.has(ev)||ev.decisionWrapped)return ev;
  if(plan.recipes.length!==ev.choices.length)throw Error('事件抉择未逐项配齐：'+ev.title);
+ decisionPrepared.add(ev);ev.decisionWrapped=true;ev.decisionPlan=plan;
  const sourceText=ev.text;ev.text=function(){return (typeof sourceText==='function'?sourceText():sourceText)+(plan.context?'\n'+plan.context:'');};
  ev.choices.forEach((c,index)=>{
   const rule=decisionParse(plan.recipes[index]),run=c.run;
