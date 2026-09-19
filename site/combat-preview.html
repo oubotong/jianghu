@@ -890,6 +890,14 @@ dialog::backdrop{background:#061a22cf;}
 @media(max-width:640px){.reading-world .reading-hook{font-size:18px}.reading-beats{font-size:16px;gap:8px}.reading-result-lead{font-size:18px}.reading-beats .reading-stakes{font-size:14px}.reading-world .result-story{font-size:16px}}
 @media(max-width:640px){.reading-talk{grid-template-columns:72px minmax(0,1fr);padding:10px;gap:10px;min-height:88px}.reading-portrait{width:72px}.reading-talk p{font-size:15px}.reading-event .reading-hook{font-size:18px}.reading-event :is(.reading-full,.reading-recap)>summary{min-height:44px;padding:10px 0}.reading-scene-note{bottom:8px;left:8px;right:8px;font-size:12px;padding:5px 7px}.reading-speaker{gap:2px 7px}}
 
+/* Event reading typography: system sans for prose; pixel headings and combat stay unchanged. */
+#event-card :is(.event-text,.event-text *,.reading-talk,.reading-talk *,.reading-memory,.reading-memory *,.reading-full-prose,.reading-full-prose *,.result-story,.result-story *,.choices>button,.choices>button *){font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif!important;font-synthesis:weight!important;letter-spacing:.025em}
+#event-card :is(.event-text,.reading-lead,.reading-beats,.reading-beats p,.reading-talk p,.reading-full-prose,.result-story){font-size:18px!important;line-height:1.95!important}
+#event-card :is(.reading-hook,.reading-result-lead){font-size:20px!important;line-height:1.8!important}
+#event-card .choices>button{font-size:17px!important;line-height:1.75!important}
+#event-card .choices>button .hint{font-size:14px!important;line-height:1.7!important}
+@media(max-width:640px){#event-card :is(.event-text,.reading-lead,.reading-beats,.reading-beats p,.reading-talk p,.reading-full-prose,.result-story){font-size:17px!important}}
+
 </style>
 <script>window.WUXIA_STATIC_DEMO=true;</script><script>window.EQUIPMENT_ASSETS={"armor":"assets/464cbe58dce5a325bcf87d72.webp","boots":"assets/c70920eeac3e84ffa43f5423.webp","cleaver":"assets/60ceb802055dd31db12999b3.webp","cloud-boots":"assets/1ef5c9af76ba266531b2de24.webp","fur":"assets/c722bd873c61baaf16e2ac09.webp","heavy-sword":"assets/55916d1fd7597ec425f91419.webp","iron-sword":"assets/61b64f8511fb781d618c7eba.webp","jinsi":"assets/4c233ea75a31dd9d81e649d1.webp","manual-cast":"assets/0b8d2ad09c773ec06b1ae4f2.webp","manual-claw":"assets/6f4ed340d29e9e10c4d301ee.webp","manual-cleave":"assets/748b4aa1d91198198b915369.webp","manual-finger":"assets/08927026964e4b45591acc15.webp","manual-generic":"assets/806f4af81ad272472530abf6.webp","manual-guard":"assets/997b6633547cd67b47db9b7e.webp","manual-heal":"assets/fdc35e0cd69446c24695ecf2.webp","manual-kick":"assets/a5138e74180552553ea5a608.webp","manual-palm":"assets/346b71bab3e5e4798c8e8d1b.webp","manual-spear":"assets/89bfa0f06d10fd2521f905ae.webp","manual-step":"assets/0a287bd6e76cbeb04e9acbd1.webp","manual-sword":"assets/9cf8bb6c4d781fa5d63d55e2.webp","pojun":"assets/6882fa8258026ac610ea6df3.webp","robe":"assets/a75ec0b33195ba9fc4c9bc33.webp","ruanwei":"assets/12942d0377aa5a53b31a07d1.webp","ruler":"assets/a65ea4da18f8d481bbd108ee.webp","saber":"assets/d603555f00819326238f9347.webp","sandals":"assets/328d233c6100afe13f3efd90.webp","shoes":"assets/e8e3e81057efc0b8b3345e63.webp","spear":"assets/8e533aa9d80885f3b62a24f7.webp","staff":"assets/2e884adf3a2ce979c0fd1702.webp","sword":"assets/fe54094fd63ca4b8b6fe0906.webp","tiancan":"assets/21728a6e85a5029c6d358194.webp","xuemo":"assets/576870d26611709cb50a841d.webp","zhanlu":"assets/603f67d13f231fb2a5761e2c.webp"};</script>
 <script>window.STORY_ASSETS={"adult-training":"assets/4e3710785dbcfcd9b76c5cd9.webp","ambush":"assets/46807c522f53e3a6bd1311e2.webp","arena":"assets/cc75d2ce88612f087c3b1ecf.webp","banquet":"assets/9b44c358e7c7e0e21cab3d87.webp","birth-book":"assets/78a8d4fe9be23f317def2c3c.webp","birth-coin":"assets/0fde47fd358cdc9aec6d64b5.webp","birth-gaze":"assets/e217b8820e394351f75a35c5.webp","birth-sword":"assets/517c11e67c724c15effefdd2.webp","birth":"assets/a9b2991227ecdb86ed7b54b0.webp","caravan":"assets/025d70d04183efeb05b8ba21.webp","career-court":"assets/ad421b3618522dfa9dafcd30.webp","career-retreat":"assets/ddef1d0610956d3255cadd3e.webp","career-sect-small":"assets/f459d973ed378a5324c84ab8.webp","career-sect":"assets/e2f54e5c40680259f6bfb6f0.webp","career-trade":"assets/4b951cd86d2b3a7c90c8d98b.webp","cliff":"assets/a568ba84fb93b5f51c2ab4aa.webp","companion-dialogue-v1":"assets/86dd60cebb7a1b16c0cd97b3.webp","dark-hall":"assets/498d3ce90c627f0454d86c12.webp","demon-lord":"assets/4c8f28e2f7f873cd233bfb2a.webp","dialogue-portraits-v1":"assets/f86ba44f1e817229e7ac3ef6.webp","disappointment":"assets/a69fe4a669fb0454166b9338.webp","emperor":"assets/5d6a8bc6eaefedeb32f5a32a.webp","enlightenment":"assets/9e8d60cb99b381c640c8656c.webp","escape":"assets/c57d24f4828f6d68a75a09b2.webp","farewell":"assets/7a4b0e65877287ce08aceb59.webp","forest":"assets/ad845e288fe14682048b60f0.webp","forge-consolation":"assets/7adb47153a90ed93ff9e0dd7.webp","forge-gift":"assets/d0b1fe3de7bde993e4fdfaeb.webp","forge-spar":"assets/69c56d002311629a4526692b.webp","forge":"assets/72909985d9e7fe2015c96f2c.webp","gambling":"assets/3549ca0ae67b62c3d191bf80.webp","help":"assets/9d9d728390924f3f82450956.webp","herbs":"assets/e166f7dbf8ba4fa3fb4214e2.webp","home":"assets/556d5afc2ebfe89446483735.webp","inn":"assets/696be2deb601df60babb1f81.webp","leader":"assets/d18150ef2b2663dfd18704ca.webp","legacy":"assets/84c5f4ffe99af1c6baabf1cf.webp","market-coins":"assets/c34274de8b17800f441b62d3.webp","market-hurt":"assets/5af2f88a61903560e0ba1a17.webp","market-protect":"assets/67e010fb59d6fe5e9e6dbebf.webp","market":"assets/e1bc56ae07179cc0d9804f2a.webp","medicine":"assets/f8f97fe43b1f7ffe9e8cbe10.webp","meditation":"assets/8d932956bbef87376faac048.webp","mentor-accepted":"assets/14f968ad8b8bb78a71d42d49.webp","mentor-beggar":"assets/cd1525b0a4b60df77c45b288.webp","mentor-gate":"assets/26735500e1d2c7aab645233c.webp","mentor-rejected":"assets/7f45d72c599b5d5e971e11e7.webp","mentor-search":"assets/65f61631c6140afca0f706e4.webp","mentor-self":"assets/73ae58c2db6d93a7be309b33.webp","mentor-taoist":"assets/199a70c9234bdcbe87d0a16d.webp","mountain":"assets/e39ed3454bf62a210092c685.webp","night-caught":"assets/d03e52c28cfea712f3cd6ef9.webp","night-escape":"assets/6e5c0f9e905f32c2def1c10d.webp","night-inn":"assets/df669d62d82a520bb94d3ae7.webp","night-sleep":"assets/fd8966ebe854900985afd4e3.webp","palace":"assets/d0b03c30e47b13e3e773db46.webp","recovery":"assets/9e76b4abe46942f2cf080ea9.webp","relief":"assets/24b9704767ec4868cedb397b.webp","river-boat":"assets/2589bd30212d15d3fe4d93f3.webp","river-rescue":"assets/531e68cf42d1218c23de8204.webp","river-rescued":"assets/f1072babccae6f52b5185e96.webp","river":"assets/2ea966807e4a237df1e8c684.webp","romance":"assets/ff49e1fdce06637eeff2f9a2.webp","sect-rain":"assets/70b997ba1db42cf148c6f14a.webp","sect":"assets/02b8c46c981a181ebfea16d9.webp","setback":"assets/ec339dfa94f2e87303ec7638.webp","study":"assets/320ad86d4506955a54986fe6.webp","summit-council":"assets/3015e3c2a2e5768fd47506fd.webp","summit-deputy":"assets/439fb73b0ff288ad437a820a.webp","summit-leader":"assets/4b36cb74ae690f643af86fc4.webp","summit-support":"assets/ed73b8a9749149ffd66f5687.webp","summit-withdraw":"assets/eeab7e4312797071f910ab4f.webp","tomb-rubbing":"assets/144a9743fa29f3c55042c7c5.webp","tomb-sealed":"assets/cc02fc4d1534ddf1d2f9e814.webp","tomb-trap":"assets/08fbb90973e945f47dd03406.webp","tomb":"assets/d5ab70fa02466eb8cf32b3f2.webp","training":"assets/e25b1cd3c7b568460af4189f.webp","treasure":"assets/7c04b7ad2fffe898d311a53b.webp","victory":"assets/95d7fd25afb27072992e5d8e.webp","village":"assets/3c35cae431b7ee97c724739f.webp","war":"assets/eed70189e16f1e0d172decde.webp","waterfall":"assets/6565212ad63dec1c654b567a.webp"};</script>
@@ -3650,6 +3658,85 @@ function renderEnding(){
     <div class="card"><div class="event-title" style="font-size:1em">你的一生</div><div id="log" style="max-height:400px">${logHTML()}</div></div>`;
   paintStory(STORY_ENDINGS[title]||'mountain',title,'ending-story');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
