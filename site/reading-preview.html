@@ -19227,6 +19227,35 @@ else e=REPLAY_EVENTS.find(e=>e.id==='replay-century-question');
 readingSelect.value=row[0];renderEvent(e);}
 readingSelect.onchange=()=>{const url=new URL(location);url.searchParams.set('scene',readingSelect.value);history.replaceState(null,'',url);visitReadingSample(readingSelect.value);};advance=()=>{if(readingSelect.value.startsWith('decision-')){const pending=Object.values(S.flags.decisions?.arcs||{}).filter(a=>!a.closed);if(pending.length){S.age=Math.max(S.age+1,Math.min(...pending.map(a=>a.due)),(S.flags.decisions.lastAge||0)+6);const next=decisionEncounter();if(next){renderEvent(next);return;}}}if(readingSelect.value.endsWith('-chain')){const a=S.flags.connections?.arcs?.[readingSelect.value.split('-')[0]];if(a&&!a.ending){S.age=Math.max(S.age+1,a.due);renderEvent(connectionEvent(a.key));return;}}const i=readingSamples.findIndex(s=>s[0]===readingSelect.value);visitReadingSample(readingSamples[(i+1)%readingSamples.length][0]);};visitReadingSample(new URLSearchParams(location.search).get('scene')||'fever');
 </script>
+<script>/* Isolated typography comparison. Does not write gameplay or font preferences. */
+if(new URLSearchParams(location.search).get('fonttest')==='1'){
+ const fonts={
+  sans:{label:'清晰黑体',family:'"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif'},
+  song:{label:'书卷宋体',family:'"Songti SC","STSong","SimSun","Noto Serif CJK SC",serif'},
+  kai:{label:'疏朗楷体',family:'"Kaiti SC","STKaiti","KaiTi","Songti SC","SimSun",serif'},
+  pixel:{label:'原版像素',family:'"Jianghu Pixel","Microsoft YaHei",sans-serif'}
+ };
+ const style=document.createElement('style');style.textContent=`
+ .font-comparison,.font-comparison *{font-family:"PingFang SC","Microsoft YaHei",sans-serif!important;font-synthesis:weight!important}
+ .font-comparison{margin:14px 0;padding:16px;border:1px solid #8f997c;background:#1c3433;color:#e9e4d1}
+ .font-comparison h2{margin:0 0 10px;font-size:18px}.font-comparison p{font-size:14px;line-height:1.7;margin:10px 0 0}
+ .font-comparison-buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+ .font-comparison-buttons button{margin:0;padding:9px 6px;min-height:44px;font-size:15px;line-height:1.5}
+ .font-comparison-buttons button[aria-pressed=true]{background:#d6bf81;color:#142c29;border-color:#f2d997}
+ body[data-reading-font] #event-card :is(.event-text,.event-text *,.reading-talk,.reading-talk *,.reading-memory,.reading-memory *,.reading-full-prose,.reading-full-prose *,.result-story,.result-story *,.choices>button,.choices>button *){font-family:var(--reading-font)!important;font-synthesis:weight!important;letter-spacing:.025em}
+ body[data-reading-font] #event-card :is(.event-text,.reading-lead,.reading-beats,.reading-beats p,.reading-talk p,.reading-full-prose,.result-story){font-size:18px!important;line-height:1.95!important}
+ body[data-reading-font] #event-card :is(.reading-hook,.reading-result-lead){font-size:20px!important;line-height:1.8!important}
+ body[data-reading-font] #event-card .choices>button{font-size:17px!important;line-height:1.75!important}
+ body[data-reading-font] #event-card .choices>button .hint{font-size:14px!important;line-height:1.7!important}
+ @media(max-width:640px){.font-comparison-buttons{grid-template-columns:repeat(2,minmax(0,1fr))}body[data-reading-font] #event-card :is(.event-text,.reading-lead,.reading-beats,.reading-beats p,.reading-talk p,.reading-full-prose,.result-story){font-size:17px!important}}
+ `;document.head.append(style);
+ const panel=document.createElement('section');panel.className='font-comparison';panel.setAttribute('aria-label','事件字体对比');panel.innerHTML='<h2>事件阅读 · 字体试读</h2><div class="font-comparison-buttons" role="group" aria-label="选择阅读字体"></div><p>同一段剧情，直接切换比较。标题与场景保持像素风格；可以点击事件选项，继续查看结果页的阅读效果。</p><p>黑体适合长时间阅读；宋体更像书页；楷体更有手写感。使用设备自带字体，手机与电脑的具体字形可能不同。本页不读写正式存档。</p>';
+ readingNav.before(panel);
+ const select=key=>{if(!fonts[key])key='sans';document.body.dataset.readingFont=key;document.body.style.setProperty('--reading-font',fonts[key].family);for(const b of panel.querySelectorAll('[data-font]'))b.setAttribute('aria-pressed',String(b.dataset.font===key));const url=new URL(location);url.searchParams.set('font',key);history.replaceState(null,'',url);};
+ for(const [key,font]of Object.entries(fonts)){const b=document.createElement('button');b.type='button';b.dataset.font=key;b.textContent=font.label;b.onclick=()=>select(key);panel.querySelector('.font-comparison-buttons').append(b);}
+ select(new URLSearchParams(location.search).get('font')||'sans');
+}
+</script>
 <script src="bonus-art/atlases.js?v=1"></script><script src="bonus-art/effects.js?v=2"></script>
 <script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-tournament-roster"></script>
 <script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-tournament-roster"></script>
