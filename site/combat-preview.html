@@ -777,6 +777,8 @@ dialog::backdrop{background:#061a22cf;}
 .connection-entry{padding:12px 0;border-top:1px solid #718a7566}.connection-entry h3{font-size:16px;color:#e5cea1;line-height:1.7;margin:0 0 8px}.connection-entry p{font-size:14px;line-height:1.9;color:#c3cfc4;overflow-wrap:anywhere}
 @media(max-width:540px){.hud-identity{display:block}.hud-purse{display:block;margin-top:2px}#hud.compact-hud .age{font-size:15px}#hud.compact-hud .hud-quick-tools .bag-btn{font-size:13px}.character-sheet-overview{grid-template-columns:minmax(0,1fr)}.character-sheet-values{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.character-sheet-values>span{display:block}.character-sheet-values>span>b{display:block;margin-top:5px}.hud-sheet .combat-foundation-grid small{font-size:12px}}
 
+.tournament-draw{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;font-size:14px;line-height:1.7;overflow-wrap:anywhere}
+
 .birth-inheritance,.rebirth-summary{border:1px solid var(--gold);background:#122728;padding:16px;margin:16px 0;line-height:1.8;border-radius:3px}.birth-inheritance h3{color:var(--gold);margin:8px 0}.birth-inheritance p{margin:0}.award-grid{display:grid;grid-template-columns:1fr auto;gap:8px}.award-grid b{color:#a1d8ac}.merchant-goods{display:grid;gap:10px}.merchant-resale{border:1px solid var(--border);padding:12px;min-width:0}.merchant-resale summary{cursor:pointer;min-height:44px;line-height:1.8}.merchant-wallet,.merchant-note,.merchant-goods,.merchant-resale{grid-column:1/-1}.merchant-note .result-story{line-height:1.8}.merchant-goods .shop-row,.rebirth-summary .shop-row{margin:0}.shop-row .s-info{min-width:0}.shop-row .s-info p{margin:6px 0;line-height:1.6}.shop-row>button{display:flex!important;align-items:center;justify-content:center;min-width:76px;text-align:center;padding:10px!important;flex:none}.shop-row>button::before{display:none!important}.lab-toolbar{max-width:1000px;margin:0 auto 18px;padding:12px;border:1px solid #caad65;background:#14292b;color:#f0dca4;line-height:1.8}.lab-toolbar nav{display:flex;flex-wrap:wrap;gap:8px}.lab-toolbar a{color:#bfe6cb;padding:8px;border:1px solid #59736b;text-decoration:none}.lab-toolbar select{max-width:100%;font:inherit;padding:8px;background:#162c2c;color:#eee1b6}.local-test-label{text-align:center;padding:8px;color:#d8c494;font-size:14px}@media(max-width:600px){.shop-row{gap:8px}.shop-row>button{min-width:66px}.birth-inheritance,.rebirth-summary{padding:12px}.lab-toolbar{margin:0 8px 12px}}
 
 #event-card .choices .s-info .catalog-name.gr1{color:#cfccb9}#event-card .choices .s-info .catalog-name.gr2{color:#9ac8e5}#event-card .choices .s-info .catalog-name.gr3{color:#cbb0ed}#event-card .choices .s-info .catalog-name.gr4{color:#eed18a}
@@ -893,7 +895,7 @@ dialog::backdrop{background:#061a22cf;}
 // Back up existing public saves before any migration. Keep the original save keys and origin.
 if(!/-preview(?:\.html)?\/?$/.test(location.pathname))try{const key='jhfsl-before-classic-combat-v1',life=localStorage.getItem('wuxia-life-v1'),meta=localStorage.getItem('jhfsl_meta_v1'),labLife=localStorage.getItem('wuxia-lab-life-v2'),labMeta=localStorage.getItem('jhfsl_lab_meta_v2');if((life||meta||labLife||labMeta)&&!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify({life,meta,labLife,labMeta,savedAt:Date.now()}));if(!life&&!meta){if(labLife){JSON.parse(labLife);localStorage.setItem('wuxia-life-v1',labLife);}if(labMeta){JSON.parse(labMeta);localStorage.setItem('jhfsl_meta_v1',labMeta);}}}catch(_){}
 </script>
-<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260918-readable-battle"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260918-readable-battle">
+<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260918-tournament-roster"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260918-tournament-roster">
 <link rel="icon" href="data:,">
 </head>
 <body>
@@ -1472,7 +1474,7 @@ function enemyTurn(){
   const e = C.e;
   if(!C.fx){ C.fx=[]; C.fxD=0; }
   if(e.attributeVersion)e.mp=Math.min(e.maxMp,e.mp+2);
-  const special = e.skill && C.round%3===0 && (!e.attributeVersion||e.mp>=e.skillCost);
+  const special = enemySkillDecision(e);
   if(special&&e.attributeVersion)e.mp-=e.skillCost;
   const dodgeChance = Math.max(0,Math.min(90,Math.min(65,pDodge()+C.dodgeBuff)-(e.accuracy||0)));
   const act = special? `祭出绝招「${e.skill}」` : "发起攻击";
@@ -2284,7 +2286,7 @@ function updateCombat(){
   $("#e-hp-label").textContent = `气血 ${Math.max(0,view.ehp)} / ${C.e.maxHp}`;
   $("#e-hp-bar").style.width = (Math.max(0,view.ehp)/C.e.maxHp*100)+"%";
   $("#round-hint").textContent = `—— 点击双方面板，再点一次收起可查看详细数值 · 第 ${view.round} 回合 ——`;
-  const warnOn = !C.over && !C.busy && C.e.skill && C.round%3===0 && (!C.e.attributeVersion||C.e.mp+2>=C.e.skillCost);
+  const warnOn = false; // Enemy decisions are made once at action time, never while rendering.
   const w = $("#skill-warn");
   w.style.display = warnOn? "" : "none";
   if(warnOn) w.textContent = `⚡ ${C.e.name}气势陡涨——本回合将祭出绝招「${C.e.skill}」！`;
@@ -14082,6 +14084,237 @@ function renderEnding(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Equipment illustrations: display only; equipment bonuses remain in the game rules. */
 const EQUIPMENT_ART={
  chaidao:'cleaver',tiejian:'iron-sword',lagan:'spear',tiechi:'ruler',yanling:'saber',qingfeng:'sword',diangang:'spear',bintie:'staff',bailian:'saber',longquan:'sword',hutou:'spear',xuantie:'heavy-sword',zhanlu:'zhanlu',xuemo:'xuemo',pojun:'pojun',
@@ -14671,6 +14904,33 @@ const TOURNAMENT_FOES=[
  {name:'回澜掌客·陆沧波',hp:190,atk:15,def:4,dodge:16,skill:'回澜叠浪',desc:'半决赛 · 攻守均衡，考验持续作战'},
  {name:'擂台魁首·萧照夜',hp:235,atk:18,def:5,dodge:22,skill:'照夜破阵',desc:'决赛 · 强敌压阵，留好内力与护身招式'}
 ];
+// Explicit identities keep titles from falling back to the same generic fighter.
+['bandit','monk','heroine','taoist','swordmaster'].forEach((key,i)=>TOURNAMENT_FOES[i].spriteKey=key);
+function tournamentHeroPower(id){const p=COMPANION_PROFILES[id];return p.hp+Math.max(...p.moves.filter(m=>m.kind==='atk').map(m=>m.damage))*3;}
+function tournamentLineup(t){
+ if(t.lineup?.length===5)return t.lineup;
+ t.drawSeed??=rnd(0x7fffffff);let seed=t.drawSeed>>>0;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+ const pick=list=>list[Math.floor(random()*list.length)],old=Object.values(S.flags.tournaments||{}).filter(x=>x!==t).flatMap(x=>x.lineup||[]);
+ const locals=[0,1,2,3,4],first=pick(locals),second=pick(locals.filter(i=>i!==first));
+ const heroes=Object.keys(COMPANION_PROFILES).sort((a,b)=>tournamentHeroPower(a)-tournamentHeroPower(b)),active=companionState().active;
+ const result=['local:'+first,'local:'+second];let floor=-1;
+ for(const [lo,hi]of [[0+t.edition*2,7+t.edition*2],[7+t.edition,13+t.edition],[12+t.edition,16+t.edition*2]]){
+  let candidates=heroes.slice(lo,Math.min(heroes.length,hi+1)).filter(id=>id!==active&&!result.includes('hero:'+id)&&tournamentHeroPower(id)>floor);
+  if(!candidates.length)candidates=heroes.filter(id=>id!==active&&!result.includes('hero:'+id)&&tournamentHeroPower(id)>floor);
+  const fresh=candidates.filter(id=>!old.includes('hero:'+id));const id=pick(fresh.length?fresh:candidates);result.push('hero:'+id);floor=tournamentHeroPower(id);
+ }
+ t.lineup=result;return result;
+}
+function tournamentOpponent(t,round){
+ const key=tournamentLineup(t)[round];
+ if(key.startsWith('hero:')){
+  const id=key.slice(5),p=COMPANION_PROFILES[id],moves=p.moves.filter(m=>m.kind==='atk').map(m=>({...m})).sort((a,b)=>a.damage-b.damage),best=moves.at(-1);
+  return {name:COMPANIONS[id].name,tournamentHero:id,tournamentMoves:moves,tournamentArts:p.moves.map(m=>({...m})),hp:p.hp,atk:p.atk,def:p.def,dodge:p.dodge,crit:p.crit,accuracy:p.accuracy,stats:{...p.stats},combatBase:{...p.base},maxMp:p.mp,mp:p.mp,skill:best.name,normalMove:moves[0].name,skillCost:best.mp,attributeVersion:1,progressionVersion:2,attributeTier:5,wuxue:Math.round(p.base.atk*4),desc:p.title+' · 群英论武，点到为止'};
+ }
+ const base=TOURNAMENT_FOES[Number(key.slice(6))],level=TOURNAMENT_FOES[round];
+ return {...base,hp:Math.round(level.hp*(1+t.edition*.3)),atk:level.atk+t.edition*3,def:level.def+t.edition,desc:['三十二进十六','十六进八'][round]+' · 江湖高手'};
+}
+function tournamentDrawHTML(t){return tournamentLineup(t).map((key,i)=>'<li>'+['首轮','次轮','八强战','半决赛','决赛'][i]+'：'+storyEscape(key.startsWith('hero:')?COMPANIONS[key.slice(5)].name:TOURNAMENT_FOES[Number(key.slice(6))].name)+'</li>').join('');}
 const TOURNAMENT_PRIZES=[
  ['三十二强','初试锋芒',30,0,null],['十六强','擂台新秀',70,1,null],['八强','八强英杰',130,2,null],
  ['四强','四强豪侠',210,3,null],['亚军','群英榜眼',300,4,null],['冠军','武会魁首',420,6,null]
@@ -14695,6 +14955,7 @@ function settleTournament(){
 function startTournament(){
  S.flags.tournaments||={};if(tournamentRecord())return '你已经参加过本届大会。';
  S.flags.tournaments[S.age]={active:true,wins:0,edition:Math.max(0,Math.min(2,Math.floor((S.age-32)/20))),settled:false,roundResolved:false,hp:null,mp:null};
+ tournamentLineup(tournamentRecord());
  return {combat:tournamentFight()};
 }
 function watchTournament(){
@@ -14707,6 +14968,7 @@ function openTournamentLedger(){
  const el=document.createElement('dialog');el.id='tournament-ledger';el.className='equipment-detail';el.setAttribute('aria-label','武林大会赛录');
  const records=Object.entries(S.flags.tournaments||{});
  el.innerHTML=`<button class="equipment-close" onclick="this.closest('dialog').close()">关闭 ×</button><h2>武林大会赛录</h2><p class="tip">32、52、72 岁举办 · 按最终名次结算一次</p><h3>历届成绩</h3>${records.length?records.map(([age,t])=>`<p>${age}岁 · ${t.spectator?'观战':t.settled?t.rank+' · '+t.title:'进行中 · 已胜'+t.wins+'轮'}${t.prize?'<small style="display:block">奖库：'+(t.prize.id?(t.prize.type==='art'?ARTS:ITEMS)[t.prize.id].name+'（'+t.prize.grade+'）':'折银'+t.prize.amount+'两')+'</small>':''}</p>`).join(''):'<p class="tip">尚未参加，届时可报名或观战。</p>'}<h3>名次奖励</h3>${TOURNAMENT_PRIZES.map(([rank,title,money,fame],i)=>`<div class="equipment-stat"><span>${rank}<small style="display:block;color:var(--dim)">${title}</small></span><b style="font-size:.8em">银两${money}${fame?' · 声望'+fame:''}${i>=2?'<br>'+['','','蓝色奖池','蓝色，福缘可升紫色','紫色奖池','首届紫色／后两届金色'][i]+'<br>随机装备或秘籍':''}</b></div>`).join('')}<p class="tip">第二、三届银两分别另加40、80。优先赠送未拥有的同阶物品；奖池收齐则折银。奖励不逐轮叠加，称号记入成就。</p>`;
+ const current=tournamentRecord();if(current&&!current.spectator){const draw=document.createElement('section');draw.innerHTML='<h3>本届签位</h3><p class="tip">本届签位已固定；后三轮大侠使用各自的固定属性与专属武学。</p><ol class="tournament-draw">'+tournamentDrawHTML(current)+'</ol>';el.querySelector('h3').before(draw);}
  el.addEventListener('close',()=>el.remove());el.addEventListener('click',e=>{if(e.target===el)el.close();});document.body.append(el);el.showModal();
 }
 const startBeforeTournament=startCombat;
@@ -14716,13 +14978,13 @@ startCombat=function(cfg){startBeforeTournament(cfg);if(!cfg.tournament)return;c
  document.getElementById('cbt-card').prepend(status);
 };
 function tournamentFight(){
- const t=tournamentRecord(),base=TOURNAMENT_FOES[t.wins];t.roundResolved=false;
- const enemy={...base,hp:Math.round(base.hp*(1+t.edition*.3)),atk:base.atk+t.edition*3,def:base.def+t.edition,dodge:base.dodge};
+ const t=tournamentRecord();t.roundResolved=false;
+ const enemy=tournamentOpponent(t,t.wins);
  const finish=win=>{
   if(t.roundResolved||t.settled)return '本轮成绩已经记录。';t.roundResolved=true;
   const rested=text=>{t.hp=pMaxHp();t.mp=pMaxMp();if(C){C.php=t.hp;C.pmp=t.mp;}return text;};
   if(win){t.wins++;if(t.wins===5)return rested('你赢下最后一场，群雄起身喝彩！'+settleTournament());
-   return rested(`你赢下第${t.wins}轮，已保住${TOURNAMENT_PRIZES[t.wins][0]}席位。下一轮：${TOURNAMENT_FOES[t.wins].name}。医师已为你回满气血与内力；可以继续争取更高名次，也可就此领取当前奖励。`);}
+   return rested(`你赢下第${t.wins}轮，已保住${TOURNAMENT_PRIZES[t.wins][0]}席位。下一轮：${tournamentOpponent(t,t.wins).name}。医师已为你回满气血与内力；可以继续争取更高名次，也可就此领取当前奖励。`);}
   return rested('裁判及时分开双方，此次止步擂台。落败不致死，也不影响师门身份。'+settleTournament());
  };
  return {enemy,tournament:true,sparring:true,onWin:()=>finish(true),onLose:()=>finish(false),onEscape:()=>finish(false)};
@@ -14743,7 +15005,7 @@ finishCombatView=function(text){beforeTournamentFinish(text);if(!C?.cfg?.tournam
  if(t?.active&&!t.settled){button.textContent='休整后进入下一轮';button.removeAttribute('onclick');button.onclick=continueTournament;
   const leave=document.createElement('button');leave.textContent='领取当前名次奖励，退出大会';leave.onclick=retireTournament;box.append(leave);}
 };
-const TOURNAMENT_EVENTS=[32,52,72].map(age=>({age,title:age+'岁 · 群英武林大会',art:'arena',cond:()=>!S?.flags?.tournaments?.[age],text:'各派高手与江湖散修齐聚擂台，三十二人争夺魁首。你将依次经历五轮淘汰赛：三十二进十六、八强争夺、四强争夺、半决赛和决赛。每轮对手更强，后两届整体难度也会提高。首战前充分休整，场间回满气血与内力。落败、主动退赛均按已取得的名次结算，切磋不致死。',choices:[{t:'报名登擂，逐轮挑战',run:startTournament},{t:'留在台下观战，不争名次',run:watchTournament}]}));
+const TOURNAMENT_EVENTS=[32,52,72].map(age=>({age,title:age+'岁 · 群英武林大会',art:'arena',cond:()=>!S?.flags?.tournaments?.[age],text:'各派高手与江湖散修齐聚擂台，三十二人争夺魁首。你将依次经历五轮淘汰赛：三十二进十六、八强争夺、四强争夺、半决赛和决赛。每届重新抽签，前两轮迎战江湖高手，后三轮与成名大侠论武。二十位大侠进入候选名单，顶尖宗师可在后届决赛现身；同行伙伴不会被抽为对手。大侠保留固定实力，前两轮随届次提高难度。首战前充分休整，场间回满气血与内力。落败、主动退赛均按已取得的名次结算，切磋不致死。',choices:[{t:'报名登擂，逐轮挑战',run:startTournament},{t:'留在台下观战，不争名次',run:watchTournament}]}));
 for(const ev of TOURNAMENT_EVENTS){EVENTS.push(ev);STORY_SCENES[ev.title]=ev.art;}
 const journalBeforeTournament=openSectJournal;
 openSectJournal=function(){journalBeforeTournament();const el=document.getElementById('sect-journal');if(el&&S.flags.tournamentTitle){const p=document.createElement('p');p.className='tip';p.textContent='最近大会称号：'+S.flags.tournamentTitle;el.append(p);}};
@@ -17591,6 +17853,28 @@ function partyActive(){return !!C?.initiative;}
 function partyAlive(side){return side==='p'?C.php>0:side==='e'?C.e.hp>0:!!C.companion&&C.companion.hp>0;}
 function partySides(){return ['p',...(C.companion?['c']:[]),'e'];}
 function partyName(side){return side==='p'?S.name:side==='e'?C.e.name:COMPANIONS[C.companion.id].name;}
+function enemySkillDecision(e){
+ if(!e.skill||(e.attributeVersion&&e.mp<(e.skillCost||0)))return false;
+ const aggressive=/刀|霸|血|魔|虎|狼|烈/.test(e.name+' '+e.skill),guarded=(C.block||0)>.3;
+ const chance=Math.min(.85,(aggressive?.68:.52)+(e.hp<e.maxHp*.4?.15:0))*(guarded?.4:1)*(e.aiLastSkill?.22:1);
+ const use=Math.random()<chance;e.aiLastSkill=use;return use;
+}
+function enemyChooseAction(e){
+ if(!e.tournamentHero){const special=enemySkillDecision(e);return {kind:'atk',name:special?e.skill:(e.normalMove||'寻常出招'),mp:special?e.skillCost||0:0,damage:Math.round(e.atk*(special?1.5:1)),style:enemyMoveStyle(special?e.skill:e.normalMove||''),special,pen:e.armorPen||0};}
+ const brain=e.ai||={turn:0,last:'',used:{}};brain.turn++;
+ const moves=e.tournamentArts||e.tournamentMoves,hp=e.hp/e.maxHp,mana=e.mp/e.maxMp,guarded=(C.block||0)>.3;
+ const options=[{move:{name:'寻常出招',kind:'atk',mp:0,damage:e.atk,style:COMPANIONS[e.tournamentHero].style},weight:mana<.2?15:4}];
+ for(const m of moves){if(e.mp<m.mp)continue;let weight=0;const since=brain.turn-(brain.used[m.name]||-10);
+  if(m.kind==='atk')weight=(m.mp>e.maxMp*.1?16:25)*(guarded?(m.pen>.3?.8:.2):1);
+  else if(m.kind==='heal'&&since>=4&&(hp<.55||mana<.25))weight=hp<.3?90:60;
+  else if(m.kind==='def'&&since>=3&&!guarded)weight=hp<.45?30:10;
+  else if(m.kind==='buff'&&!e.dodgeBuff&&since>=3)weight=brain.turn===1?24:12;
+  if(m.name===brain.last)weight*=.18;if(weight>0)options.push({move:m,weight});
+ }
+ if(mana<.18&&brain.turn-(brain.used['回气']||-10)>=3)options.push({move:{name:'回气',kind:'heal',mp:0,heal:0,restore:Math.max(12,Math.round(e.maxMp*.18)),style:'heal'},weight:65});
+ let roll=Math.random()*options.reduce((sum,x)=>sum+x.weight,0),chosen=options.at(-1).move;for(const x of options){roll-=x.weight;if(roll<0){chosen=x.move;break;}}
+ brain.last=chosen.name;brain.used[chosen.name]=brain.turn;return {...chosen,special:!!chosen.art,style:({staff:'spear',blade:'cleave',fist:'palm'}[chosen.style]||chosen.style)};
+}
 function partyStats(side){return side==='p'?S.stats:side==='e'?C.e.stats:COMPANION_PROFILES[C.companion.id].stats;}
 function partySpeed(side){return Math.round(18+Math.min(100,Math.max(0,partyStats(side)?.shenfa||0))*.22);}
 function partyMaxHp(side){return side==='p'?pMaxHp():side==='e'?C.e.maxHp:C.companion.maxHp;}
@@ -17638,7 +17922,7 @@ function partyTrackHTML(){return '<div class="initiative-lane"><div class="initi
 async function partyTrackPortraits(){const owner=C;for(const side of partySides()){
  const canvas=document.querySelector('[data-initiative="'+side+'"] canvas');if(!canvas)continue;
  try{let source,sw,sh;
-  if(side==='c'){const atlas=COMPANION_ATLASES[owner.companion.id];source=new Image();source.src=atlas.src;await source.decode();sw=atlas.width;sh=atlas.height;}
+  if(side==='c'||side==='e'&&owner.e.tournamentHero){const atlas=COMPANION_ATLASES[side==='c'?owner.companion.id:owner.e.tournamentHero];source=new Image();source.src=atlas.src;await source.decode();sw=atlas.width;sh=atlas.height;}
   else{const actor=document.getElementById('stage-'+side),img=actor?.querySelector('img.hero-img');if(img){source=new Image();source.src=img.src;await source.decode();sw=source.naturalWidth;sh=source.naturalHeight;}else{source=actor?.querySelector('canvas');sw=source?.width;sh=source?.height;}}
   if(C!==owner||!canvas.isConnected||!sw||!sh)continue;
   const scratch=document.createElement('canvas');scratch.width=sw;scratch.height=sh;const ctx=scratch.getContext('2d');ctx.drawImage(source,0,0,sw,sh,0,0,sw,sh);const pixels=ctx.getImageData(0,0,sw,sh).data;
@@ -17694,8 +17978,8 @@ function partyStatusEnd(side){if(!partyActive())return;const s=statusOf(side),tu
  if(s.poison){const damage=Math.max(1,Math.ceil(partyMaxHp(side)*.02))*s.poison.layers;partySetHp(side,partyHp(side)-damage);clog(partyName(side)+'余毒发作，损失'+damage+'点气血。');fx(side,'毒 −'+damage,'dmg');if(--s.poison.turns<=0)delete s.poison;}
  for(const key of ['shield','exposed'])if(s[key]&&s[key].bornAction<turn&&--s[key].turns<=0)delete s[key];
  if(s.immuneActionUntil&&turn>=s.immuneActionUntil)delete s.immuneActionUntil;
- const actor=side==='c'?C.companion:side==='p'?C:null;
- if(actor&&actor.buffRounds>0&&actor.buffBornAction<turn&&--actor.buffRounds===0){actor.dodgeBuff=0;actor.labAgileReduction=0;}
+ const actor=side==='c'?C.companion:side==='p'?C:C.e;
+ if(actor&&actor.buffRounds>0&&actor.buffBornAction<turn&&--actor.buffRounds===0){if(side==='e')actor.dodge=actor.aiBaseDodge??actor.dodge;actor.dodgeBuff=0;actor.labAgileReduction=0;}
 }
 statusEnd=function(side){return partyActive()?partyStatusEnd(side):partyOldEnd(side);};
 const partyOldEntries=statusEntries;
@@ -17743,23 +18027,30 @@ function partyCompanionMove(index){if(!partyCanAct('c'))return;
 function useCompanion(){partyCompanionMove(1);}
 const partyLegacyEnemy=enemyTurn;
 enemyTurn=function(){if(partyActive())return;return partyLegacyEnemy();};
-function partyEnemyAction(){if(!partyCanAct('e'))return;partyBegin('e',C.e.name+'出招');const e=C.e;
+function partyEnemyAction(){if(!partyCanAct('e'))return;partyBegin('e',C.e.name+'出招');const e=C.e;e.block=0;
  if(statusSkip('e')){partyFinish('e');return;}
- e.mp=Math.min(e.maxMp||0,(e.mp||0)+2);const special=e.skill&&C.initiative.actions.e%3===0&&e.mp>=(e.skillCost||0);
- if(special)e.mp-=e.skillCost||0;
- const targets=['p','c'].filter(partyAlive),side=targets[rnd(targets.length)],p=side==='c'?COMPANION_PROFILES[C.companion.id]:null,actor=side==='c'?C.companion:C;
- const style=enemyMoveStyle(special?e.skill:e.normalMove||'');C.partyTarget=side;
- fx('e','','',{dash:true,motion:style,partyTarget:side});if(special)fx('e','','',{banner:e.skill,red:true});C.fxD=400;
+ e.mp=Math.min(e.maxMp||0,(e.mp||0)+2);const move=enemyChooseAction(e),special=move.special,style=move.style;e.mp-=move.mp||0;
+ const tier=move.grade==='神功'?4:move.grade==='绝学'?3:move.grade==='上品'?2:special?2:0,vfx={style,side:'e',tier,name:special||move.kind!=='atk'?move.name:''};
+ if(move.kind!=='atk'){
+  if(move.kind==='def'){e.block=move.block;clog(e.name+'使出「'+move.name+'」，收势护住周身，静待破绽。');fx('e','守','guard',{motion:'guard',glow:'def',vfx});}
+  else if(move.kind==='buff'){e.aiBaseDodge??=e.dodge;e.dodgeBuff=move.dodge;e.dodge=Math.min(65,e.aiBaseDodge+move.dodge);e.buffRounds=move.duration||2;e.buffBornAction=C.initiative.actions.e;clog(e.name+'踏出「'+move.name+'」，身影一晃，已换了方位。');fx('e','身法↑','guard',{motion:'step',glow:'buff',vfx});}
+  else{const hp=e.hp,mp=e.mp;e.hp=Math.min(e.maxHp,e.hp+Math.round(e.maxHp*(move.heal||0)));e.mp=Math.min(e.maxMp,e.mp+(move.restore||0));const poison=statusOf('e').poison;if(poison&&--poison.layers<=0)delete statusOf('e').poison;partyNarrate('e',e.name+'运起「'+move.name+'」，稳住呼吸，重新聚拢散乱的真气。','heal',['气血 +'+(e.hp-hp),'内力 +'+(e.mp-mp)]);fx('e','','',{motion:'heal',glow:'heal',snapshot:C.visual,vfx});C.fxD=400;fx('e','+'+(e.hp-hp),'heal');}
+  partyFinish('e');return;
+ }
+ const targets=['p','c'].filter(partyAlive),side=targets[rnd(targets.length)],p=side==='c'?COMPANION_PROFILES[C.companion.id]:null,actor=side==='c'?C.companion:C;C.partyTarget=side;
+ fx('e','','',{dash:true,motion:style,enemyAnimation:e.tournamentHero?(move.animation||'attack'):null,partyTarget:side,vfx});if(special)fx('e','','',{banner:move.name,red:true});C.fxD=400;
  const dodge=Math.max(0,Math.min(65,(p?p.dodge:pDodge())+(actor.dodgeBuff||0))-(e.accuracy||0));
- if(rnd(100)<dodge){clog(e.name+'追击'+partyName(side)+'，却被侧身让过。');fx(side,'闪避','miss',{miss:true});}
- else{const crit=rnd(100)<(e.crit||0),rage=Math.max(0,C.initiative.actions.e-15);let raw=(Math.round(e.atk*(special?1.5:1))+rage+rnd(4))*(crit?1.5:1);
-  const damage=statusDamage(side,directDamage(raw,p?p.def:playerArmor(),e.armorPen||0,actor.block||0,side==='p'&&hasTalent('tough')?2:0));partySetHp(side,partyHp(side)-damage);C.tookDmg=true;
-  if(special&&partyAlive(side))statusHit(side,{name:e.skill,kind:'atk'});
-  partyNarrate('e',e.name+(special?'祭出「'+e.skill+'」':'抢步进击')+'，'+labProse(style,'e')+'。'+partyName(side)+(crit?'要害受创，气息一滞。':'被震退半步，仍在寻找反击的空隙。'),crit?'crit':'hurt',[partyName(side)+'气血 −'+damage,...(special?['敌方绝招']:[])]);fx(side,'−'+damage,crit?'crit':'dmg',{shake:true,blocked:!!actor.block});
+ if(!move.sure&&rnd(100)<dodge){clog(e.name+'追击'+partyName(side)+'，却被侧身让过。');fx(side,'闪避','miss',{miss:true});}
+ else{const crit=rnd(100)<(e.crit||0),rage=e.tournamentHero?0:Math.max(0,C.initiative.actions.e-15),raw=(move.damage+rage+(e.tournamentHero?0:rnd(4)))*(crit?1.5:1);
+  const damage=statusDamage(side,directDamage(raw,p?p.def:playerArmor(),move.pen||0,actor.block||0,side==='p'&&hasTalent('tough')?2:0));partySetHp(side,partyHp(side)-damage);C.tookDmg=true;
+  if(partyAlive(side)){if(move.status)statusApply(side,move.status,move.chance);else if(special&&!e.tournamentHero)statusHit(side,{name:move.name,kind:'atk'});}
+  partyNarrate('e',e.name+(special?'祭出「'+move.name+'」':'抢步进击')+'，'+labProse(style,'e')+'。'+partyName(side)+(crit?'要害受创，气息一滞。':'被震退半步，仍在寻找反击的空隙。'),crit?'crit':'hurt',[partyName(side)+'气血 −'+damage,...(special?[move.art||'敌方绝招']:[])]);fx(side,'−'+damage,crit?'crit':'dmg',{shake:true,blocked:!!actor.block});
   if(!partyAlive(side)){clog(partyName(side)+'力竭倒下，暂时无法行动。','bad');C.initiative.progress[side]=0;}
  }
  partyFinish('e');
 }
+const enemyGuardDamage=statusDamage;
+statusDamage=function(side,damage){if(side==='e'&&C?.e?.block)damage=Math.max(1,Math.round(damage*(1-C.e.block)));return enemyGuardDamage(side,damage);};
 const partyOldFlee=tryFlee;
 tryFlee=function(){if(!partyActive())return partyOldFlee();if(!partyCanAct('p'))return;
  partyBegin('p','抽身退走');C.partyAuto=false;if(statusSkip('p')){partyFinish('p');return;}
@@ -17773,7 +18064,7 @@ function partyAutoAction(){if(!partyActive()||!C.partyAuto)return;if(partyCanAct
 const partySupportLines=labSupportLines;
 labSupportLines=function(m){if(!partyActive())return partySupportLines(m);return partySupportLines(m).map(line=>line.replace('当回合卸力','至下次自身行动前卸力').replace('最多持续至后续2回合结束','最多持续两次后续自身行动').replace(/持续(\d+)回合（含施展回合）/,'持续$1次后续自身行动').replace('下回合进攻','下次进攻'));};
 const partyEnemyTip=eTipHTML;
-eTipHTML=function(){const html=partyEnemyTip();return partyActive()?html.replaceAll('每3回合','每3次自身行动').replaceAll('久战狂暴','连续久战'):html;};
+eTipHTML=function(){const html=partyEnemyTip(),block=C.visual?.guardVisual?.e??C.e.block;return (partyActive()?html.replaceAll('每3回合','择机').replaceAll('久战狂暴','连续久战'):html)+(block?'<section class="status-summary"><b>守势</b><div>卸去'+Math.round(block*100)+'%直接伤害，持续至下次自身出手。</div></section>':'');};
 function partyRender(){const t=C.initiative;
  let track=document.getElementById('initiative-track');if(!track){track=document.createElement('section');track.id='initiative-track';track.setAttribute('aria-label','出手进度');track.innerHTML=partyTrackHTML();C.stage.append(track);C.stage.classList.add('has-initiative');partyTrackPortraits();}
  if(C.companion){let actor=document.getElementById('stage-companion');if(!actor){actor=document.createElement('div');actor.id='stage-companion';actor.className='companion-actor';actor.innerHTML=companionPortrait(C.companion.id,'companion-body')+'<span class="companion-name">'+partyName('c')+'</span>';C.stage.append(actor);}
@@ -18768,12 +19059,12 @@ restartMotionDemo();
 
 </script>
 <script src="bonus-art/atlases.js?v=1"></script><script src="bonus-art/effects.js?v=2"></script>
-<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-readable-battle"></script>
-<script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-readable-battle"></script>
-<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260918-readable-battle"></script>
-<script src="phaser-trial/hero-appearance.js?v=production-20260918-readable-battle"></script>
-<script src="phaser-trial/idle-v3/atlases.js?v=production-20260918-readable-battle"></script>
-<script src="phaser-trial/production.js?v=production-20260918-readable-battle"></script>
-<script src="phaser-trial/production-ui.js?v=production-20260918-readable-battle"></script>
+<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-tournament-roster"></script>
+<script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-tournament-roster"></script>
+<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260918-tournament-roster"></script>
+<script src="phaser-trial/hero-appearance.js?v=production-20260918-tournament-roster"></script>
+<script src="phaser-trial/idle-v3/atlases.js?v=production-20260918-tournament-roster"></script>
+<script src="phaser-trial/production.js?v=production-20260918-tournament-roster"></script>
+<script src="phaser-trial/production-ui.js?v=production-20260918-tournament-roster"></script>
 </body>
 </html>

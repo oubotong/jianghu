@@ -31,11 +31,13 @@
  if(typeof partyCompanionMove==='function'){const oldCompanion=partyCompanionMove;partyCompanionMove=function(i){const previous=moveContext;moveContext=metaFor(partyMoves()[i],'c');try{return oldCompanion.apply(this,arguments);}finally{moveContext=previous;}};}
  const oldFx=fx;
  fx=function(side,text,cls,opts){const result=oldFx.apply(this,arguments),packet=C?.fx?.at(-1);if(!packet)return result;
-  if(moveContext)packet.vfx={...moveContext};
+  if(opts?.vfx)packet.vfx={...opts.vfx};
+  else if(moveContext)packet.vfx={...moveContext};
   else if(opts?.dash||supports.has(opts?.motion))packet.vfx={name:'',tier:0};
   if(opts?.banner&&!moveContext){const art=Object.values(ARTS).find(a=>a.move?.name===opts.banner||a.name===opts.banner);
-   const meta={name:opts.banner,tier:art?tierFor({...art,art:art.name}):2};packet.vfx=meta;
-   const prior=C.fx.slice(0,-1).reverse().find(f=>f.side===side&&(f.dash||supports.has(f.motion)));if(prior)prior.vfx=meta;
+   const prior=C.fx.slice(0,-1).reverse().find(f=>f.side===side&&(f.dash||supports.has(f.motion)));
+   const meta=prior?.vfx?.name===opts.banner?{...prior.vfx}:{name:opts.banner,tier:art?tierFor({...art,art:art.name}):2};packet.vfx=meta;
+   if(prior)prior.vfx=meta;
   }return result;
  };
  // Two name lanes share neither timers nor replacement logic. Wall-clock timing is
@@ -85,6 +87,8 @@
   if(owner.companion){const a=COMPANION_ATLASES[owner.companion.id];atlas.c=window.COMPANION_ACTION_ATLASES?.[owner.companion.id]||{attack:{...a,bodyHeight:sizePack?.companion?.[owner.companion.id]||a.height}};}
   if(idlePack?.['e-'+enemyIdentity])atlas.e.idle=idlePack['e-'+enemyIdentity];
   if(atlas.c&&idlePack?.['c-'+owner.companion.id])atlas.c.idle=idlePack['c-'+owner.companion.id];
+  const rival=owner.e.tournamentHero;
+  if(rival){const a=COMPANION_ATLASES[rival];atlas.e={...(window.COMPANION_ACTION_ATLASES?.[rival]||{attack:{...a,bodyHeight:sizePack?.companion?.[rival]||a.height}})};atlas.e.special||=atlas.e.attack;if(idlePack?.['c-'+rival])atlas.e.idle=idlePack['c-'+rival];}
   const bonusActor=window.BONUS_ACTORS?.[owner.e.bonusActor];
   if(bonusActor){const a=bonusActor.atlas;atlas.e={idle:a.idle,palm:a.attack,claw:a.attack,pounce:a.attack,charge:a.attack,cast:a.special,finger:a.special,guard:a.guard,hurt:a.hurt};}
   // Cover the legacy stage synchronously, before the first asynchronous asset load.
@@ -127,6 +131,7 @@
      this.actors[side]={sprite,shadow,aura:this.add.sprite(x,ground-size*.52,'fx-guard',0).setDepth(5).setTintFill(0xaedfff).setVisible(false),home:x,ground,visualGround:ground,homeFlip:classicStage,scale:size/(a.bodyHeight||a.height),size,idle:key,nativeFacing:side==='e'?-1:1,action:null,react:null,style};
      Object.assign(this.actors[side],{idleFrames:a.frames||1,idleSince:null,idleInterval:side==='p'?400:side==='c'?660:730,bodyHeight:a.bodyHeight||a.height,identity:side==='c'?owner.companion.id:side==='e'?enemyIdentity:'hero'});
      if(side==='e'&&bonusActor){Object.assign(this.actors[side],{bonus:true,nativeFacing:1,homeFlip:!classicStage,idleInterval:240,identity:owner.e.bonusActor});sprite.setFlipX(!classicStage);}
+     if(side==='e'&&rival){Object.assign(this.actors[side],{namedRival:true,nativeFacing:1,homeFlip:!classicStage,idleInterval:660,identity:rival});sprite.setFlipX(!classicStage);}
     }
     host.addEventListener('click',e=>e.stopPropagation());
     for(let i=0;i<14;i++){const dot=this.add.rectangle(i/14*width,(i*47)%height,2+i%2,2,0xd7d5a0,.18+i%3*.06).setDepth(i%2?1:7);this.wind.push(dot);}
@@ -292,7 +297,7 @@
      if(a.react){const t=(now-a.react.start)*combatSpeed/MOTION_PACE;
       if(t>470){a.react=null;a.sprite.clearTint();a.sprite.angle=0;if(!a.action)a.sprite.setTexture(a.idle,0).setScale(a.scale);}
       else{const sign=classicStage?(side==='e'?-1:1):(side==='e'?1:-1);x+=sign*(a.react.miss?26:a.react.blocked?5:a.react.heavy?17:10)*Math.sin(Math.PI*Math.min(1,t/470));
-       if(t>80)a.sprite.clearTint();if(!a.react.miss&&!a.react.blocked){a.sprite.angle=gentleCombat?0:sign*3*Math.sin(Math.PI*t/470);if((a.bonus||side==='c')&&!a.action&&this.textures.exists(side+'-hurt'))a.sprite.setTexture(side+'-hurt',Math.min((atlas[side].hurt?.frames||2)-1,Math.floor(t/470*(atlas[side].hurt?.frames||2)))).setScale(a.scale).setFlipX(a.homeFlip);else if(side==='p'&&!a.action&&this.textures.exists('p-hurt')){a.sprite.setTexture('p-hurt',modernHero?Math.min(3,Math.floor(t/118)):0);a.sprite.setScale(modernHero?a.scale:a.size/a.sprite.frame.realHeight);}}
+       if(t>80)a.sprite.clearTint();if(!a.react.miss&&!a.react.blocked){a.sprite.angle=gentleCombat?0:sign*3*Math.sin(Math.PI*t/470);if((a.bonus||a.namedRival||side==='c')&&!a.action&&this.textures.exists(side+'-hurt'))a.sprite.setTexture(side+'-hurt',Math.min((atlas[side].hurt?.frames||2)-1,Math.floor(t/470*(atlas[side].hurt?.frames||2)))).setScale(a.scale).setFlipX(a.homeFlip);else if(side==='p'&&!a.action&&this.textures.exists('p-hurt')){a.sprite.setTexture('p-hurt',modernHero?Math.min(3,Math.floor(t/118)):0);a.sprite.setScale(modernHero?a.scale:a.size/a.sprite.frame.realHeight);}}
       }
      }
      const dead=(side==='p'?(owner.visual?.php??owner.php):side==='e'?(owner.visual?.ehp??owner.e.hp):(owner.visual?.companion?.hp??owner.companion?.hp))<=0;
@@ -309,7 +314,7 @@
  }
  spawnFx=function(f){const trial=instance;if(!enabled||!trial?.ready||trial.owner!==C)return base.spawn(f);
   const scene=trial.scene,side=f.companionAction?'c':f.side,meta=f.vfx||{tier:0};
-  if(f.dash||f.companionAction){scene.attack(side,f.companionAction?(f.companionAnimation||'attack'):f.motion||'palm',side==='e'?(f.partyTarget||'p'):'e',meta);if(meta.tier)showName(meta.name||f.moveName,side,meta.tier);motionLater(()=>GameAudio.strike(f.motion||'sword',side==='c'?'p':side),220);}
+  if(f.dash||f.companionAction){scene.attack(side,f.companionAction?(f.companionAnimation||'attack'):f.enemyAnimation||f.motion||'palm',side==='e'?(f.partyTarget||'p'):'e',meta);if(meta.tier)showName(meta.name||f.moveName,side,meta.tier);motionLater(()=>GameAudio.strike(f.motion||'sword',side==='c'?'p':side),220);}
   else if(supports.has(f.motion)){scene.support(side,f.motion,meta);if(meta.tier)showName(meta.name,side,meta.tier);GameAudio.support(f.motion,side==='c'?'p':side);}
   // Named action packets already opened the appropriate reading lane.
   if(f.shake||f.miss){scene.react(side,f);GameAudio.contact(f);}
