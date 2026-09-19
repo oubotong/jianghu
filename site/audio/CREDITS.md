@@ -16,7 +16,7 @@
 | 魔影来袭.wav | 邪道、魔主、杀手等强敌 |
 | 荒野搏命.wav | 野兽与毒物 |
 
-## 现成音效：均选用 CC0 1.0 授权
+## 原有交锋音效：CC0 1.0 授权
 
 1. **20 Sword Sound Effects (Attacks and Clashes)** — StarNinjas。
    原始页面：https://opengameart.org/node/122900
@@ -31,11 +31,28 @@
 3. **Battle Sound Effects** — artisticdude，Ogrebane 上传。
    原始页面：https://opengameart.org/content/battle-sound-effects
    下载：`https://opengameart.org/sites/default/files/battle_sound_effects_0.zip`。
-   页面提供多种授权，本项目选择 CC0。使用 swish_2、3、4 与 Bow，用于拳脚、爪击、暗器、闪避和运气；运气声音使用较轻音量、较低音高的原有挥风音效。
+   页面提供多种授权，本项目选择 CC0。使用 swish_2、3、4 与 Bow，用于拳脚、爪击、暗器和闪避；其中暗器声也以低音量用于余毒结算。护体、疗伤和回气现已使用下方独立素材。
 
 授权说明：https://creativecommons.org/publicdomain/zero/1.0/
 
-下载核实日期：2026-09-09。原始素材包保存在 `sources/`。网页使用的 `sfx/` 衍生 WAV 经单声道转换、起止静音裁剪、响度调整和极短淡入淡出。完整文件映射见 `audio-manifest.json`。感谢以上作者分享素材。
+下载核实日期：2026-09-09。原始素材包保存在 `sources/`。网页使用的 `sfx/` 衍生 WAV 经单声道转换、起止静音裁剪、响度调整和极短淡入淡出。完整文件映射见源项目的 `audio-manifest.js`。感谢以上作者分享素材。
+
+## 护体、疗伤与回气（2026-09-19 新增）
+
+以下作品与本游戏作者无从属或背书关系。CC BY 3.0 素材依该许可使用，保留作者、来源及改动说明；不改变整款游戏的代码许可。
+
+| 网页文件 | 原作品及作者 | 使用许可 | 改动 |
+|---|---|---|---|
+| sfx/guard-v1.wav | [Magic Shield — spookymodem](https://opengameart.org/content/magic-shield) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) | 截取起始护盾脉冲，1.15秒 |
+| sfx/heal-v1.wav | [3 Heal Spells — DoKashiteru](https://opengameart.org/content/3-heal-spells)，healspell2.aif | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) | 截取起始疗伤声，1.45秒 |
+| sfx/restore-v1.wav | [Magic Spell SFX — JaggedStone](https://opengameart.org/content/magic-spell-sfx)，magical_2.ogg | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) | 截取回气声，1.10秒 |
+
+共同处理：单声道44.1kHz WAV、裁剪开头静音、90Hz高通与7.8kHz低通、归一化目标−18 LUFS及−3dBTP、12ms淡入与240ms淡出。护盾声另放大2.4倍，并以0.7振幅限制尖峰，避免低频脉冲被背景音乐盖住；淡出后的短片段响度可能低于归一化目标。治疗音也以更低音量用于吸血回流。原始下载保留在源项目 audio/sources/support-20260919；下载地址：
+- https://opengameart.org/sites/default/files/Magic%20Shield.wav
+- https://opengameart.org/sites/default/files/3%20heal%20spells.zip
+- https://opengameart.org/sites/default/files/magical_2.ogg
+
+三方角色共用同一套动作音效；仅在动作真正播放时触发，状态栏重绘不会重复播放。声音设置提供护体、疗伤、回气试听。中毒、眩晕只在扣血或跳过行动时发一次较轻提示，不在每次刷新状态时播放。
 
 ## 界面音效
 

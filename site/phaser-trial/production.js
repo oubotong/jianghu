@@ -319,10 +319,11 @@
  }
  spawnFx=function(f){const trial=instance;if(!enabled||!trial?.ready||trial.owner!==C)return base.spawn(f);
   const scene=trial.scene,side=f.companionAction?'c':f.side,meta=f.vfx||{tier:0};
-  if(f.dash||f.companionAction){scene.attack(side,f.companionAction?(f.companionAnimation||'attack'):f.enemyAnimation||f.motion||'palm',side==='e'?(f.partyTarget||'p'):'e',meta);if(meta.tier)showName(meta.name||f.moveName,side,meta.tier);motionLater(()=>GameAudio.strike(f.motion||'sword',side==='c'?'p':side),220);}
-  else if(supports.has(f.motion)){scene.support(side,f.motion,meta);if(meta.tier)showName(meta.name,side,meta.tier);GameAudio.support(f.motion,side==='c'?'p':side);}
+  GameAudio.frame(f);
+  if(f.dash||f.companionAction){scene.attack(side,f.companionAction?(f.companionAnimation||'attack'):f.enemyAnimation||f.motion||'palm',side==='e'?(f.partyTarget||'p'):'e',meta);if(meta.tier)showName(meta.name||f.moveName,side,meta.tier);}
+  else if(supports.has(f.motion)){scene.support(side,f.motion,meta);if(meta.tier)showName(meta.name,side,meta.tier);}
   // Named action packets already opened the appropriate reading lane.
-  if(f.shake||f.miss){scene.react(side,f);GameAudio.contact(f);}
+  if(f.shake||f.miss){scene.react(side,f);}
   if(f.text)scene.float(side,f.text,f.cls);
  };
  startCombat=function(){dispose();const result=base.start.apply(this,arguments);if(enabled)mount();return result;};

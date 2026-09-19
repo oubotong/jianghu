@@ -675,6 +675,8 @@ dialog::backdrop{background:#061a22cf;}
 .sound-dialog h2{font-size:22px;margin:0;color:#dac38e;}
 .sound-note,.sound-credit{font-size:14px;color:#b5c0ad;}
 .sound-credit a{color:#d8c18d;}
+.sound-previews{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sound-previews button{width:100%;min-height:42px;}
 .sound-slider{display:grid;grid-template-columns:1fr auto;gap:8px;margin:20px 0;}
 .sound-slider input{grid-column:1/-1;width:100%;height:32px;margin:0;accent-color:#c7a565;cursor:pointer;}
 @media(max-width:520px){#sound-controls{gap:6px;justify-content:space-between;font-size:12px;}#sound-controls button{min-height:40px;padding:6px 9px;}#sound-now{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.sound-dialog{padding:18px;}}
@@ -907,7 +909,7 @@ dialog::backdrop{background:#061a22cf;}
 // Back up existing public saves before any migration. Keep the original save keys and origin.
 if(!/-preview(?:\.html)?\/?$/.test(location.pathname))try{const key='jhfsl-before-classic-combat-v1',life=localStorage.getItem('wuxia-life-v1'),meta=localStorage.getItem('jhfsl_meta_v1'),labLife=localStorage.getItem('wuxia-lab-life-v2'),labMeta=localStorage.getItem('jhfsl_lab_meta_v2');if((life||meta||labLife||labMeta)&&!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify({life,meta,labLife,labMeta,savedAt:Date.now()}));if(!life&&!meta){if(labLife){JSON.parse(labLife);localStorage.setItem('wuxia-life-v1',labLife);}if(labMeta){JSON.parse(labMeta);localStorage.setItem('jhfsl_meta_v1',labMeta);}}}catch(_){}
 </script>
-<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260919-facing-integer"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260919-facing-integer">
+<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260919-support-audio"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260919-support-audio">
 <link rel="icon" href="data:,">
 </head>
 <body>
@@ -14971,6 +14973,168 @@ function renderEnding(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Equipment illustrations: display only; equipment bonuses remain in the game rules. */
 const EQUIPMENT_ART={
  chaidao:'cleaver',tiejian:'iron-sword',lagan:'spear',tiechi:'ruler',yanling:'saber',qingfeng:'sword',diangang:'spear',bintie:'staff',bailian:'saber',longquan:'sword',hutou:'spear',xuantie:'heavy-sword',zhanlu:'zhanlu',xuemo:'xuemo',pojun:'pojun',
@@ -15904,13 +16068,13 @@ function statusEnd(side){
  if(!statusActive())return;const s=statusOf(side);
  if(s.poison){const max=side==='p'?pMaxHp():C.e.maxHp,dmg=Math.max(1,Math.min(4,Math.ceil(max*.01)))*s.poison.layers;
   if(side==='p')C.php=Math.max(0,C.php-dmg);else C.e.hp=Math.max(0,C.e.hp-dmg);
-  clog(statusName(side)+'中毒，损失'+dmg+'点气血。');fx(side,'毒 -'+dmg,'dmg');if(--s.poison.turns<=0)delete s.poison;
+  clog(statusName(side)+'中毒，损失'+dmg+'点气血。');fx(side,'毒 -'+dmg,'dmg',{audioCue:'poison'});if(--s.poison.turns<=0)delete s.poison;
  }
  for(const key of ['exposed','shield'])if(s[key]&&s[key].born<C.round&&--s[key].turns<=0)delete s[key];
 }
 function statusSkip(side){
  if(!statusActive()||!statusOf(side).stun)return false;const s=statusOf(side);delete s.stun;s.immuneUntil=C.round+1;
- clog(statusName(side)+'眩晕，无法行动；随后一回合免疫眩晕。');fx(side,'眩晕','guard');return true;
+ clog(statusName(side)+'眩晕，无法行动；随后一回合免疫眩晕。');fx(side,'眩晕','guard',{audioCue:'stun'});return true;
 }
 function statusSupport(m){
  if(!statusActive())return;const s=statusOf('p');
@@ -17584,13 +17748,13 @@ for (const [id,text] of Object.entries(REPLAY_PROSE)) {
 /* END EVENT PROSE */
 
 /* Game audio: presentation-only; never consumes the gameplay random stream. */
-const GAME_AUDIO_ASSETS={"version": 1, "music": {"battle": {"name": "江湖交锋", "src": "audio/runtime/battle.mp3", "duration": 50.76, "source": "audio/music/江湖交锋.wav", "sourceSha256": "0e46c2c11b540cb492d9699fd7795ddd865f47a941b323064b76357aeb54f08c", "trimLead": 0.0, "trimTail": 0.0, "seamOverlap": 0.12, "bytes": 1069351}, "sparring": {"name": "同门切磋", "src": "audio/runtime/sparring.mp3", "duration": 104.4, "source": "audio/music/同门切磋.wav", "sourceSha256": "84cbffe33f948816fec8bf1fd98c09c9ea9e8f321a271621368132ecee5f08c7", "trimLead": 0.0, "trimTail": 0.0, "seamOverlap": 0.12, "bytes": 2231195}, "tournament": {"name": "群雄争鼎", "src": "audio/runtime/tournament.mp3", "duration": 102.68, "source": "audio/music/群雄争鼎.wav", "sourceSha256": "7e5741bd10011c65db50e98d19e12bf495e6450df87b0fde71ce15e7a69617c9", "trimLead": 0.0, "trimTail": 0.0, "seamOverlap": 0.12, "bytes": 2145092}, "master": {"name": "宗师对决", "src": "audio/runtime/master.mp3", "duration": 59.8, "source": "audio/music/宗师对决.wav", "sourceSha256": "2f1ced2db55cb724e5d14da5eb7131cacac0f17cc5e615cd2f620b67a920e9da", "trimLead": 0.0, "trimTail": 0.0, "seamOverlap": 0.12, "bytes": 1277102}, "dark": {"name": "魔影来袭", "src": "audio/runtime/dark.mp3", "duration": 59.44, "source": "audio/music/魔影来袭.wav", "sourceSha256": "f94e601e4ccfec82e61d86d9307f49e8d3446a034e325571889124925cc14ead", "trimLead": 0.0, "trimTail": 0.0, "seamOverlap": 0.12, "bytes": 1263104}, "beast": {"name": "荒野搏命", "src": "audio/runtime/beast.mp3", "duration": 91.64, "source": "audio/music/荒野搏命.wav", "sourceSha256": "81960bb4e983a545d4b81799dc90b2be9a58ab8335b3a3dadf623a8bb7a473a7", "trimLead": 0.0, "trimTail": 0.0, "seamOverlap": 0.12, "bytes": 2005167}, "event": {"name": "江湖闲云", "src": "audio/runtime/event.mp3", "duration": 86.082, "source": "audio/music/江湖闲云.wav", "sourceSha256": "a13cb902c5b62c2ece4c1f52bddb1e56318b5c077355366ac9a38195ee70e411", "trimLead": 0.0, "trimTail": 2.438, "seamOverlap": 0.12, "bytes": 1684648}}, "sfx": {"sword1": {"src": "audio/sfx/sword1.wav", "duration": 0.8818, "source": "audio/sources/sword/sword - StarNinjas/sword.1.ogg", "license": "CC0-1.0"}, "sword3": {"src": "audio/sfx/sword3.wav", "duration": 0.6226, "source": "audio/sources/sword/sword - StarNinjas/sword.3.ogg", "license": "CC0-1.0"}, "sword4": {"src": "audio/sfx/sword4.wav", "duration": 0.5406, "source": "audio/sources/sword/sword - StarNinjas/sword.4.ogg", "license": "CC0-1.0"}, "block1": {"src": "audio/sfx/block1.wav", "duration": 0.8792, "source": "audio/sources/clash/sword_clash.1.ogg", "license": "CC0-1.0"}, "block2": {"src": "audio/sfx/block2.wav", "duration": 0.4672, "source": "audio/sources/clash/sword_clash.2.ogg", "license": "CC0-1.0"}, "hit1": {"src": "audio/sfx/hit1.wav", "duration": 0.4072, "source": "audio/sources/punch/qubodupPunch/qubodupPunch01.flac", "license": "CC0-1.0"}, "hit2": {"src": "audio/sfx/hit2.wav", "duration": 0.3903, "source": "audio/sources/punch/qubodupPunch/qubodupPunch02.flac", "license": "CC0-1.0"}, "hit3": {"src": "audio/sfx/hit3.wav", "duration": 0.4002, "source": "audio/sources/punch/qubodupPunch/qubodupPunch03.flac", "license": "CC0-1.0"}, "swish2": {"src": "audio/sfx/swish2.wav", "duration": 0.202, "source": "audio/sources/swish/battle_sound_effects/swish_2.wav", "license": "CC0-1.0"}, "swish3": {"src": "audio/sfx/swish3.wav", "duration": 0.5333, "source": "audio/sources/swish/battle_sound_effects/swish_3.wav", "license": "CC0-1.0"}, "swish4": {"src": "audio/sfx/swish4.wav", "duration": 0.2639, "source": "audio/sources/swish/battle_sound_effects/swish_4.wav", "license": "CC0-1.0"}, "dart": {"src": "audio/sfx/dart.wav", "duration": 0.2897, "source": "audio/sources/swish/battle_sound_effects/Bow.wav", "license": "CC0-1.0"}}};
+const GAME_AUDIO_ASSETS={"version":2,"music":{"battle":{"name":"江湖交锋","src":"audio/runtime/battle.mp3","duration":50.76,"source":"audio/music/江湖交锋.wav","sourceSha256":"0e46c2c11b540cb492d9699fd7795ddd865f47a941b323064b76357aeb54f08c","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1069351},"sparring":{"name":"同门切磋","src":"audio/runtime/sparring.mp3","duration":104.4,"source":"audio/music/同门切磋.wav","sourceSha256":"84cbffe33f948816fec8bf1fd98c09c9ea9e8f321a271621368132ecee5f08c7","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2231195},"tournament":{"name":"群雄争鼎","src":"audio/runtime/tournament.mp3","duration":102.68,"source":"audio/music/群雄争鼎.wav","sourceSha256":"7e5741bd10011c65db50e98d19e12bf495e6450df87b0fde71ce15e7a69617c9","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2145092},"master":{"name":"宗师对决","src":"audio/runtime/master.mp3","duration":59.8,"source":"audio/music/宗师对决.wav","sourceSha256":"2f1ced2db55cb724e5d14da5eb7131cacac0f17cc5e615cd2f620b67a920e9da","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1277102},"dark":{"name":"魔影来袭","src":"audio/runtime/dark.mp3","duration":59.44,"source":"audio/music/魔影来袭.wav","sourceSha256":"f94e601e4ccfec82e61d86d9307f49e8d3446a034e325571889124925cc14ead","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1263104},"beast":{"name":"荒野搏命","src":"audio/runtime/beast.mp3","duration":91.64,"source":"audio/music/荒野搏命.wav","sourceSha256":"81960bb4e983a545d4b81799dc90b2be9a58ab8335b3a3dadf623a8bb7a473a7","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2005167},"event":{"name":"江湖闲云","src":"audio/runtime/event.mp3","duration":86.082,"source":"audio/music/江湖闲云.wav","sourceSha256":"a13cb902c5b62c2ece4c1f52bddb1e56318b5c077355366ac9a38195ee70e411","trimLead":0,"trimTail":2.438,"seamOverlap":0.12,"bytes":1684648}},"sfx":{"sword1":{"src":"audio/sfx/sword1.wav","duration":0.8818,"source":"audio/sources/sword/sword - StarNinjas/sword.1.ogg","license":"CC0-1.0"},"sword3":{"src":"audio/sfx/sword3.wav","duration":0.6226,"source":"audio/sources/sword/sword - StarNinjas/sword.3.ogg","license":"CC0-1.0"},"sword4":{"src":"audio/sfx/sword4.wav","duration":0.5406,"source":"audio/sources/sword/sword - StarNinjas/sword.4.ogg","license":"CC0-1.0"},"block1":{"src":"audio/sfx/block1.wav","duration":0.8792,"source":"audio/sources/clash/sword_clash.1.ogg","license":"CC0-1.0"},"block2":{"src":"audio/sfx/block2.wav","duration":0.4672,"source":"audio/sources/clash/sword_clash.2.ogg","license":"CC0-1.0"},"hit1":{"src":"audio/sfx/hit1.wav","duration":0.4072,"source":"audio/sources/punch/qubodupPunch/qubodupPunch01.flac","license":"CC0-1.0"},"hit2":{"src":"audio/sfx/hit2.wav","duration":0.3903,"source":"audio/sources/punch/qubodupPunch/qubodupPunch02.flac","license":"CC0-1.0"},"hit3":{"src":"audio/sfx/hit3.wav","duration":0.4002,"source":"audio/sources/punch/qubodupPunch/qubodupPunch03.flac","license":"CC0-1.0"},"swish2":{"src":"audio/sfx/swish2.wav","duration":0.202,"source":"audio/sources/swish/battle_sound_effects/swish_2.wav","license":"CC0-1.0"},"swish3":{"src":"audio/sfx/swish3.wav","duration":0.5333,"source":"audio/sources/swish/battle_sound_effects/swish_3.wav","license":"CC0-1.0"},"swish4":{"src":"audio/sfx/swish4.wav","duration":0.2639,"source":"audio/sources/swish/battle_sound_effects/swish_4.wav","license":"CC0-1.0"},"dart":{"src":"audio/sfx/dart.wav","duration":0.2897,"source":"audio/sources/swish/battle_sound_effects/Bow.wav","license":"CC0-1.0"},"guard":{"src":"audio/sfx/guard-v1.wav","duration":1.15,"bytes":101530,"source":"audio/sources/support-20260919/magic-shield.wav","sourceSha256":"8ed1ca8570f7e4248b5222262fd4e5acec2385050259ed28bc39607488b510dd","author":"spookymodem","license":"CC-BY-3.0","page":"https://opengameart.org/content/magic-shield"},"heal":{"src":"audio/sfx/heal-v1.wav","duration":1.45,"bytes":127968,"source":"audio/sources/support-20260919/heal/healspell2.aif","sourceSha256":"2b2c56c0652481f1c81aa4a5d43b68bfbe1754e47681768d9cd9af679e1f250f","author":"DoKashiteru","license":"CC-BY-3.0","page":"https://opengameart.org/content/3-heal-spells"},"restore":{"src":"audio/sfx/restore-v1.wav","duration":1.1,"bytes":97098,"source":"audio/sources/support-20260919/magical-2.ogg","sourceSha256":"84a70f63f3f21e5ba4a48285b760a663d422ad3feddba2f3cbadd94b76cdc52e","author":"JaggedStone","license":"CC0-1.0","page":"https://opengameart.org/content/magic-spell-sfx"}}};
 
 const GameAudio=(()=>{
  const assets=GAME_AUDIO_ASSETS,cache=new Map(),effects=new Map(),pendingEffects=new Map(),voices=new Set();
  const uiBuffers=new Map(),uiVoices=new Set();let uiTransaction=null,lastUI=-Infinity;
  let prefs={muted:false,music:.25,sfx:.55,ui:.4},ctx,musicBus,sfxBus,uiBus,current=null,desired=null,revision=0,request=null,unlocked=false,loading=false,error='',serial=0;
- const events=[];
+ const events=[],heardFrames=new WeakSet();
  try{const p=JSON.parse(localStorage.getItem('wuxia-audio')||'null');if(p){prefs.muted=p.muted===true;for(const k of ['music','sfx','ui'])if(Number.isFinite(p[k]))prefs[k]=Math.max(0,Math.min(1,p[k]));}}catch(_){}
  const trace=(kind,data={})=>{events.push({kind,time:performance.now(),...data});if(events.length>80)events.shift();};
  const url=src=>window.GAME_AUDIO_INLINE?.[src]||src;
@@ -17706,7 +17870,7 @@ const GameAudio=(()=>{
   const buffer=effects.get(key);if(!buffer){loadEffects();return;} // A late-loaded impact must never play retroactively.
   if(voices.size>=6)return;
   const source=ctx.createBufferSource(),volume=ctx.createGain();source.buffer=buffer;source.playbackRate.value=rate;volume.gain.value=gain;source.connect(volume);
-  let pan;if(ctx.createStereoPanner){pan=ctx.createStereoPanner();pan.pan.value=side==='p'?-.15:.15;volume.connect(pan);pan.connect(sfxBus);}else volume.connect(sfxBus);
+  let pan;if(ctx.createStereoPanner){pan=ctx.createStereoPanner();pan.pan.value=side==='e'?.15:-.15;volume.connect(pan);pan.connect(sfxBus);}else volume.connect(sfxBus);
   voices.add(source);source.onended=()=>{voices.delete(source);source.disconnect();volume.disconnect();pan?.disconnect();};source.start();trace('sfx',{key,side});
  }
  function variant(keys){return keys[(serial++)%keys.length];}
@@ -17719,7 +17883,23 @@ const GameAudio=(()=>{
   if(f.blocked){effect(variant(['block1','block2']),f.side,.78);return;}
   effect(variant(['hit1','hit2','hit3']),f.side,f.cls==='crit'?1:.8,f.cls==='crit'?.92:1);
  }
- function support(style,side){effect(style==='step'?'swish2':'swish4',side,style==='guard'?.25:.34,style==='heal'?.68:.9);}
+ function support(style,side,cue){
+  if(style==='step'){effect('swish2',side,.58,1.08);return;}
+  const key=cue==='restore'?'restore':style==='guard'?'guard':'heal';
+  effect(key,side,key==='guard'?.85:key==='heal'?.8:.75);
+ }
+ // One audio entry for both renderers. Only consume presented animation packets,
+ // never stat calculations or HUD redraws (which can run before the animation).
+ function frame(f){
+  if(!f||heardFrames.has(f))return;heardFrames.add(f);
+  const side=f.companionAction?'c':f.side;
+  if(f.dash||f.companionAction)motionLater(()=>strike(f.motion||'palm',side),220);
+  else if(['step','heal','guard'].includes(f.motion))support(f.motion,side,f.audioCue);
+  else if(f.audioCue==='drain')effect('heal',side,.4,1.12);
+  else if(f.audioCue==='poison')effect('dart',side,.3,.72);
+  else if(f.audioCue==='stun')effect('block2',side,.42,.68);
+  if(f.shake||f.miss)contact(f);
+ }
  function save(){try{localStorage.setItem('wuxia-audio',JSON.stringify(prefs));}catch(_){}volumes();if(prefs.muted||!prefs.sfx)stopEffects(prefs.muted);if(!prefs.ui)stopUI();reconcile();paint();}
  function paint(){
   const b=document.getElementById('sound-toggle'),label=document.getElementById('sound-now');
@@ -17730,8 +17910,8 @@ const GameAudio=(()=>{
  function settings(){
   let dialog=document.getElementById('sound-dialog');if(dialog){dialog.showModal();return;}
   dialog=document.createElement('dialog');dialog.id='sound-dialog';dialog.className='sound-dialog';dialog.setAttribute('aria-labelledby','sound-heading');
-  dialog.innerHTML='<div class="sound-dialog-heading"><h2 id="sound-heading">江湖声韵</h2><button type="button" id="sound-close" aria-label="关闭声音设置">关闭 ×</button></div><p class="sound-note">音乐随场景切换；出招、受击与界面操作都有声音反馈。</p>'+['music','sfx','ui'].map(k=>'<label class="sound-slider" for="sound-'+k+'"><span>'+({music:'背景音乐',sfx:'战斗音效',ui:'界面音效'})[k]+'</span><output id="sound-'+k+'-value"></output><input id="sound-'+k+'" type="range" min="0" max="100" step="1" value="'+Math.round(prefs[k]*100)+'"></label>').join('')+'<button type="button" id="sound-ui-preview">试听界面音效</button><p class="sound-note">音量设置会保存在本机；切到后台时暂停声音。</p><p class="sound-credit">战斗音效：StarNinjas、qubodup、artisticdude · CC0<br>界面音效：本游戏原创合成<br><a href="audio/CREDITS.md" target="_blank" rel="noopener">查看素材来源</a></p>';
-  document.body.append(dialog);dialog.querySelector('#sound-close').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  dialog.innerHTML='<div class="sound-dialog-heading"><h2 id="sound-heading">江湖声韵</h2><button type="button" id="sound-close" aria-label="关闭声音设置">关闭 ×</button></div><p class="sound-note">音乐随场景切换；出招、受击与界面操作都有声音反馈。</p>'+['music','sfx','ui'].map(k=>'<label class="sound-slider" for="sound-'+k+'"><span>'+({music:'背景音乐',sfx:'战斗音效',ui:'界面音效'})[k]+'</span><output id="sound-'+k+'-value"></output><input id="sound-'+k+'" type="range" min="0" max="100" step="1" value="'+Math.round(prefs[k]*100)+'"></label>').join('')+'<div class="sound-previews"><button type="button" id="sound-ui-preview">界面试听</button><button type="button" data-sound-preview="guard">护体试听</button><button type="button" data-sound-preview="heal">疗伤试听</button><button type="button" data-sound-preview="restore">回气试听</button></div><p class="sound-note">音量设置会保存在本机；切到后台时暂停声音。</p><p class="sound-credit">战斗音效：StarNinjas、qubodup、artisticdude、JaggedStone · CC0<br>护体与疗伤：spookymodem、DoKashiteru · CC BY 3.0<br>界面音效：本游戏原创合成<br><a href="audio/CREDITS.md" target="_blank" rel="noopener">查看素材来源</a></p>';
+  document.body.append(dialog);for(const button of dialog.querySelectorAll('[data-sound-preview]'))button.onclick=async()=>{const key=button.dataset.soundPreview;await unlock();await pendingEffects.get(key);if(!dialog.open)return;stopEffects(false);support(key==='guard'?'guard':'heal','p',key);};dialog.querySelector('#sound-close').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
   for(const k of ['music','sfx','ui'])dialog.querySelector('#sound-'+k).addEventListener('input',e=>{prefs[k]=Number(e.target.value)/100;save();});dialog.querySelector('#sound-ui-preview').onclick=()=>feedback('confirm');dialog.showModal();paint();
  }
  const bar=document.createElement('div');bar.id='sound-controls';bar.innerHTML='<span id="sound-now">江湖声韵</span><div><button type="button" id="sound-toggle" aria-pressed="false">开启声音</button><button type="button" id="sound-settings" aria-haspopup="dialog">声音设置</button></div>';document.getElementById('app').before(bar);
@@ -17741,7 +17921,7 @@ const GameAudio=(()=>{
  document.addEventListener('visibilitychange',()=>{if(!ctx)return;if(document.hidden){stopEffects();ctx.suspend().catch(()=>{});}else if(unlocked)ctx.resume().then(reconcile).catch(()=>{});});
  window.addEventListener('pagehide',()=>{stopEffects();ctx?.suspend().catch(()=>{});});
  window.addEventListener('pageshow',()=>{if(ctx&&unlocked&&!document.hidden)ctx.resume().then(reconcile).catch(()=>{});});paint();
- return {select,classify,strike,contact,support,stopEffects,unlock,ui,feedback,get state(){return {desired,current:current?.key||null,unlocked,loading,error,prefs:{...prefs},context:ctx?.state,voices:voices.size,uiVoices:uiVoices.size,loadedEffects:effects.size,cache:[...cache.keys()],events:[...events]};}};
+ return {select,classify,strike,contact,support,frame,stopEffects,unlock,ui,feedback,get state(){return {desired,current:current?.key||null,unlocked,loading,error,prefs:{...prefs},context:ctx?.state,voices:voices.size,uiVoices:uiVoices.size,loadedEffects:effects.size,cache:[...cache.keys()],events:[...events]};}};
 })();
 // Wrap final renderers, including save restore and shared-player duels.
 const audioRenderCombat=renderCombat;renderCombat=function(){const result=audioRenderCombat.apply(this,arguments);GameAudio.select(GameAudio.classify(C.cfg));return result;};
@@ -17753,9 +17933,12 @@ const audioRenderEnding=renderEnding;renderEnding=function(){GameAudio.select('e
 const audioCancelMotion=cancelCombatMotion;cancelCombatMotion=function(){GameAudio.stopEffects(false);return audioCancelMotion.apply(this,arguments);};
 const audioSpawnFx=spawnFx;spawnFx=function(f){
  const result=audioSpawnFx(f);if(!C?.stage?.isConnected)return result;
- if(f.dash)motionLater(()=>GameAudio.strike(f.motion||'palm',f.side),220);
- else if(['step','heal','guard'].includes(f.motion))GameAudio.support(f.motion,f.side);
- if(f.shake||f.miss)GameAudio.contact(f);return result;
+ GameAudio.frame(f);return result;
+};
+// Legacy duels also receive the recovery cue when a move is primarily for MP.
+const audioQueueFx=fx;fx=function(side,text,cls,options={}){
+ if(options.motion==='heal'&&side==='p'&&typeof labLogContext!=='undefined'&&labLogContext?.m.role==='restore')options={...options,audioCue:'restore'};
+ return audioQueueFx(side,text,cls,options);
 };
 // Result cues replace the generic click within the same trusted interaction.
 const audioBuyMerchant=buyMerchant;
@@ -18632,9 +18815,9 @@ statusApply=function(side,key,chance=100){if(!partyActive())return partyOldApply
 };
 statusSkip=function(side){if(!partyActive())return partyOldSkip(side);const s=statusOf(side);if(!s.stun)return false;
  delete s.stun;s.immuneActionUntil=C.initiative.actions[side]+1;delete s.immuneUntil;
- clog(partyName(side)+'眩晕，失去本次出手；至下一次行动结束前免疫眩晕。');fx(side,'眩晕','guard');return true;};
+ clog(partyName(side)+'眩晕，失去本次出手；至下一次行动结束前免疫眩晕。');fx(side,'眩晕','guard',{audioCue:'stun'});return true;};
 function partyStatusEnd(side){if(!partyActive())return;const s=statusOf(side),turn=C.initiative.actions[side];
- if(s.poison){const damage=Math.max(1,Math.ceil(partyMaxHp(side)*.02))*s.poison.layers;partySetHp(side,partyHp(side)-damage);clog(partyName(side)+'余毒发作，损失'+damage+'点气血。');fx(side,'毒 −'+damage,'dmg');if(--s.poison.turns<=0)delete s.poison;}
+ if(s.poison){const damage=Math.max(1,Math.ceil(partyMaxHp(side)*.02))*s.poison.layers;partySetHp(side,partyHp(side)-damage);clog(partyName(side)+'余毒发作，损失'+damage+'点气血。');fx(side,'毒 −'+damage,'dmg',{audioCue:'poison'});if(--s.poison.turns<=0)delete s.poison;}
  for(const key of ['shield','exposed'])if(s[key]&&s[key].bornAction<turn&&--s[key].turns<=0)delete s[key];
  if(s.immuneActionUntil&&turn>=s.immuneActionUntil)delete s.immuneActionUntil;
  const actor=side==='c'?C.companion:side==='p'?C:C.e;
@@ -18659,7 +18842,7 @@ useMove=function(index){if(!partyActive())return partyOldUse(index);if(!partyCan
   else{if(C.partyCounterReady)C.counterUntil=C.round;else delete C.counterUntil;let damage=tacticalDamage(m,rnd(6)),crit=rnd(100)<pCrit();if(crit)damage=Math.round(damage*1.5);if(statusMove(m))damage=Math.max(1,Math.round(damage*.9));damage=statusDamage('e',damage);
    const actual=Math.min(damage,C.e.hp);C.e.hp=Math.max(0,C.e.hp-damage);if(C.e.hp>0)statusHit('e',m);
    clog(atkHitLine(m.name,C.e.name,damage,crit,damage/C.e.maxHp),crit?'crit':'hit');fx('e','−'+damage,crit?'crit':'dmg',{shake:true,flash:crit,tech:techForMove(m),from:'p'});
-   if(m.kind==='drain'){const heal=Math.round(actual*(m.drainRatio??.5));C.php=Math.min(pMaxHp(),C.php+heal);clog('真气回流，回复'+heal+'点气血。');C.fxD=650;fx('p','+'+heal,'heal');}
+   if(m.kind==='drain'){const heal=Math.round(actual*(m.drainRatio??.5));C.php=Math.min(pMaxHp(),C.php+heal);clog('真气回流，回复'+heal+'点气血。');C.fxD=650;fx('p','+'+heal,'heal',{audioCue:heal>0?'drain':null});}
   }
  }else if(m.kind==='def'){C.block=m.block;C.pmp=Math.min(pMaxMp(),C.pmp+(m.gain||0));clog('你运起「'+m.name+'」，严阵以待');fx('p','守','guard',{glow:'def',motion:'guard'});}
  else if(m.kind==='buff'){C.dodgeBuff=m.dodge;C.buffRounds=m.labDuration||2;C.buffBornAction=C.initiative.actions.p;clog('你运起「'+m.name+'」，身形飘忽如絮');fx('p','身法↑','guard',{glow:'buff',motion:'step'});}
@@ -18680,7 +18863,7 @@ function partyCompanionMove(index){if(!partyCanAct('c'))return;
   }
  }else if(m.kind==='def'){c.block=m.block;c.mp=Math.min(c.maxMp,c.mp+(m.restore||0));clog(partyName('c')+'收招守住门户，等待下一次出手机会。');fx('c','守','guard',{motion:'guard',glow:'def'});}
  else if(m.kind==='buff'){c.dodgeBuff=m.dodge;c.buffRounds=m.duration;c.buffBornAction=C.initiative.actions.c;clog(partyName('c')+'展开「'+m.name+'」，足下变换，身形忽远忽近。');fx('c','身法↑','guard',{motion:'step',glow:'buff'});}
- else{const old=c.hp,mp=c.mp;c.hp=Math.min(c.maxHp,c.hp+Math.round(c.maxHp*m.heal));c.mp=Math.min(c.maxMp,c.mp+m.restore);const s=statusOf('c');if(s.poison&&--s.poison.layers<=0)delete s.poison;clog(partyName('c')+'收息归元，回复'+(c.hp-old)+'点气血、'+(c.mp-mp)+'点内力。');fx('c','','',{motion:'heal',glow:'heal',snapshot:C.visual});C.fxD=400;fx('c','+'+(c.hp-old),'heal');}
+ else{const old=c.hp,mp=c.mp;c.hp=Math.min(c.maxHp,c.hp+Math.round(c.maxHp*m.heal));c.mp=Math.min(c.maxMp,c.mp+m.restore);const s=statusOf('c');if(s.poison&&--s.poison.layers<=0)delete s.poison;clog(partyName('c')+'收息归元，回复'+(c.hp-old)+'点气血、'+(c.mp-mp)+'点内力。');fx('c','','',{motion:'heal',glow:'heal',snapshot:C.visual,audioCue:m.heal?'heal':'restore'});C.fxD=400;fx('c','+'+(c.hp-old),'heal');}
  partyFinish('c');
 }
 function useCompanion(){partyCompanionMove(1);}
@@ -18693,7 +18876,7 @@ function partyEnemyAction(){if(!partyCanAct('e'))return;partyBegin('e',C.e.name+
  if(move.kind!=='atk'){
   if(move.kind==='def'){e.block=move.block;clog(e.name+'使出「'+move.name+'」，收势护住周身，静待破绽。');fx('e','守','guard',{motion:'guard',glow:'def',vfx});}
   else if(move.kind==='buff'){e.aiBaseDodge??=e.dodge;e.dodgeBuff=move.dodge;e.dodge=Math.min(65,e.aiBaseDodge+move.dodge);e.buffRounds=move.duration||2;e.buffBornAction=C.initiative.actions.e;clog(e.name+'踏出「'+move.name+'」，身影一晃，已换了方位。');fx('e','身法↑','guard',{motion:'step',glow:'buff',vfx});}
-  else{const hp=e.hp,mp=e.mp;e.hp=Math.min(e.maxHp,e.hp+Math.round(e.maxHp*(move.heal||0)));e.mp=Math.min(e.maxMp,e.mp+(move.restore||0));const poison=statusOf('e').poison;if(poison&&--poison.layers<=0)delete statusOf('e').poison;partyNarrate('e',e.name+'运起「'+move.name+'」，稳住呼吸，重新聚拢散乱的真气。','heal',['气血 +'+(e.hp-hp),'内力 +'+(e.mp-mp)]);fx('e','','',{motion:'heal',glow:'heal',snapshot:C.visual,vfx});C.fxD=400;fx('e','+'+(e.hp-hp),'heal');}
+  else{const hp=e.hp,mp=e.mp;e.hp=Math.min(e.maxHp,e.hp+Math.round(e.maxHp*(move.heal||0)));e.mp=Math.min(e.maxMp,e.mp+(move.restore||0));const poison=statusOf('e').poison;if(poison&&--poison.layers<=0)delete statusOf('e').poison;partyNarrate('e',e.name+'运起「'+move.name+'」，稳住呼吸，重新聚拢散乱的真气。','heal',['气血 +'+(e.hp-hp),'内力 +'+(e.mp-mp)]);fx('e','','',{motion:'heal',glow:'heal',snapshot:C.visual,vfx,audioCue:move.heal?'heal':'restore'});C.fxD=400;fx('e','+'+(e.hp-hp),'heal');}
   partyFinish('e');return;
  }
  const targets=['p','c'].filter(partyAlive),side=targets[rnd(targets.length)],p=side==='c'?COMPANION_PROFILES[C.companion.id]:null,actor=side==='c'?C.companion:C;C.partyTarget=side;
@@ -18758,10 +18941,10 @@ function partyFilter(category){document.querySelectorAll('#party-moves article')
 // Route companion effects without replacing the player's sprite or attributes.
 const partySpawn=spawnFx;
 spawnFx=function(f){if(!partyActive())return partySpawn(f);
- if(f.companionAction){const d=COMPANIONS[f.companionAction],original=d.move;d.move=f.moveName||d.move;try{animateCompanion(f.companionAction);}finally{d.move=original;}return;}
- if(f.side==='c'){const actor=document.getElementById('stage-companion');if(!actor)return;
-  if(f.motion){const body=actor.querySelector('.companion-body');body.style.backgroundPosition='14.2857% 0';motionLater(()=>{body.style.backgroundPosition='85.7143% 0';},260);motionLater(()=>{body.style.backgroundPosition='0% 0';},690);motionRing(actor,f.motion==='heal'?'#93d6b4':'#b1d9fa');pixelBurst(actor,f.motion,16);motionAnimate(actor,[{transform:'translate(0,0)'},{transform:'translate(-12px,-3px)',offset:.4},{transform:'translate(0,0)'}],700);if(typeof GameAudio!=='undefined')GameAudio.support(f.motion,'p');}
-  if(f.shake||f.miss){motionAnimate(actor,[{transform:'translateX(0)'},{transform:'translateX(-14px)',offset:.35},{transform:'translateX(0)'}],500);pixelBurst(actor,f.miss?'wind':'hit',12);if(typeof GameAudio!=='undefined')GameAudio.contact({...f,side:'p'});}
+ if(f.companionAction){GameAudio.frame(f);const d=COMPANIONS[f.companionAction],original=d.move;d.move=f.moveName||d.move;try{animateCompanion(f.companionAction);}finally{d.move=original;}return;}
+ if(f.side==='c'){GameAudio.frame(f);const actor=document.getElementById('stage-companion');if(!actor)return;
+  if(f.motion){const body=actor.querySelector('.companion-body');body.style.backgroundPosition='14.2857% 0';motionLater(()=>{body.style.backgroundPosition='85.7143% 0';},260);motionLater(()=>{body.style.backgroundPosition='0% 0';},690);motionRing(actor,f.motion==='heal'?'#93d6b4':'#b1d9fa');pixelBurst(actor,f.motion,16);motionAnimate(actor,[{transform:'translate(0,0)'},{transform:'translate(-12px,-3px)',offset:.4},{transform:'translate(0,0)'}],700);}
+  if(f.shake||f.miss){motionAnimate(actor,[{transform:'translateX(0)'},{transform:'translateX(-14px)',offset:.35},{transform:'translateX(0)'}],500);pixelBurst(actor,f.miss?'wind':'hit',12);}
   if(f.text){const text=document.createElement('span');text.className='fx-float '+(f.cls||'');text.textContent=f.text;actor.append(text);motionLater(()=>text.remove(),1080);}return;
  }
  C.partyVisualTarget=f.partyTarget||C.partyVisualTarget;return partySpawn(f);
@@ -19997,12 +20180,12 @@ const bonusPreviewUpdate=updateCombat;updateCombat=function(){const r=bonusPrevi
 const selected=new URLSearchParams(location.search).get('foe');bonusPreviewStart(BONUS_FOES[selected]?selected:'kaiju');
 </script>
 <script src="bonus-art/atlases.js?v=1"></script><script src="bonus-art/effects.js?v=2"></script>
-<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260919-facing-integer"></script>
-<script src="phaser-trial/hero-v2/atlases.js?v=production-20260919-facing-integer"></script>
-<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260919-facing-integer"></script>
-<script src="phaser-trial/hero-appearance.js?v=production-20260919-facing-integer"></script>
-<script src="phaser-trial/idle-v3/atlases.js?v=production-20260919-facing-integer"></script>
-<script src="phaser-trial/production.js?v=production-20260919-facing-integer"></script>
-<script src="phaser-trial/production-ui.js?v=production-20260919-facing-integer"></script>
+<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260919-support-audio"></script>
+<script src="phaser-trial/hero-v2/atlases.js?v=production-20260919-support-audio"></script>
+<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260919-support-audio"></script>
+<script src="phaser-trial/hero-appearance.js?v=production-20260919-support-audio"></script>
+<script src="phaser-trial/idle-v3/atlases.js?v=production-20260919-support-audio"></script>
+<script src="phaser-trial/production.js?v=production-20260919-support-audio"></script>
+<script src="phaser-trial/production-ui.js?v=production-20260919-support-audio"></script>
 </body>
 </html>
