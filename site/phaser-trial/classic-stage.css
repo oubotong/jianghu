@@ -134,3 +134,29 @@ body.classic-stage-page{background:#101c20!important;background-image:radial-gra
  #stage-commands .command-confirm{min-height:34px!important}#stage-commands .command-back{min-height:32px!important}
  .classic-stage-page #stage-command-edges{left:11%;right:11%;bottom:13px}#stage-command-edges button{min-height:34px!important;font-size:15px!important;padding:5px 14px!important}
 }
+
+/* Readable battle status and chronicle, without reducing the scene area. */
+.classic-stage-page .cbt-side>.cbt-name{font-size:18px!important;line-height:1.4!important}
+.classic-stage-page .cbt-side>.bar-label,.classic-stage-page #party-e-mp>.bar-label{font-size:14px!important;line-height:1.5!important;color:#d0ddd7!important;white-space:normal!important;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.classic-stage-page .cbt-side{min-height:124px}
+.classic-stage-page .bar{height:8px!important}
+.classic-stage-page .lab-chronicle header>strong{font-size:16px!important;line-height:1.5}
+.classic-stage-page #lab-log-toggle,.classic-stage-page .lab-chronicle .lab-log-tools button{font-size:13px!important;min-height:34px!important;padding:5px 10px!important}
+.classic-stage-page #lab-log-brief{max-height:none;padding-bottom:12px!important}
+.classic-stage-page #lab-log-brief p,.classic-stage-page #lab-chronicle-feed p{font-size:16px!important;line-height:1.75!important}
+.classic-stage-page #lab-log-brief .lab-brief-impact{height:auto;min-height:34px;flex-wrap:wrap;gap:4px 12px}
+.classic-stage-page #lab-log-brief .lab-brief-impact>strong{font-size:17px!important;white-space:normal;line-height:1.5}
+.classic-stage-page #lab-log-brief .lab-result-value{font-size:22px!important}
+.classic-stage-page #lab-log-brief.tone-crit .lab-brief-impact>strong{font-size:21px!important}
+.classic-stage-page #lab-log-brief.tone-crit .lab-result-value{font-size:30px!important}
+.classic-stage-page #lab-chronicle-feed .lab-log-caption,.classic-stage-page #lab-chronicle-feed .lab-log-round{font-size:13px!important}
+.classic-stage-page #lab-chronicle-feed .lab-log-aftermath{font-size:15px!important}
+.classic-stage-page #lab-chronicle-feed .lab-log-results>span:not(.lab-result-main){font-size:13px!important}
+@media(max-width:700px){
+ .classic-stage-page .cbt-side{min-height:120px!important;padding:8px 6px!important}
+ .classic-stage-page .cbt-side>.cbt-name{font-size:14px!important;line-height:28px!important;margin-left:29px!important}
+ .classic-stage-page .cbt-side>.bar-label,.classic-stage-page #party-e-mp>.bar-label{font-size:12px!important;line-height:1.5!important;min-height:36px;display:flex;align-items:flex-end}
+ .classic-stage-page .bar{height:7px!important}
+ .classic-stage-page #lab-log-brief p,.classic-stage-page #lab-chronicle-feed p{font-size:15px!important;line-height:1.8!important}
+ .classic-stage-page .lab-chronicle header{padding:7px 9px!important}
+}

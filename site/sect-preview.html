@@ -681,6 +681,12 @@ dialog::backdrop{background:#061a22cf;}
 
 /* Compact catalog and ink-green character sheets. */
 .result-story{white-space:pre-line}
+.result-outcome-notes{margin-top:12px;padding-top:10px;border-top:1px solid #708d7d45;font:14px/1.7 'Microsoft YaHei','PingFang SC',sans-serif;color:#c5d4c9;letter-spacing:0;overflow-wrap:anywhere}
+.result-outcome-notes>strong{font-size:13px;color:#dabe83;font-weight:600}
+.result-outcome-notes ul{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:4px}
+.result-records{border:0;padding-top:0;margin-top:8px;color:#a6b7b0;font-size:13px}
+.result-records>summary{cursor:pointer;min-height:32px;line-height:32px;color:#a6b7b0}
+.result-reward-line.reward-loss{color:#f0a29a}
 .result-check-failure{margin-top:14px;padding:12px 14px;border:1px solid #c8796b66;border-left:3px solid #dc9181;background:#9f514012;color:#ebc7bc;line-height:1.75;letter-spacing:0;white-space:normal;overflow-wrap:anywhere}
 .result-check-failure,.result-check-failure *{font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif!important;font-synthesis:weight;font-size:14px;font-variant-numeric:tabular-nums}
 .result-check-title{display:block;color:#ffb0a0;font-weight:700;margin-bottom:5px}
@@ -885,7 +891,7 @@ dialog::backdrop{background:#061a22cf;}
 // Back up existing public saves before any migration. Keep the original save keys and origin.
 if(!/-preview(?:\.html)?\/?$/.test(location.pathname))try{const key='jhfsl-before-classic-combat-v1',life=localStorage.getItem('wuxia-life-v1'),meta=localStorage.getItem('jhfsl_meta_v1'),labLife=localStorage.getItem('wuxia-lab-life-v2'),labMeta=localStorage.getItem('jhfsl_lab_meta_v2');if((life||meta||labLife||labMeta)&&!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify({life,meta,labLife,labMeta,savedAt:Date.now()}));if(!life&&!meta){if(labLife){JSON.parse(labLife);localStorage.setItem('wuxia-life-v1',labLife);}if(labMeta){JSON.parse(labMeta);localStorage.setItem('jhfsl_meta_v1',labMeta);}}}catch(_){}
 </script>
-<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260918-female-hero"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260918-female-hero">
+<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260918-readable-battle"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260918-readable-battle">
 <link rel="icon" href="data:,">
 </head>
 <body>
@@ -13920,6 +13926,83 @@ function renderEnding(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Equipment illustrations: display only; equipment bonuses remain in the game rules. */
 const EQUIPMENT_ART={
  chaidao:'cleaver',tiejian:'iron-sword',lagan:'spear',tiechi:'ruler',yanling:'saber',qingfeng:'sword',diangang:'spear',bintie:'staff',bailian:'saber',longquan:'sword',hutou:'spear',xuantie:'heavy-sword',zhanlu:'zhanlu',xuemo:'xuemo',pojun:'pojun',
@@ -15657,20 +15740,31 @@ function formatEventResult(html){
  const story=document.createElement('div');story.className='result-story';story.innerHTML=(html||'').replace(/(〔获得装备：[^〕]*?) · 查看详情/g,'$1');
  const plain=story.textContent;root.dataset.sourceText=plain;
  // Locate complete reward annotations in text, preserving links and rarity markup.
- const pattern=/〔(?:判定失败|习得武学|获得装备|伙伴加入|伙伴离队|成就达成|师门贡献|同门情分|战后奖赏)[^〕]*〕|（(?:根骨|悟性|身法|膂力|定力|福缘|银两|声望|侠义|善恶|武学|武功|内功|闪避|护体)[^（）]*[+\-]\d[^（）]*）/g;
- const matches=[...plain.matchAll(pattern)],rewards=[],failures=[];
+ const pattern=/〔[^〕]*〕|（(?:根骨|悟性|身法|膂力|定力|福缘|银两|声望|侠义|善恶|武学|武功|内功|闪避|护体)[^（）]*[+\-]\d[^（）]*）/g;
+ const matches=[...plain.matchAll(pattern)],rewards=[],failures=[],followups=[],records=[],notes=[],seenNotes=new Set();
  for(const match of matches.reverse()){
   const nodes=[],walker=document.createTreeWalker(story,NodeFilter.SHOW_TEXT);let offset=0,node;
   while(node=walker.nextNode()){nodes.push({node,start:offset,end:offset+node.length});offset+=node.length;}
   const start=match.index,end=start+match[0].length,a=nodes.find(n=>n.start<=start&&n.end>start),b=nodes.find(n=>n.start<end&&n.end>=end);
   if(!a||!b)continue;const range=document.createRange();range.setStart(a.node,start-a.start);range.setEnd(b.node,end-b.start);
   const fragment=range.extractContents(),line=document.createElement('div');line.className='result-reward-line';
-  if(match[0].startsWith('〔判定失败')){
+  const annotation=match[0].startsWith('〔')?match[0].slice(1,-1):null;
+  if(annotation&&/^(?:判定失败|准备失败|购买失败|下注失败|拜师失败|筹款失败|筹粮失败|筹备失败|筹军失败|补偿失败|诊金不足)/.test(annotation)){
    const list=document.createElement('ul');list.className='result-check-list';
    for(const part of match[0].replace(/^〔判定失败[：:]?\s*/,'').slice(0,-1).split(/[；;，]/).filter(x=>x.trim())){
     const li=document.createElement('li');li.textContent=part.trim();list.append(li);
    }
    failures.unshift(list);continue;
+  }else if(annotation&&/奔忙占去了练功时日|本年不再获得日常修为/.test(annotation)){
+   if(!seenNotes.has('practice')){line.classList.add('reward-loss');line.textContent='精力消耗：本年不获得日常练功收益';rewards.unshift(line);seenNotes.add('practice');}continue;
+  }else if(annotation&&!/^(?:习得武学|获得装备|伙伴加入|伙伴离队|成就达成|师门贡献|同门情分|战后奖赏)/.test(annotation)){
+   const clean=annotation.replace(/^后续[：:]\s*/,'').replace(/(留下[^，]+)，\1，/g,'$1，');
+   if(!seenNotes.has(clean)){
+    seenNotes.add(clean);
+    if(/^后续[：:]|^终章[：:]/.test(annotation))followups.unshift(clean);
+    else if(/^(?:共同经历已记下|考核心得积累)$/.test(annotation))records.unshift(clean==='共同经历已记下'?'已记入伙伴经历':clean);
+    else notes.unshift(clean);
+   }continue;
   }else if(match[0].startsWith('（')){
    for(const part of match[0].slice(1,-1).split(/[，,]/)){
     const m=part.match(/^(.*?)([+\-]\d+(?:\.\d+)?)(.*)$/),entry=document.createElement('span');
@@ -15678,12 +15772,16 @@ function formatEventResult(html){
     if(m){const label=document.createElement('span'),value=document.createElement('b');label.textContent=m[1];value.textContent=m[2]+m[3];entry.append(label,value);}else entry.textContent=part;
     line.append(entry);
    }
-  }else{line.classList.add('reward-special');line.append(fragment);}
+  }else{line.classList.add('reward-special');line.append(fragment);const w=document.createTreeWalker(line,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode())n.textContent=n.textContent.replace(/[〔〕]/g,'');}
   rewards.unshift(line);
  }
  root.append(story);
- if(failures.length){const box=document.createElement('section'),title=document.createElement('strong');box.className='result-check-failure';box.setAttribute('aria-label','判定失败原因');title.className='result-check-title';title.textContent='判定失败';box.append(title,...failures);root.append(box);}
+ if(failures.length){const box=document.createElement('section'),title=document.createElement('strong');box.className='result-check-failure';box.setAttribute('aria-label','未能完成的原因');title.className='result-check-title';title.textContent=matches.some(m=>m[0].startsWith('〔判定失败'))?'判定失败':'未能完成';box.append(title,...failures);root.append(box);}
  if(rewards.length){const box=document.createElement('div');box.className='result-rewards';box.setAttribute('aria-label','本次收获与代价');box.append(...rewards);root.append(box);}
+ for(const [label,items,folded]of [['后续影响',followups,false],['其他变化',notes,false],['经历记录',records,true]]){
+  if(!items.length)continue;const box=document.createElement(folded?'details':'section'),title=document.createElement(folded?'summary':'strong'),list=document.createElement('ul');box.className='result-outcome-notes'+(folded?' result-records':'');title.textContent=label;
+  for(const text of items){const li=document.createElement('li');li.textContent=text;list.append(li);}box.append(title,list);root.append(box);
+ }
  return root.outerHTML;
 }
 function detailChips(values){return '<span class="detail-chips">'+values.filter(Boolean).map(x=>'<span>'+storyEscape(String(x))+'</span>').join('')+'</span>';}
@@ -18268,7 +18366,7 @@ function decisionRemember(kind,ev,index,phase){
  r.memories.push({kind,key:decisionKey(ev),title:ev.title,choice:readingPlain(ev.choices[index].t),age:S.age,phase,spent:false});
  const arcKey={F:'people',P:'justice',T:'trade',K:'study',R:'refuge',N:'assembly',X:'debt'}[kind];
  if(S.age<94&&!r.arcs[arcKey])r.arcs[arcKey]={step:0,due:Math.max(15,S.age+3),source:decisionKey(ev),closed:false};
- return '〔后续：留下'+DECISION_KINDS[kind]+'，'+DECISION_HELP[kind]+'〕';
+ return '〔后续：'+DECISION_HELP[kind]+'〕';
 }
 function decisionSpend(kind){const m=decisionHeld(kind)[0];if(!m)return null;m.spent=true;m.usedAge=S.age;return m;}
 function decisionOldFact(kind){const m=decisionHeld(kind)[0];return m?m.age+'岁「'+m.title+'」中，你选择了“'+m.choice+'”。这段经历尚可派上用场。':'';}
@@ -18604,12 +18702,12 @@ advance=()=>{if(C&&C.busy)return;cancelCombatMotion();const next=SECT_EVENTS.fin
 
 </script>
 <script src="bonus-art/atlases.js?v=1"></script><script src="bonus-art/effects.js?v=2"></script>
-<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-female-hero"></script>
-<script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-female-hero"></script>
-<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260918-female-hero"></script>
-<script src="phaser-trial/hero-appearance.js?v=production-20260918-female-hero"></script>
-<script src="phaser-trial/idle-v3/atlases.js?v=production-20260918-female-hero"></script>
-<script src="phaser-trial/production.js?v=production-20260918-female-hero"></script>
-<script src="phaser-trial/production-ui.js?v=production-20260918-female-hero"></script>
+<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-readable-battle"></script>
+<script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-readable-battle"></script>
+<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260918-readable-battle"></script>
+<script src="phaser-trial/hero-appearance.js?v=production-20260918-readable-battle"></script>
+<script src="phaser-trial/idle-v3/atlases.js?v=production-20260918-readable-battle"></script>
+<script src="phaser-trial/production.js?v=production-20260918-readable-battle"></script>
+<script src="phaser-trial/production-ui.js?v=production-20260918-readable-battle"></script>
 </body>
 </html>
