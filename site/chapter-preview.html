@@ -19974,21 +19974,15 @@ const JIANGHU_CHAPTERS={
 
 renderStart();
 </script>
-<script>// Independent workshop: no official save, collection or reward writes.
+<script>
 saveMeta=()=>{};metaMark=()=>{};
-const companionWorkshop=document.createElement('nav');companionWorkshop.className='story-demo-bar';companionWorkshop.innerHTML='<strong>伙伴相逢 · 独立试玩</strong><label>人物 <select aria-label="选择伙伴">'+Object.entries(COMPANIONS).map(([id,d])=>'<option value="'+id+'">'+d.name+'</option>').join('')+'</select></label><label>情景 <select aria-label="选择相逢阶段"><option value="first">初遇</option><option value="joint">共同经历</option><option value="invite">邀请同行</option><option value="failed">邀请条件不足</option><option value="replace">替换伙伴</option><option value="travel">同行 · 路见不平</option></select></label><a href="index.html">返回正式游戏</a>';
-companionWorkshop.classList.add('companion-workshop');app.before(companionWorkshop);const workshopPerson=companionWorkshop.querySelector('select'),workshopStage=companionWorkshop.querySelectorAll('select')[1];
-workshopStage.insertAdjacentHTML('beforeend','<option value="battle">战斗试招</option>');
-const workshopRoster=document.createElement('button');workshopRoster.textContent='查看二十位伙伴';workshopRoster.onclick=()=>openCompanions();companionWorkshop.append(workshopRoster);
-const workshopRetry=document.createElement('button');workshopRetry.textContent='重置本次试玩';workshopRetry.onclick=()=>visitCompanionWorkshop();companionWorkshop.append(workshopRetry);
-function visitCompanionWorkshop(){cancelCombatMotion();C=null;S=newState(ORIGINS[0]);S.name='同行过客';S.age=30;S.money=400;S.xiayi=20;S.arts=['huashan','tuna'];for(const k of STAT_KEYS)S.stats[k]=100;const id=workshopPerson.value,stage=workshopStage.value,m=companionMemory(id);m.bond=3;m.stage=stage==='first'?0:1;m.journeyDone=['invite','failed','replace'].includes(stage);if(stage==='failed')for(const k of STAT_KEYS)S.stats[k]=1;
- if(stage==='battle'){companionState().roster=[id];companionState().active=id;startCombat({enemy:{name:'青衫剑客',hp:12000,atk:65,def:28,dodge:8,skill:'流云剑诀'},noVictoryReward:true,onWin:()=> '演武结束；可重置试玩，更换伙伴。',onLose:()=> '演武暂歇；可重置试玩，更换伙伴。'});return;}
- if(stage==='replace'){const other=id==='guojing'?'linghuchong':'guojing';companionState().roster=[other];companionState().active=other;}
- if(stage==='travel'){companionState().roster=[id];companionState().active=id;renderEvent(SMALL_EVENTS.find(e=>e.title==='路见不平'));}else renderEvent(companionEvent(id));
-}
-workshopPerson.onchange=workshopStage.onchange=visitCompanionWorkshop;
-advance=()=>{if(C?.busy)return;cancelCombatMotion();C=null;S.age+=4;renderEvent(companionEvent(workshopPerson.value));};
-const workshopParams=new URLSearchParams(location.search);if(COMPANIONS[workshopParams.get('person')])workshopPerson.value=workshopParams.get('person');if(['first','joint','invite','failed','replace','travel','battle'].includes(workshopParams.get('phase')))workshopStage.value=workshopParams.get('phase');visitCompanionWorkshop();
+const chapterControls=document.createElement('div');chapterControls.className='chapter-preview-controls';
+chapterControls.innerHTML='<label>篇章试玩 <select aria-label="选择江湖篇章"></select></label><button type="button">从本篇开头重试</button><p>六个五幕故事 · 独立试玩，不读写正式存档。选项隐藏判定门槛；战败也能继续，选择会改变结局。</p>';
+document.getElementById('app').before(chapterControls);
+const chapterSelect=chapterControls.querySelector('select');for(const [id,d]of Object.entries(JIANGHU_CHAPTERS)){const o=document.createElement('option');o.value=id;o.textContent=d.name;chapterSelect.append(o);}
+function previewChapter(id){if(C?.busy)return;cancelCombatMotion();C=null;S=newState(ORIGINS[0]);const d=JIANGHU_CHAPTERS[id];S.name='试游江湖';S.age=d.ages[0]+1;S.gender='男';S.flags.sect='wudang';S.money=300;S.stats=Object.fromEntries(STAT_KEYS.map(k=>[k,18+d.tier*4]));S.combatBase={atk:25+d.tier*20,mp:70+d.tier*20,dodge:4,def:8};S.arts=['huashan','hunyuan','tuna','piaoxu'];S.items=['qingfeng','suozi','kuaixue'];S.equip={weapon:'qingfeng',armor:'suozi',shoes:'kuaixue'};hudPrev=null;chapterSelect.value=id;const u=new URL(location);u.searchParams.set('chapter',id);history.replaceState(null,'',u);renderEvent(chapterOffer(id));}
+chapterSelect.onchange=()=>{if(C?.busy){chapterSelect.value=S.flags.chapters?.active?.id||chapterSelect.value;return;}previewChapter(chapterSelect.value);};chapterControls.querySelector('button').onclick=()=>previewChapter(chapterSelect.value);
+const initial=new URLSearchParams(location.search).get('chapter');previewChapter(JIANGHU_CHAPTERS[initial]?initial:'escort');
 </script>
 <script src="bonus-art/atlases.js?v=1"></script><script src="bonus-art/effects.js?v=2"></script>
 <script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260919-facing-integer"></script>

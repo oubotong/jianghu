@@ -898,6 +898,9 @@ dialog::backdrop{background:#061a22cf;}
 #event-card .choices>button .hint{font-size:14px!important;line-height:1.7!important}
 @media(max-width:640px){#event-card :is(.event-text,.reading-lead,.reading-beats,.reading-beats p,.reading-talk p,.reading-full-prose,.result-story){font-size:17px!important}}
 
+/* Compact chapter context, with history available without displacing the scene. */
+.chapter-progress{display:flex;flex-wrap:wrap;gap:6px 16px;margin:0 0 12px;padding:8px 10px;background:#243b38;border-left:3px solid #c4a467;color:#dcd6bd;font:14px/1.6 "Microsoft YaHei",sans-serif}.chapter-progress,.chapter-progress *{font-family:"PingFang SC","Microsoft YaHei",sans-serif!important;font-synthesis:weight!important}.chapter-memory{flex-basis:100%;font-size:13px}.chapter-memory summary{cursor:pointer;min-height:32px;line-height:1.6}.chapter-memory p{margin:6px 0;line-height:1.8;color:#c4d0c7}.chapter-preview-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}.chapter-preview-controls select{max-width:100%;min-height:44px}.chapter-preview-controls p{flex-basis:100%;margin:0;font-size:14px;line-height:1.7}
+
 </style>
 <script>window.WUXIA_STATIC_DEMO=true;</script><script>window.WUXIA_STATIC_DEMO=true;window.WUXIA_RELEASE='2026-09-16-classic-combat';
 // Back up existing public saves before any migration. Keep the original save keys and origin.
@@ -3303,6 +3306,7 @@ function nextEvent(){
   if(S.dead){ renderDeath(); return; }
   if(S.age>100){ renderEnding(); return; }
   let ev = SCHOOL_EXAMS.find(e=>e.age===S.age&&e.cond())||replayMilestone()||EVENTS.find(e=>e.age===S.age && (!e.cond || e.cond()));
+  if(!ev)ev=chapterEncounter();
   if(!ev)ev=lifeThreadEncounter()||lifePathEncounter();
   if(!ev)ev=connectionEncounter();
   if(!ev)ev=decisionEncounter();
@@ -3584,6 +3588,328 @@ function renderEnding(){
     <div class="card"><div class="event-title" style="font-size:1em">你的一生</div><div id="log" style="max-height:400px">${logHTML()}</div></div>`;
   paintStory(STORY_ENDINGS[title]||'mountain',title,'ending-story');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -19420,6 +19746,231 @@ rebirthScore=function(title){return [...explorationRebirthScore(title),['首次�
 const explorationSettle=settleLegacy;
 settleLegacy=function(title){const schools=heroNewSchools(),result=explorationSettle(title);if(S.metaDone){META.exploredSchools=[...new Set([...(META.exploredSchools||[]),...schools])];saveMeta();}return result;};
 /* END HERO PROGRESSION */
+
+/* Jianghu chapters: same-year scenes, persistent choices and exactly-once settlements. */
+function chapterState(){return S.flags.chapters||={version:1,active:null,done:{},declined:{},lastOffer:-10};}
+function chapterFact(id,key){return !!S.flags.chapters?.done?.[id]?.flags?.[key];}
+function chapterEncounter(){
+ if(S.dead||S.age<18||S.age>96)return null;
+ const state=chapterState();if(state.active)return chapterEvent();
+ if(S.age-state.lastOffer<5)return null;
+ const id=Object.keys(JIANGHU_CHAPTERS).find(id=>{const d=JIANGHU_CHAPTERS[id];return S.age>=d.ages[0]&&S.age<=d.ages[1]&&!state.done[id]&&!state.declined[id]&&(!d.eligible||d.eligible());});
+ return id?chapterOffer(id):null;
+}
+function chapterOffer(id){const d=JIANGHU_CHAPTERS[id];return {id:'chapter-offer-'+id,title:'江湖大事 · '+d.name,art:d.art,thread:true,
+ text:d.invitation+'\n这段行程有五幕，将在本年内连续展开。接下后，本年以奔走此事为主；若有日常练功收益，将暂停一次。途中会自动保存。交锋落败仍有后续，不会直接致死。',choices:[
+ {t:'接下此事',hint:'五幕连贯剧情 · 占用本年日常练功',run:()=>{const state=chapterState();if(state.active||state.done[id]||state.declined[id])return '这封邀约已有答复。';state.lastOffer=S.age;state.active={id,age:S.age,step:0,phase:'choice',flags:{},history:[],result:'',complete:false};commitSeason();return {event:chapterEvent()};}},
+ {t:'婉拒邀约，继续原本的行程',hint:'本世不再参加这一篇；保留本年日常练功',run:()=>{const state=chapterState();if(state.active||state.done[id]||state.declined[id])return '这封邀约已有答复。';state.lastOffer=S.age;state.declined[id]={age:S.age};return d.decline;}}
+ ]};}
+function chapterEnemy(r,battle){const tier=JIANGHU_CHAPTERS[r.id].tier+(battle.boss?1:0),n=Math.min(5,tier),v=[10,15,22,30,40,50][n];return {
+ name:battle.name,spriteKey:battle.sprite||'bandit',hp:Math.round([150,250,420,720,1100,1700][n]*(battle.prepared?.85:1)),atk:[18,29,43,65,95,135][n],def:[3,5,8,12,17,23][n],dodge:[5,8,10,12,14,16][n],mp:100,maxMp:100,skillCost:12,skill:battle.skill||'截江掌',
+ stats:{genggu:v,wuxing:v,shenfa:v,liuli:v,dingli:v,fuyuan:10},attributeVersion:1,attributeTier:n,progressionVersion:2,
+ desc:'篇章交锋 · 落败或脱身仍会继续故事，但会失去本次争取的机会。'
+ };}
+function chapterEvent(){const r=chapterState().active;if(!r)return null;const step=r.step,d=JIANGHU_CHAPTERS[r.id],scene=d.scenes(r)[step];
+ return {id:'chapter-'+r.id+'-'+r.step,title:d.name+' · '+scene.title,art:scene.art||d.art,chapter:r.id,thread:true,text:scene.text,
+ choices:scene.choices.filter(c=>!c.when||c.when(r)).map(c=>({t:c.t,hint:c.hint||(c.battle?'交锋落败仍可继续，结果会改变下一幕。':undefined),run:()=>chapterChoose(r,step,c)}))};
+}
+function chapterChoose(r,step,c){
+ if(chapterState().active!==r||r.step!==step||r.phase!=='choice')return '这一幕已经记下，请继续行程。';
+ if(c.battle){r.phase='battle';const finish=win=>chapterSettle(r,step,c,win);return {combat:{enemy:chapterEnemy(r,c.battle),chapter:r.id,sparring:true,noVictoryReward:true,onWin:()=>finish(true),onLose:()=>finish(false),onEscape:()=>finish(false)}};}
+ return chapterSettle(r,step,c,true);
+}
+function chapterSettle(r,step,c,won){
+ if(chapterState().active!==r||r.step!==step||!['choice','battle'].includes(r.phase))return '这一幕已经记下。';
+ r.phase='settling';let ok=won,detail='';
+ if(c.cost){if(S.money<c.cost){ok=false;detail='〔准备失败：银两'+S.money+'，需要'+c.cost+'〕';}else{S.money-=c.cost;detail='（银两-'+c.cost+'）';}}
+ if(ok&&c.need){const [stat,target]=c.need;ok=test(STAT_NAMES[stat],S.stats[stat],target);if(!ok)detail+=revealFail();}
+ Object.assign(r.flags,ok?c.set:c.failSet);
+ if(ok&&c.effect)c.effect(r);
+ if(!ok&&c.failEffect)c.failEffect(r);
+ let text=(ok?c.text:c.fail)||'你没能争到这一步，事情已经转向另一条路。';if(typeof text==='function')text=text(r);
+ text+=detail;
+ const ending=ok?c.ending:c.failEnding;
+ if(step===4||ending){
+  r.complete=true;r.ending=ending||'余波未平';
+  const reward=ok?c.reward:c.failReward;
+  if(reward)text+=mod(reward);
+  if(ok&&c.item){text+=S.items.includes(c.item)?'旧物已有同款，谢仪改为银两。'+mod({money:40}):addItem(c.item);}
+  text+='〔篇章落幕：'+r.ending+'〕';
+ }
+ r.history.push({step,title:JIANGHU_CHAPTERS[r.id].scenes(r)[step].title,choice:c.t,ok,text});r.result=text;r.phase='result';
+ if(r.complete)chapterState().done[r.id]={age:r.age,ending:r.ending,flags:{...r.flags},history:JSON.parse(JSON.stringify(r.history))};
+ return text;
+}
+function chapterBadge(){
+ const r=S?.flags?.chapters?.active;if(!r)return;const card=document.querySelector('#event-card')||document.querySelector('#cbt-card');if(!card)return;
+ const button=card.querySelector('#result>button.primary,#cbt-bottom button.primary');if(button)button.textContent=r.complete?'结束篇章，继续人生 →':'继续下一幕 →';
+ const stamp=[r.id,r.step,r.phase,r.history.length,r.complete].join(':'),existing=card.querySelector('.chapter-progress');if(existing?.dataset.chapterStamp===stamp)return;
+ existing?.remove();const bar=document.createElement('div');bar.className='chapter-progress';bar.dataset.chapterStamp=stamp;
+ bar.innerHTML='<span>'+r.age+'岁 · '+(r.complete?'篇章落幕':'第'+(r.step+1)+'幕 / 5幕')+'</span><span>本年行程 · 年岁暂不推进</span>';
+ card.querySelector('.event-title')?.after(bar);
+ if(r.history.length&&!r.complete){const memory=document.createElement('details');memory.className='chapter-memory';const title=document.createElement('summary');title.textContent='前情：'+r.history.at(-1).choice;memory.append(title);for(const h of r.history){const p=document.createElement('p');p.textContent=h.title+'：'+readingPlain(h.text);memory.append(p);}bar.append(memory);}
+}
+const chapterRender=renderEvent;
+renderEvent=function(ev){const result=chapterRender.apply(this,arguments);if(ev?.chapter){chapterBadge();if(!lifeRestoring&&lifeSaveEnabled&&chapterState().active?.phase==='choice'){lifeCheckpoint={...lifeState(),kind:'event',seed:0};lifeWrite(lifeCheckpoint);}}return result;};
+const chapterNext=nextEvent;
+nextEvent=function(){if(S?.flags?.chapters?.active&&!S.dead){renderEvent(chapterEvent());return;}return chapterNext.apply(this,arguments);};
+const chapterAdvance=advance;
+advance=function(){const state=S?.flags?.chapters,r=state?.active;if(!r)return chapterAdvance.apply(this,arguments);if(C?.busy||r.phase!=='result')return;
+ if(martialPending().length||(lifeSaveEnabled&&martialOverflow())){openMartialDecision();return;}
+ cancelCombatMotion();C=null;
+ if(r.complete){state.active=null;return chapterAdvance.apply(this,arguments);}
+ r.step++;r.phase='choice';r.result='';renderEvent(chapterEvent());
+};
+const chapterFinishCombat=finishCombatView;
+finishCombatView=function(){const result=chapterFinishCombat.apply(this,arguments);if(C?.cfg?.chapter)chapterBadge();return result;};
+const chapterContinue=continueLife;
+continueLife=function(){const result=chapterContinue.apply(this,arguments),r=S?.flags?.chapters?.active;if(!r)return result;chapterBadge();return result;};
+document.addEventListener('click',()=>queueMicrotask(chapterBadge));
+function openChapterJournal(){const d=hudDialog('chapter-journal','江湖篇章');if(!d)return;const h=document.createElement('h2');h.textContent='江湖篇章';d.append(h);const state=chapterState();
+ for(const [id,def]of Object.entries(JIANGHU_CHAPTERS)){const record=state.active?.id===id?state.active:state.done[id],section=document.createElement('section'),title=document.createElement('h3');title.textContent=def.name+' · '+(record?(record.ending||'正在经历'):state.declined[id]?'已婉拒':'尚未经历');section.append(title);for(const item of record?.history||[]){const p=document.createElement('p');p.textContent=item.title+'：'+item.choice;section.append(p);}d.append(section);}d.showModal();}
+const chapterMenu=openJourneyMenu;
+openJourneyMenu=function(){chapterMenu();const grid=document.querySelector('#journey-menu .journey-menu-grid');if(!grid)return;const b=document.createElement('button');b.textContent='江湖篇章';b.onclick=()=>{grid.closest('dialog').close();openChapterJournal();};grid.append(b);};
+// Every scene has its own conflict; flags record only what actually happened.
+const JIANGHU_CHAPTERS={
+ escort:{name:'雨夜失镖',ages:[18,29],tier:1,art:'caravan',invitation:'一匹空鞍马撞进客栈。马背上挂着半面镖旗，旗杆里塞着血书：“莫信来接镖的人。”店外，一个自称镖局管事的男人正问你的姓名。',decline:'你没有接下染血的镖旗，请店主去报官。第二日，镖局的人将马牵走，这一程恩怨与你错开了。',scenes:r=>[
+ {title:'半面血旗',text:'山道上，断车横在泥里。老镖师腹上插着半截箭，手指仍攥着车轴；另一边，黑衣人抱着镖匣钻进竹林。雨声压着他的喘息：“先……看封条。”',choices:[
+ {t:'先救镖师，让贼人走',set:{witness:true},text:'你撕下衣袖替镖师压住伤口。黑衣人的脚步消失在林里，镖师却活了下来：“匣子出门以前，封条便换过。”'},
+ {t:'追入竹林，夺回镖匣',need:['shenfa',13],set:{seal:true},failSet:{witness:false},text:'你赶在溪口截住黑衣人，扯下他怀中的外匣。回到断车旁时，老镖师已没了气息，换封条的人再也问不出来。',fail:'竹枝划破肩头，你追丢了贼人。等你折返，老镖师已咽气；你只带回一面破镖旗。'},
+ {t:'守住山口，记下来接应的人',need:['dingli',12],set:{route:true},text:'你伏在坡后，记住接应者腰间的白玉环和往东的车辙。你没有暴露，但也错过了救人的时候。',fail:'雨雾遮住了接应者，你不敢贸然出手。山道渐静，那辆车已经走远。'}]},
+ {title:'破庙问口供',art:'inn',text:r.flags.witness?'镖师在破庙里发起高热。药郎要四十两才肯连夜配药，局里的年轻趟子手却催你先去渡口，声称天亮就追不上了。':'破庙里只剩一个趟子手。他坚持说劫镖的是外人，却把镖匣封条的颜色说错了。渡口的船将在天亮前离岸。',choices:[
+ {t:'请药郎救人（40两）',when:()=>!!r.flags.witness,cost:40,set:{testimony:true},text:'药汤灌下去，镖师终于能说完一句话：“换封条的是管事，玉环是他夫人的陪嫁。”这回有了活人的指认。',fail:'诊金没有凑齐，镖师被药郎留在庙里照看；高热未退，他暂时无法作证。'},
+ {t:'拿封条细节盘问趟子手',need:['wuxing',15],set:{seal:true},text:'你故意说错封泥的纹样，他脱口纠正，随即闭嘴。你从他的行囊搜出另一枚封印。',fail:'趟子手把话圆了回来，你找不到能揭穿他的证据。他趁你添火时溜了。'},
+ {t:'雇渔户领路，抢先到渡口（30两）',cost:30,set:{route:true},text:'渔户带你走过芦苇里的小路，指出白玉环管事常用的私船。你赶到了船前。',fail:'渔户不肯赊账，你只能沿官道追赶，抵达时船已离岸。'}]},
+ {title:'芦湾拦船',art:'river',text:r.flags.route?'私船尚未解缆。甲板上捆着两个送镖的脚夫，船头的刀客已经看见你，抬脚踢开踏板。':'你追到下游才赶上私船。船已离岸数丈，两个脚夫被捆在舱口；刀客用刀背拍着其中一人的脸，示意你别再靠近。',choices:[
+ {t:'踏上船头，先把人救下来',battle:{name:'芦湾截镖刀客',sprite:'bandit',skill:'截浪刀'},set:{rescued:true,seal:true},failSet:{setback:true},text:'你压下刀客的刀，砍断脚夫身上的绳。船舱里没有镖银，只有镖局自己写的空箱清单。',fail:'刀客将你逼落浅水，私船趁势离岸。你活着上了岸，人和清单却没能带回来。'},
+ {t:'沿芦苇潜到船尾，偷取清单',need:['shenfa',r.flags.route?12:20],set:{seal:true},text:'你从后舱取走清单。为免惊动刀客，你没有解开脚夫的绳；船上很快又响起呵斥声。',fail:'脚下断苇惊动守卫，你只得退回岸边，船上没有留下可取的东西。'},
+ {t:'拿自己的盘缠换两个脚夫（60两）',cost:60,set:{rescued:true},text:'刀客掂过银子，把脚夫推下跳板。人救回来了，清单与空箱仍随船远去。',fail:'刀客见你凑不齐赎银，收起跳板。你记下船的去向，请脚夫家人另寻接应。'}]},
+ {title:'镖局闭门',art:'dark-hall',text:'管事在镖局摆了三杯茶，一杯推给你，两杯留给再没回来的镖师。“匣子原本就是空的。你揭开它，镖局几十口人都得饿死。”他把一包银子压在茶盘下。',choices:[
+ {t:'把证据交给失主，不收封口银',set:{public:true},text:r=>r.flags.seal||r.flags.testimony?'你把封印与证词分开交给失主，留了一份在自己手里。管事终于收起笑容，叫人落下门闩。':'你说出了怀疑，但拿不出完整证据。失主愿与你同去对质，能否讨回公道仍在两可。'},
+ {t:'先护住脚夫和镖师，拒绝独自赴宴',set:{protect:true},text:'你没有进镖局的门，先把肯说话的人送到人多的客栈。管事的茶冷了一夜，没能等到你落单。'},
+ {t:'收下封口银，替管事瞒住空镖',set:{bought:true},text:'银包沉得压手。你把封印投进炭盆，从这一刻起，失主追索的便不只管事一人。'}]},
+ {title:'天明对质',art:'arena',text:r.flags.bought?'管事请你从后门离开。门外的脚夫认出了你，望向你腰间新添的银包，却没有再开口。':'镖局护院列在院中，失主堵在门口。管事指着你：“江湖规矩，谁敢进这扇门，谁便担下这场是非。”',choices:[
+ {t:'闯过护院，当众清算空镖',when:()=>!r.flags.bought,battle:{name:'空镖局总护院',sprite:'thug',skill:'封门铁掌',boss:true},set:{cleared:true},text:'你打落护院的兵刃，逼管事交出私账。失主拿到账册，肯作证的人终于敢跨进门来。',fail:'护院将你挡在门外。失主带着现有线索另寻帮手，你留下了这笔尚未讨清的旧账。',ending:'镖银见日',failEnding:'空镖未雪',reward:{fame:4,money:100},item:'qingfeng'},
+ {t:'带齐证据与证人，请失主依法追索',when:()=>!r.flags.bought&&(r.flags.seal||r.flags.testimony)&&(r.flags.rescued||r.flags.witness),set:{cleared:true},text:'封印、证词与活人对得上。失主请来的差役封了库房，管事没能把空箱案推成江湖私斗。',ending:'人证俱全',reward:{fame:3,xiayi:2,money:80}},
+ {t:'退还封口银，陪失主继续追案',when:()=>!!r.flags.bought,set:{bought:false},text:'你将未拆的银包退回桌上，承认自己曾想把这件事瞒下。烧掉的封印无法复原，失主仍准你同行，信任却得重新挣来。',ending:'回头仍有路',reward:{xiayi:1}},
+ {t:r.flags.bought?'带银离开，承担这笔旧账':'先带幸存者离开，放弃追银',text:r=>r.flags.bought?'你拿走封口银，却没能带走街上那些目光。往后有人提起空镖，便也会提起你。':'你护着幸存者走出镖局的势力范围。银子暂时追不回，人至少不必再被堵在门里。',ending:r.flags.bought?'一包封口银':'保人弃镖',reward:r.flags.bought?{money:150,xiayi:-3}:{xiayi:2}}]}
+ ]},
+ school:{name:'山门血诏',ages:[23,42],tier:1,art:'sect',eligible:()=>!!activeSchool(),invitation:'师门急令送到：外门弟子沈砚盗走禁谱，限你三日内带回。令纸背面另有一行小字，是他从前练字时的笔迹：“师兄，别在山门前问我。”',decline:'你回信说明不愿领追杀之令。另一个同门下山去了，你未参与这桩门内疑案。',scenes:r=>[
+ {title:'雨中追令',text:'沈砚在旧亭等你，手中没有剑，只有一本封皮染血的拳谱。追来的同门拔剑围住亭子：“掌门只要人，不要你听他解释。”',choices:[
+ {t:'挡住同门，让沈砚说完',set:{trust:true},text:'你横剑隔开追兵，听他说出药房失踪的三名杂役。那本所谓禁谱，夹着他们领药的名字。'},
+ {t:'先扣下拳谱，独自查验',need:['wuxing',16],set:{proof:true},text:'你发现封皮新旧不一，夹页上记的是试药剂量。沈砚趁双方争执退入林中，没再相信你。',fail:'你看不出拳谱的异常，追兵带走了人。书到了你手中，口供却暂时断了。'},
+ {t:'依门令将人交回，随队上山',set:{custody:true},text:'沈砚没有挣扎，只把药房钥匙塞进你掌心。你随押送队上山，暂时保住了在门内查探的身份。'}]},
+ {title:'药房无灯',art:'study',text:'药房炉灰尚温。柜里摆着几碗无人喝完的汤药，墙上却挂着“扶危济困”的旧匾。守夜老人看见你，先问沈砚是否还活着。',choices:[
+ {t:'拿出沈砚的托付，请老人作证',when:()=>!!(r.flags.trust||r.flags.custody),set:{witness:true},text:'老人从鞋底取出药单。他不肯随你进刑堂，却答应在后山钟响时来作证。'},
+ {t:'查验残药，寻找剂量异常',need:['wuxing',18],set:{proof:true},text:'两份药单剂量相差十倍，签字却出自同一人。你留下原纸，没有只记一个模糊的数。',fail:'你分不清几味药的剂量，不敢把猜测拿去指认。炉灰里的纸已无法复原。'},
+ {t:'先开后门，让受伤杂役离山',set:{saved:true},text:'你送出两个尚能走动的杂役。为避开守门弟子，你来不及翻完药柜；人走了，证据也少了一份。'}]},
+ {title:'刑堂拔剑',art:'arena',text:'执刑师叔将药碗推到沈砚面前：“喝了，便算你认错。”堂外同门噤声，只有碗底碰上石桌的一声轻响。',choices:[
+ {t:'击落药碗，挡住执刑弟子',battle:{name:'刑堂执剑弟子',sprite:'swordmaster',skill:'封喉连剑'},set:{saved:true,defied:true},text:'碗在剑下碎开，你护着沈砚退到堂柱后。师叔第一次叫出了你的名字，声音冷得没有半分师门情分。',fail:'执刑弟子压住你的剑。药碗被争斗打翻，沈砚暂免一劫，你却被逐出了刑堂。',failSet:{defied:true}},
+ {t:'当众递出药单，请掌门验看',when:()=>!!r.flags.proof,set:{hearing:true},text:'药单被同门逐手传到掌门面前。执刑师叔伸出的手停在半空，这碗药暂时没人再敢逼他喝。'},
+ {t:'虚应认错，换沈砚先关入后院',need:['dingli',17],set:{saved:true},text:'你低头揽下管教之责，换来缓刑一夜。出了刑堂，掌心已经被自己的指甲掐破。',fail:'师叔看穿你在拖延，只许沈砚暂缓行刑，不许你再靠近。他的处境仍未解开。'}]},
+ {title:'师叔的条件',art:'dark-hall',text:'夜里，师叔独自来见你。“药确实出了事，但若传出去，仇家明日便会围山。交出那几张纸，我保你入内门。”窗外传来后山第一声钟。',choices:[
+ {t:'拒绝交易，召同门到后山听证',set:{public:true,proof:!!(r.flags.witness||r.flags.proof)},text:r=>r.flags.witness?'老人如约走出林子，拿出按过指印的领药原单，把失踪杂役的姓名一个个念给同门听。':'你敲响后山钟，却没有等来证人。同门愿意听，你仍得拿出足以服人的证据。'},
+ {t:'逼师叔先放人，再交还药单',set:{bargain:true},text:'你守在后门，亲眼看着沈砚和杂役下山，才交出药单。命保住了，真相也被你亲手按回了暗处。'},
+ {t:'把原件藏好，准备与师门决裂',set:{leave:true},text:'你把药单缝进衣衬，将弟子腰牌放到桌上。屋外有人喊你师兄，你隔着门应了一声，没再回头。'}]},
+ {title:'山门见真章',art:'sect-rain',text:r.flags.bargain?'师叔递来内门衣袍，仿佛昨夜只是一次寻常考校。沈砚留下的旧剑还靠在门边。':'山门前聚满同门。师叔拔剑挡住石阶，掌门站在他身后，等你给这三日一个交代。',choices:[
+ {t:'凭药单与证人公开指认',when:()=>!!(r.flags.proof&&r.flags.witness&&!r.flags.bargain),set:{truth:true},text:'原药单与证词相互印证，掌门命人封存药房。沈砚获准归门，却选择先送受伤杂役回乡；你守住了师门，也揭开了师门的伤口。',ending:'山门见日',reward:{fame:4,xiayi:3}},
+ {t:'打过守门人，带沈砚离开师门',when:()=>!r.flags.bargain,hint:'离开当前门派，放弃后续本门考核；落败仍会离山。',battle:{name:'刑堂守门师叔',sprite:'swordmaster',skill:'断义三剑',boss:true},effect:()=>{S.flags.sect='self';},failEffect:()=>{S.flags.sect='self';},set:{left:true},text:'你卸下他的剑，扶起沈砚走下长阶。从今往后，这座山门不再是归处，那一声师兄却仍有人肯叫。',fail:'你败在石阶上，掌门叫停了追击，准你带伤离山。未能救出的人留在门内，这件事没有圆满。',failSet:{left:true},ending:'弃门护友',failEnding:'长阶折剑',reward:{dingli:1},item:'piao'},
+ {t:'承认自己以证据换人，辞去弟子身份',when:()=>!!r.flags.bargain,effect:()=>{S.flags.sect='self';},set:{left:true},hint:'离开当前门派，放弃后续本门考核。',text:'你当众讲出换人的经过，没有假称自己查清了一切。掌门收回腰牌，沈砚在山下等你；活人得救，案子仍有缺口。',ending:'负剑离山',reward:{dingli:1}},
+ {t:r.flags.bargain?'拒领赏赐，留在门内守望':'收剑退让，保留门内身份',text:r=>r.flags.bargain?'你没有收那件衣袍，继续做原来的弟子。活下来的人去了别处，门内仍有人等着一个迟到的答案。':'你没有再逼掌门当众裁断。沈砚的冤屈未全解，你也未失去在门内继续追问的身份。',ending:r.flags.bargain?'保人封口':'疑案未决',reward:{fame:1}}]}
+ ]},
+ tomb:{name:'沉江剑冢',ages:[30,48],tier:2,art:'river',invitation:'江水一夜退了三尺，露出一扇刻满剑痕的石门。船娘递给你父亲留下的铜钥：“里面若真有绝世剑，先替我找找他。”',decline:'你将铜钥推回船娘手中。她另外雇船探江，石门的传闻从此只在你的酒席上出现。',scenes:r=>[
+ {title:'水落石门',text:'石门前已来了两路寻宝客。有人要炸开门，有人说必须献血。船娘将铜钥交给你，船上只留得下三个人。',choices:[
+ {t:'带船娘同行，按铜钥寻门',set:{guide:true},text:'船娘认出父亲在石壁上留下的潮汐刻线。你让她坐在船头，没有收另一队寻宝客的买路银。'},
+ {t:'独自测量水痕，先记下退路',need:['wuxing',22],set:{route:true},text:'你认出水位仍会回涨，在石阶上留下回程的记号。船娘留在岸上，铜钥也未借给你。',fail:'几道旧水痕相互重叠，你没能判断涨潮时刻，只记下了眼前的入口。'},
+ {t:'雇熟水性的潜工同行（60两）',cost:60,set:{rope:true},text:'潜工将绳索系在岸桩，另一头牢牢绑在腰上。找父亲的船娘没能挤上这一船。',fail:'潜工没有收够定金，你只得独自靠近石门。'}]},
+ {title:'双室回潮',art:'mountain',text:'墓道分成两间。一间浮着写有姓名的木牌，一间亮着兵刃的寒光。水从脚踝涨到小腿，已经来不及两边都走。',choices:[
+ {t:'请船娘循潮线开启侧门',when:()=>!!r.flags.guide,set:{names:true,route:true},text:'船娘按父亲留下的记号拧开侧门，从木牌室取出父亲的名牌。侧门通向高处，回程也有了避水的路。'},
+ {t:'进入木牌室，寻找失踪者下落',set:{names:true},text:'你从铁栅后找到数具旧骸骨，衣袋里仍有船票。这里死的不只有剑客，也有被带进来的船工。'},
+ {t:'进入兵器室，取出剑架上的残锋',need:['genggu',21],set:{blade:true},text:'寒水刺得手指发麻，你仍将残锋拔出剑架。另一间石门已经沉入水下，木牌漂散了。',fail:'寒气逼得你退回墓道，手掌失了力，没有把残锋带出来。'},
+ {t:'先拆水闸，替后来人留出口',need:['liuli',22],set:{route:true},text:'闸门被你撑开一道缝，水势缓了下来。你没来得及取宝，却为自己和追来的人留下一条路。',fail:'闸轴没有松动，反震得你虎口破裂。你退开时，水已经没过石阶。'}]},
+ {title:'夺钥之人',art:'dark-hall',text:'另一队寻宝客在出口截住你，为首的独眼剑客伸出手：“钥匙，或者你在里面取到的东西。”他把船娘父亲的短刀挂在腰上。',choices:[
+ {t:'夺下短刀，逼问旧事',battle:{name:'独眼夺钥客',sprite:'swordmaster',skill:'沉江剑'},set:{confession:true},text:'剑客败退，承认当年有人用假藏宝图招来船工，再将他们困在墓里。他拿出了雇主留下的信。',fail:'你没能压住他的剑，只得退开。短刀与口供都未到手，所带的东西倒保住了。'},
+ {t:'交出残锋，换短刀与去路',when:()=>!!r.flags.blade,set:{blade:false,relic:true},text:'你把残锋放在石上，换回船工的短刀。剑客让开路，没再说一句关于旧事的话。'},
+ {t:'借涨潮甩开拦路人',need:['shenfa',r.flags.route?16:26],set:{escaped:true},text:'你循着水势退入侧洞，避过了拦路剑客。他拿不到你的东西，你也未问出短刀的来历。',fail:'暗流把你冲回原路，你丢掉包袱才脱开纠缠。此行所得未能全带出去。',failSet:{blade:false}}]},
+ {title:'只够一船',art:'river',text:'回程的船压得很低。水下还有一个困在石缝里的潜工，船娘死死盯着冒泡的水面；带出的铁匣再不丢，船就撑不住。',choices:[
+ {t:'丢下残锋与铁匣，拉潜工上船',set:{rescued:true,blade:false},text:'沉重的铁匣落回江底，潜工被拖上船板。他咳出的第一口水里带着血，却终于能喘气。'},
+ {t:'用岸绳接应，两边一起带走',when:()=>!!r.flags.rope,set:{rescued:true},text:'潜工抓住岸绳，你借绳把船稳住。准备好的退路，在这时保住了人，也保住了船上的东西。'},
+ {t:'先保住船上人，立刻离开',set:{leftDiver:true},text:'船冲过石门，身后的呼救被江声盖住。你没有回头，船上再没人谈起宝物值多少银子。'}]},
+ {title:'江岸归物',art:'legacy',text:r.flags.names?'船娘把父亲的姓名木牌摆在岸边，一块块擦去泥沙。她抬头问你，墓里究竟发生过什么。':'船娘在岸边等你，先看你的手，再看你的眼睛。她要找的人没有上船，而你必须告诉她这一趟带回了什么。',choices:[
+ {t:'交出名字与口供，查清沉江旧案',when:()=>!!(r.flags.names&&r.flags.confession),set:{truth:true},text:'两份线索对上了人名。船娘带着家属去寻雇主，不必再对着一片江水猜父亲的下落。',ending:'沉冤出水',reward:{fame:4,xiayi:3,money:100}},
+ {t:'留下残锋，交给匠人续接',when:()=>!!r.flags.blade,set:{keptBlade:true},text:'你带回一柄值得重铸的残剑。船娘收下你留下的路图，却没有收那袋谢银。',ending:'残锋归鞘',reward:{wuxue:2},item:'longquan'},
+ {t:'标出险处，请船户封住入口',set:{sealed:true},text:'你将涨潮与塌陷的位置画给船户，请他们立下警示。没带出的宝物仍在江底，后来人至少不会因一张藏宝图毫无防备地下水。',ending:'石门止步',reward:{fame:1}},
+ {t:'如实交还遗物，陪家属祭江',text:r=>r.flags.rescued?'获救的潜工一同跪在江边，将自己记得的名字逐一念出。此行未得神兵，却带回一个能回家的人。':'你没有拿模糊的猜测安慰她。江边焚起纸火，这一程仍留下许多没有答案的名字。',ending:r.flags.rescued?'渡人出冢':'江水无言',reward:r.flags.rescued?{xiayi:3}:{dingli:1}}]}
+ ]},
+ forge:{name:'铸剑之约',ages:[38,58],tier:2,art:'forge',invitation:'名匠温铁衣封炉十年，忽然给你送来试剑帖。来送信的女弟子只有一句话：“师父这次开炉，不是为了卖剑。他在等杀死我父亲的人。”',decline:'你退回试剑帖。炉火的消息仍在江湖流传，你没有卷进温家这一场旧仇。',scenes:r=>[
+ {title:'炉前旧债',text:'温铁衣把新剑横在炭上，弟子阿棠站在他身后。试剑客名单的最后一个名字，被刀尖划穿了纸。“若他来了，”老人问，“你帮谁？”',choices:[
+ {t:'答应护住阿棠，不替任何人报仇',set:{protect:true},text:'你把阿棠叫到离炉火远些的地方。她低声说，当年父亲死后，是名单上的仇人送她回来。'},
+ {t:'借看旧剑，先查当年的伤口',need:['wuxing',25],set:{doubt:true},text:'旧剑上的崩口像是救人时硬挡重击留下的。你请阿棠再讲一遍当年的事，没有急着答应报仇。',fail:'旧剑损伤太重，你没能凭残痕断明凶手。老人收起剑，不再提问。'},
+ {t:'答应替温铁衣主持试剑',set:{host:true},text:'你的名字被写在试剑帖最上方。来客会因你赴约，若这场试剑变成杀局，也会记在你头上。'}]},
+ {title:'来客不开剑',art:'inn',text:'被指为仇人的傅迟进了客栈，解下佩剑放在桌上。他没有求你保命，只取出半枚烧黑的剑穗：“当年屋里还有一个孩子。”',choices:[
+ {t:'请阿棠辨认剑穗',when:()=>!!r.flags.protect,set:{truth:true},text:'阿棠认出母亲缝的线结。她记起把自己从火里抱出去的，正是这个人；当年的仇书至少漏写了一半。'},
+ {t:'追问火场的先后经过',need:['dingli',r.flags.doubt?18:25],set:{truth:true},text:'你让傅迟逐句重说，终于问出纵火者另有其人。旧日镖单上，还留着那人的真名。',fail:'傅迟不肯交出另一个名字。你只知道他救过人，仍无法证明他没有杀人。'},
+ {t:'把剑穗转交温铁衣，由他决断',set:{warning:true},text:'温铁衣捏着剑穗站了很久，最后仍让弟子添炭。他知道有别的说法，却不肯在仇人面前先低头。'}]},
+ {title:'试锋变阵',art:'arena',text:'试剑开始，炉门忽然落锁。几个戴灰巾的人同时拔刀，刀锋朝向温铁衣，根本不在意台上的傅迟。有人喊：“账本就在炉底！”',choices:[
+ {t:'拦下灰巾刀手，护住铸剑人',battle:{name:'灰巾焚炉刀手',sprite:'assassin',skill:'焚炉快刀',prepared:r.flags.warning},set:{smith:true},text:'你逼退刀手，把老人从炉边拉开。温铁衣终于看清，这场仇杀背后还有人怕他开口。',fail:'刀手撞倒炉架，你只来得及拖出受伤的老人。炉底的账本被火吞了一半。',failSet:{burned:true}},
+ {t:'趁乱取出炉底账本',need:['shenfa',26],set:{ledger:true},text:'你从炉口抽出账本，手背烫出水泡。阿棠和傅迟合力救出了老人，你拿到了另一份能说话的东西。',fail:'账本被滚落的炭火封住，你退回来时只剩几片黑纸。',failSet:{burned:true}},
+ {t:'破开侧门，先带阿棠离开',set:{protect:true},text:'你砸开侧门，带阿棠退入院外。老人被傅迟从火里拖了出来，伤不致命，炉与新剑却暂时顾不上了。'}]},
+ {title:'火里认仇',art:'forge',text:'炉火还在烧，温铁衣把最后一桶水握在手里：浇向剑坯，新剑可成；浇向烧伤的傅迟，或许能少留一身残疾。阿棠看着你，没有替师父求情。',choices:[
+ {t:'先救傅迟，剑还可以重铸',set:{mercy:true},text:'水浇上烧伤的衣襟，傅迟痛得浑身发抖。剑坯在炉中弯了，温铁衣没有再拦第二桶水。'},
+ {t:'救剑坯，再花钱请医（80两）',cost:80,set:{blade:true,mercy:true},text:'剑坯入水，医者也被你请到院中。你付清诊金，两边都保住了，却无法抹平当年的死者。',fail:'医者未收到诊金，没有赶来。你停下淬剑，转身帮忙救人，新剑因此错过了火候。'},
+ {t:'以主持者身份请试剑客一同救人',when:()=>!!r.flags.host,set:{mercy:true,blade:true},text:'你报出试剑帖上的约定，请来客分头救人、救炉。愿意赴你邀约的人没有袖手旁观，淬剑与救治终于不必只靠这一桶水。'},
+ {t:'让温铁衣自己决定，不代他了仇',set:{judgment:true},text:'老人看了阿棠一眼，把水泼向傅迟。那柄剑弯下去时，他也像突然老了十岁。'}]},
+ {title:'无字剑铭',art:'forge',text:'灰巾人的来路渐渐查明。温铁衣请你在剑铭上留字，阿棠却问：“这柄剑，将来还只为报仇而出吗？”',choices:[
+ {t:'公开旧案，让该偿命的人受审',when:()=>!!(r.flags.truth||r.flags.ledger),set:{truth:true},text:'账本与火场证词交到受害者家属手中。阿棠终于知道父亲因何而死，温铁衣也不必再把仇恨刻进每一柄剑。',ending:'炉火照旧案',reward:{fame:4,xiayi:2},item:'bailian'},
+ {t:'接下试锋剑，答应护送阿棠远行',when:()=>!!(r.flags.mercy||r.flags.protect),set:{oath:true},text:'温铁衣把修好的试锋剑交给你。阿棠决定去看父亲曾走过的镖路，你答应在险处替她挡一次刀。',ending:'一剑一诺',reward:{fame:2},item:'longquan'},
+ {t:'出资安顿受伤的宾客（60两）',cost:60,set:{aid:true},text:'你留下药钱，请医者把受伤的人逐个看完。温家仍有旧仇要面对，至少今夜不必再添一个无人照看的伤者。',fail:'药钱未凑齐，你留下帮忙包扎，没能承担所许的资助。',ending:'炉边药香',failEnding:'炉前辞客',reward:{xiayi:2}},
+ {t:'不留剑铭，只劝众人各自归去',text:'你没有把这场恩怨写成自己的功劳。温铁衣重新封炉，阿棠收起旧剑，傅迟离开时向院内长揖。',ending:'封炉息剑',reward:{dingli:1,money:100}}]}
+ ]},
+ siege:{name:'孤城烽火',ages:[50,76],tier:3,art:'palace',invitation:'边城的求援信比溃兵晚到一天。城门将关，守将只给你看了一眼军令：“援军未至，城不可弃。”城外的百姓却还没进来。',decline:'你没有应下守城之请，把沿途所见告诉了后撤的人。那座城的烽火，此后只能从远处看见。',scenes:r=>[
+ {title:'闭门之前',text:'门楼下挤着百姓，箭声已经越过坡头。守将要你先护送粮车进城，老卒却拉住你的袖子：“门一关，外面都是我们的家人。”',choices:[
+ {t:'守住门洞，先让百姓入城',set:{people:true},text:'你站在门外压住追兵，最后一个孩子进门时，两辆粮车已被截在远处。城里多了活人，也少了几日口粮。'},
+ {t:'护粮车进城，再组织夜间接应',set:{grain:true},text:'粮车进了库房，城门随即落闩。你记住城外尚未回来的人，答应夜里再开一条路。'},
+ {t:'联络当年救下的船工走水门',when:()=>chapterFact('escort','rescued')||chapterFact('tomb','rescued'),set:{people:true,grain:true,water:true},text:'旧日获救的人认出你的信物，连夜撑船绕到水门。粮与人分两路进城，当年的一次出手，今日救下了更多人。'}]},
+ {title:'援军空信',art:'study',text:'信使中箭死在门内，怀里的援军令却是三日前的旧纸。军中有人提议瞒住百姓，有人说今夜就该走。守将把决定推到了你面前。',choices:[
+ {t:'公开援军未到，准备撤离老幼',set:{evac:true},text:'街上先是一片寂静，随后有人开始收拾药物和干粮。守军知道你没有保证必胜，也知道你还站在城上。'},
+ {t:'查出假令的来源，防备内应',need:['wuxing',30],set:{spy:true},text:'印泥与折痕暴露了军需官。他承认有人许他开城后的官位，暗门的地点也被供了出来。',fail:'你查不到改令的人，只能加派守卫。暗处那条线仍未断掉。'},
+ {t:'拿出盘缠备船（120两）',cost:120,set:{water:true,evac:true},text:'水门备好了船，即使城破，老幼也有一条不必挤进火里的路。',fail:'备船的钱没有凑齐，水门仍是空的。你只能让百姓先向城内高处转移。'}]},
+ {title:'夜破东楼',art:'sect-rain',text:'东楼忽然起火，敌军先锋沿倒下的旗杆攀上城头。城内有人喊开门，你必须决定把这一身功夫用在哪一处。',choices:[
+ {t:'登楼迎战先锋，保住城墙',battle:{name:'围城破阵先锋',sprite:'general',skill:'破阵长枪'},set:{wall:true},text:'你折断先锋的枪，守卒重新举起城旗。东楼守住了，城内的火却还没有灭。',fail:'先锋夺下东楼，你随守卒退到内街。城墙失了一段，尚能守住撤离的路。'},
+ {t:'循内应暗门反制突袭',when:()=>!!r.flags.spy,set:{wall:true},text:'你在暗门里截住接应者，未让敌军里外夹击。先锋找不到内应，暂时退下城楼。'},
+ {t:'放弃东楼，护送伤者与老幼',set:{evac:true},text:'你把人从火巷里带出去，将守城的胜负暂时留在身后。东楼失守，水门前却多了一队能走的人。'}]},
+ {title:'一夜两条路',art:'river',text:'守将要集结还能持兵的人反攻，百姓则等着最后一班船。天亮以前，你只能亲自带一路。城头的鼓又响起来了。',choices:[
+ {t:'率敢死队反攻，争取守到天明',set:{counter:true},text:r=>r.flags.grain?'库里的粮分给了守卒，他们吃完最后一碗热饭，随你重新登城。':'守卒空着肚子整队，你没有再许诺援兵，只答应自己走在最前面。'},
+ {t:'留下断后，送百姓从水门离开',set:{rear:true},text:r=>r.flags.water?'船一条条离岸，你站在最后的栈桥上。旧友答应过河后再来接你。':'备好的船不够，你用门板扎成简筏，让会水的守卒先护老幼过河。'},
+ {t:'用查明的内应传假令，拖延进攻',when:()=>!!r.flags.spy,set:{delay:true},text:'敌军收到互相冲突的开门时辰，在城下停了半夜。你用这半夜给撤离队留出距离，也给城头留下换防的机会。'}]},
+ {title:'烽火将熄',art:'arena',text:r.flags.counter?'敌军主将立在破开的城口，身后是刚换上的重甲亲兵。你的身后也有人，但每一张脸都熬过了同一夜。':'最后一队百姓走到河边，追兵已经转过街角。城守不守得住，和这些人能不能活着走出去，终于成了两件事。',choices:[
+ {t:'迎战敌将，夺回城口',battle:{name:'围城铁甲主将',sprite:'general',skill:'横扫千军',boss:true},set:{held:true},text:r=>r.flags.wall&&r.flags.grain?'敌将退下，守卒收回城口。粮仓与东楼尚在，这座城终于撑到了援军的旗出现在山口。':'你击退敌将，为守军赢得撤出的时间。城防已经残破，你没有把这一场胜利说成满城无损。',fail:'你未能击退敌将，守军把你抢回内街。剩下的人依照先前安排撤离，城池最终失守。',ending:r.flags.wall&&r.flags.grain?'孤城不落':'破阵留生路',failEnding:'烽火失城',reward:{fame:6},item:'mingguang'},
+ {t:'断后撤离，保住已经走出城的人',when:()=>!!(r.flags.evac||r.flags.rear||r.flags.delay),set:{saved:true},text:r=>r.flags.water?'你斩断栈桥，坐上返航的最后一条船。天明回望时城旗已换，船上的孩子却还活着。':'你守住窄巷直到撤离队走远，再从旧城墙翻出。散落的人并未全部找齐，幸存者仍记着那条出城的路。',ending:r.flags.water?'渡尽孤城人':'弃城留人',reward:{xiayi:4,fame:3}},
+ {t:'带回军令与死者名册，撤出战场',text:'你带回真实的军令与伤亡名单，没有替任何人报一个好看的捷报。失去的人不会因此回来，但也不会只剩一个数字。',ending:'带血的军报',reward:{dingli:1}}]}
+ ]},
+ return:{name:'故人归来',ages:[72,96],tier:4,art:'legacy',invitation:'一名年轻剑客送来一封几十年前的旧信，落款是你以为再也见不到的人。“他在旧渡口等你。”来人说，“还带着当年的剑。”',decline:'你把旧信放回匣里，请来人带一句珍重。渡口的约终究没有赴，这也是此生留下的一种答案。',scenes:r=>[
+ {title:'旧信重开',text:'渡口的老人背对你坐着，脚边放了两只酒杯。他没有先叫你的名字，只问：“这么多年，你还记不记得自己答应过什么？”',choices:[
+ {t:'先问他这些年过得如何',set:{listen:true},text:'他讲起逃难、养伤和一间关了门的武馆。你听完才知道，他这一生并没有停在与你分别的那一天。'},
+ {t:'取出旧事记录，逐件对照',when:()=>Object.keys(S.flags.chapters?.done||{}).length>0,set:{records:true},text:'你翻出旧日留下的信物和记述。老人认出其中几件，承认有些传闻确实与事实不同。'},
+ {t:'直问来意，不愿重提旧怨',set:{distance:true},text:'他把第二只酒杯收回去：“那便只说眼前。有人拿你们当年的名头，逼年轻人替他卖命。”'}]},
+ {title:'借名之徒',art:'inn',text:'年轻人围在武馆门口，馆主挂着你的旧画像，声称自己尽得真传。见你进门，他先是一惊，随后笑着请你给新弟子训话。',choices:[
+ {t:'当众拆穿假传承，留下弟子',set:{students:true},text:'你指出他所教的险招会伤经脉，让弟子先停练。有人扯下画像，有人仍不肯相信自己白交了几年束脩。'},
+ {t:'查看账册，追回弟子的学费',need:['wuxing',34],set:{accounts:true},text:'钱款的去处藏在两套账中，你找到被转走的银号凭证。那些年轻人的损失终于有了追索之处。',fail:'银号凭证已被转走，你没能找回完整账册。徒弟们仍得另寻追款的办法。'},
+ {t:'私下让馆主关门，不再借名',set:{quiet:true},text:'馆主答应关门，却要求你别在众人面前揭穿。他保住了脸面，学徒未必知道自己受骗到什么地步。'}]},
+ {title:'旧敌试剑',art:'arena',text:'老人拦住要走的馆主，一剑挑落他的匾额。门内冲出护院，护院身后却站着一个你年轻时就见过的对手。“这一次，”他说，“还要别人替你打吗？”',choices:[
+ {t:'亲自接剑，让年轻人退后',battle:{name:'旧渡口隐剑客',sprite:'elder',skill:'回首断云剑'},set:{won:true},text:'你压住他的剑，却没有继续追伤。年轻人看见的不是传闻中的名字，而是你今日仍能承担的一剑。',fail:'旧伤拖慢了收势，你败下阵来。老人替你挡住追剑，年轻人扶你坐回门前；这一败没有抹去你的一生。'},
+ {t:'拿出假传承证据，请对手别替骗子出头',when:()=>!!r.flags.accounts,set:{reason:true},text:'对手看完凭证，将剑还鞘。他愿意与你分胜负，却不肯替一个骗学费的人看门。'},
+ {t:'先护送弟子离开，改日再论输赢',set:{students:true},text:'你没有接那句激将，先把还在发抖的孩子送到街口。身后的笑声响了一阵，终于停了。'}]},
+ {title:'最后一杯酒',art:'river',text:'夜里回到渡口，老人又摆出两只杯子。他说自己不是来讨一场输赢：“我想知道，当年若能重来，你还会不会那样选？”',choices:[
+ {t:'认下做错的事，也认下当年的不得已',set:{reconcile:true},text:'你没有把旧事说成天意。他听你讲完，终于推来那只酒杯。原谅尚未必有，话却不再被堵在喉头。'},
+ {t:'请他与自己一道，把真事留给后人',when:()=>!!(r.flags.records||r.flags.listen),set:{testament:true},text:'你们把各自记得的事写在两张纸上，连意见相左的地方也留下。后人读到的，会是两个活过这一生的人。'},
+ {t:'承认彼此无法释怀，就此告别',set:{part:true},text:'你将杯中酒倒入江里，他没有劝。并非所有旧怨都能在白发时化解，但你们终于亲口说了再见。'}]},
+ {title:'留给江湖',art:'legacy',text:'天亮时，年轻人带来洗净的旧匾，问你是否愿意留下几个字。老人站在船上等风，岸边有了从前没有的喧闹。',choices:[
+ {t:'把真事和得失写进最后一卷',when:()=>!!(r.flags.testament||r.flags.records),set:{legacy:true},text:'书里有胜负，也有你不愿掩去的失手。年轻人替你装订，不再只问哪一招最厉害。老人带走抄本，与你约好有错便改。',ending:'两纸江湖',reward:{wuxue:3,fame:4}},
+ {t:'留下护身之物，请年轻人自己走下去',when:()=>!!(r.flags.students||r.flags.reconcile),set:{legacy:true},text:'你把能教的教完，把做不到的也说清。弟子送你到渡口，老人把自己珍藏的旧衣交给你：“这一路，穿暖些。”',ending:'薪火有人',reward:{xiayi:3},item:'wucan'},
+ {t:'只记下亲见之事，提醒学徒辨别假师',set:{warning:true},text:'你没有替所有旧事下定论，只把这间武馆里的见闻写清，交给仍在求师的年轻人。故事少了传奇，却多了一份能查证的提醒。',ending:'暮年留言',reward:{fame:1}},
+ {t:'不留名号，与故人各赴归途',text:r=>r.flags.part?'两条船驶向不同水路。你们没有握手言和，却也不必再让晚辈替旧怨拔剑。':'你没有再给自己添一个名号。江风吹开船帘，岸上的人挥手时，你也像年轻时那样挥了一下。',ending:'江湖各归舟',reward:{dingli:1}}]}
+ ]}
+};
+
+/* END JIANGHU CHAPTERS */
 
 renderStart();
 
