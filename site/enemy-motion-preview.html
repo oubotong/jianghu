@@ -905,7 +905,7 @@ dialog::backdrop{background:#061a22cf;}
 // Back up existing public saves before any migration. Keep the original save keys and origin.
 if(!/-preview(?:\.html)?\/?$/.test(location.pathname))try{const key='jhfsl-before-classic-combat-v1',life=localStorage.getItem('wuxia-life-v1'),meta=localStorage.getItem('jhfsl_meta_v1'),labLife=localStorage.getItem('wuxia-lab-life-v2'),labMeta=localStorage.getItem('jhfsl_lab_meta_v2');if((life||meta||labLife||labMeta)&&!localStorage.getItem(key))localStorage.setItem(key,JSON.stringify({life,meta,labLife,labMeta,savedAt:Date.now()}));if(!life&&!meta){if(labLife){JSON.parse(labLife);localStorage.setItem('wuxia-life-v1',labLife);}if(labMeta){JSON.parse(labMeta);localStorage.setItem('jhfsl_meta_v1',labMeta);}}}catch(_){}
 </script>
-<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260918-tournament-roster"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260918-tournament-roster">
+<link rel="preload" as="image" href="phaser-trial/river-stage.webp"><link rel="stylesheet" href="phaser-trial/trial.css?v=production-20260919-facing-integer"><link rel="stylesheet" href="phaser-trial/classic-stage.css?v=production-20260919-facing-integer">
 <link rel="icon" href="data:,">
 </head>
 <body>
@@ -1515,6 +1515,11 @@ const HERO_CLAW_FRAMES=["assets/d28ddb9400744f5a721404be.webp","assets/938f192af
 const HERO_CLAW_ATLAS={"src":"assets/28aa41ea752fd07a98e9feaa.webp","width":384,"height":447};
 const HERO_MARTIAL_ATLASES={"sword":{"src":"assets/f4c9876423bbbc0965616064.webp","width":157,"height":136,"scale":1.018796992481203},"cleave":{"src":"assets/8005049d1a85cd0afe715811.webp","width":157,"height":149,"scale":1.1203007518796992},"spear":{"src":"assets/e5c9d1de29f10586409f5cd0.webp","width":157,"height":121,"scale":1.021097046413502},"palm":{"src":"assets/f36429c7f4083ee0f29e57dc.webp","width":157,"height":123,"scale":1.0165289256198347},"finger":{"src":"assets/119aa9eb3a06dec285b63766.webp","width":157,"height":144,"scale":1.0141342756183747},"cast":{"src":"assets/1f5dc2481bec4a376da9117e.webp","width":157,"height":144,"scale":1.0141342756183747},"step":{"src":"assets/4c1639d2d04580de0fef5af1.webp","width":157,"height":137,"scale":1.0185873605947955},"kick":{"src":"assets/edd1e735d31927068492252f.webp","width":157,"height":139,"scale":1.037313432835821},"guard":{"src":"assets/f9afea2883dfe6bfe002bc94.webp","width":157,"height":142,"scale":1.0179856115107915},"heal":{"src":"assets/6ca500285114b683d271a62f.webp","width":157,"height":141,"scale":1.014388489208633}};
 const ENEMY_MARTIAL_ATLASES={"soldier-cleave":{"src":"assets/a559b3201dc331befbc31a16.webp","width":157,"height":155,"scale":1.1884615384615385},"soldier-palm":{"src":"assets/1e604fc0fe4874ce0cecc9ff.webp","width":157,"height":133,"scale":1.051383399209486},"swordmaster-sword":{"src":"assets/f5c2793ad1c054a8dcb87a56.webp","width":157,"height":134,"scale":1.0151515151515151},"swordmaster-cast":{"src":"assets/13c68687a86025379460932c.webp","width":157,"height":146,"scale":1.1064638783269962},"monk-palm":{"src":"assets/87eb0e245e0d1cdbede63618.webp","width":158,"height":141,"scale":1.0253623188405796},"monk-cast":{"src":"assets/64de07e76d3e3bbefbb497a8.webp","width":158,"height":139,"scale":1.0145985401459854},"assassin-claw":{"src":"assets/d5f722b41bd725c379bd7706.webp","width":192,"height":121,"scale":1.0168067226890756},"assassin-finger":{"src":"assets/b2e73ceef8aee53e97e7f244.webp","width":192,"height":121,"scale":1.0168067226890756},"demon-claw":{"src":"assets/1d36b4f3d01f6f5ffde57123.webp","width":157,"height":151,"scale":1.0134680134680134},"demon-cast":{"src":"assets/1c68c266ef0431923dc06434.webp","width":157,"height":150,"scale":1.0135135135135136},"bandit-cleave":{"src":"assets/6bb884257cb4cb2b8e3acf91.webp","width":157,"height":148,"scale":1.1607843137254903},"bandit-palm":{"src":"assets/697e20127d4a9d357a34f856.webp","width":157,"height":129,"scale":1.032},"brute-cleave":{"src":"assets/f62355d5a21965592a02b819.webp","width":157,"height":159,"scale":1.2519685039370079},"brute-palm":{"src":"assets/6d7f2a060ec15f3c6d8aff58.webp","width":157,"height":134,"scale":1.0509803921568628},"elder-palm":{"src":"assets/961d2db5f5620a10ab86ac8f.webp","width":157,"height":137,"scale":1.0300751879699248},"elder-cast":{"src":"assets/18f59a332a6139ad7ee81d8e.webp","width":157,"height":138,"scale":1.0185185185185186},"general-spear":{"src":"assets/ae7a8b64c6c51f4d3c8931f2.webp","width":157,"height":111,"scale":1.0184331797235022},"general-cleave":{"src":"assets/751b0c640beca0c6ef03eb8b.webp","width":157,"height":135,"scale":1.2339449541284404},"ghost-cast":{"src":"assets/e3aed5a2142e6875f8c33cff.webp","width":157,"height":125,"scale":1.0245901639344261},"ghost-claw":{"src":"assets/2850be83435f2d6a17201989.webp","width":157,"height":128,"scale":1.0450819672131149},"heroine-sword":{"src":"assets/b1f7f9e9d1880632bd35fdda.webp","width":157,"height":146,"scale":1.0138888888888888},"heroine-kick":{"src":"assets/5b2ddd56a67067788642e1fe.webp","width":157,"height":144,"scale":1.0285714285714285},"taoist-cast":{"src":"assets/00d9cb9732b64b57e571a187.webp","width":155,"height":152,"scale":1.0666666666666667},"taoist-finger":{"src":"assets/27e5dfa7135b469ac54e1386.webp","width":155,"height":159,"scale":1.0126582278481013},"thug-palm":{"src":"assets/ceb6f7edbac7255ccd81c7d7.webp","width":157,"height":137,"scale":1.0148698884758365},"thug-cleave":{"src":"assets/1800ec585aed891316327f4a.webp","width":157,"height":149,"scale":1.129277566539924},"boar-charge":{"src":"assets/7cd6860ecb463cee4ecb3f63.webp","width":158,"height":100,"scale":1.0255102040816326},"boar-pounce":{"src":"assets/3f3be5057515fefa1004a3d7.webp","width":158,"height":120,"scale":1.2371134020618557},"centipede-coil":{"src":"assets/2c11ad207474d411b0c1d6a0.webp","width":160,"height":100,"scale":1.1916167664670658},"centipede-poison":{"src":"assets/e5959da6da552338e3173ef5.webp","width":160,"height":124,"scale":1.5403726708074534},"monkey-pounce":{"src":"assets/e9f0ff3a5cad25a2ea8cc86f.webp","width":157,"height":123,"scale":1.0165289256198347},"monkey-claw":{"src":"assets/17cf28c34b85e085dec796fc.webp","width":157,"height":159,"scale":1.0635451505016722},"python-coil":{"src":"assets/51d947deb8ed1d9b334d58c9.webp","width":157,"height":131,"scale":1.0607287449392713},"python-poison":{"src":"assets/047b0eab80e5f9a1852e982e.webp","width":157,"height":146,"scale":1.1192307692307693},"rat-pounce":{"src":"assets/9ff34e6dc7e4b7568c36d36b.webp","width":158,"height":100,"scale":1.2134146341463414},"rat-bite":{"src":"assets/50fe4a68a90792bced704579.webp","width":158,"height":87,"scale":1.2720588235294117},"tiger-pounce":{"src":"assets/0ecb01bdec50410fb773f0d8.webp","width":157,"height":100,"scale":1.3245033112582782},"tiger-claw":{"src":"assets/c578e9efa1b4ff71d2411c26.webp","width":157,"height":97,"scale":1.2847682119205297},"wolf-pounce":{"src":"assets/4da587b9dca525758be75764.webp","width":159,"height":99,"scale":1.2857142857142858},"wolf-bite":{"src":"assets/efe1e30987a6ce6a4b2e4db4.webp","width":159,"height":86,"scale":1.2374100719424461},"soldier-claw":{"src":"assets/5a474db8fd01ab1a6203fea0.webp","width":157,"height":133,"scale":1.0231660231660231},"soldier-spear":{"src":"assets/9806d9a5c768bff7d41a320f.webp","width":157,"height":127,"scale":1.0160642570281124},"swordmaster-cleave":{"src":"assets/6b9e91c0f266f5a30f416d78.webp","width":157,"height":153,"scale":1.2142857142857142},"swordmaster-palm":{"src":"assets/09ab5bf169937c69855c146f.webp","width":157,"height":134,"scale":1.0553359683794465},"monk-spear":{"src":"assets/cd513fdb83af3a5aadf954f8.webp","width":157,"height":130,"scale":1.036},"monk-finger":{"src":"assets/e22dcf535dd3bf32505cc323.webp","width":157,"height":131,"scale":1.0275590551181102},"assassin-cleave":{"src":"assets/eb6f92fd641ffb92cccf9997.webp","width":157,"height":144,"scale":1.070631970260223},"assassin-poison":{"src":"assets/a07dda4545ddb230e01f7bfb.webp","width":157,"height":140,"scale":1.037174721189591},"demon-palm":{"src":"assets/98f19aa58f27589afb1133b6.webp","width":157,"height":146,"scale":1.0138888888888888},"demon-poison":{"src":"assets/c04afade8068da1993bc4d7c.webp","width":157,"height":145,"scale":1.013986013986014},"bandit-spear":{"src":"assets/b08f8c2374e634719c053a70.webp","width":157,"height":129,"scale":1.0197628458498025},"bandit-poison":{"src":"assets/5d76b2e5ff837ca820ad192a.webp","width":157,"height":152,"scale":1.0133779264214047},"taoist-sword":{"src":"assets/26f8c690b930da85dd03aadd.webp","width":157,"height":133,"scale":1.0310077519379846},"taoist-palm":{"src":"assets/57aff7442332090155d48a9a.webp","width":157,"height":131,"scale":1.0155038759689923},"thug-spear":{"src":"assets/95be6a9da306872433d58594.webp","width":157,"height":145,"scale":1.1111111111111112},"thug-finger":{"src":"assets/ee67f905eb4b3399e36e4467.webp","width":157,"height":134,"scale":1.0307692307692307},"heroine-spear":{"src":"assets/21a72092821d736be1a8d084.webp","width":157,"height":139,"scale":1.049056603773585},"heroine-palm":{"src":"assets/64fdde836f910e4c628e5eee.webp","width":157,"height":132,"scale":1.0154440154440154},"elder-sword":{"src":"assets/20658ca354638221fef8afdb.webp","width":157,"height":128,"scale":1.0406504065040652},"elder-finger":{"src":"assets/c74e8ac12365e04dd88a9a98.webp","width":157,"height":129,"scale":1.0489795918367346},"assassin-kick":{"src":"assets/110a1a9d384984dcef9dad99.webp","width":160,"height":146,"scale":1.0695970695970696},"assassin-step":{"src":"assets/4e44ff34cd5d54740f53012c.webp","width":160,"height":128,"scale":1.024},"thug-poison":{"src":"assets/025be13f691b4244ce6e0019.webp","width":157,"height":159,"scale":1.0127388535031847},"thug-kick":{"src":"assets/dff39fc8a617a1ad93498c7e.webp","width":157,"height":159,"scale":1.0127388535031847}};
+// Bandit attacks strike left, while the separate breathing/idle sheet faces right.
+// Use the contact poses for attack direction, not the turning wind-up pose.
+for(const [style,facing]of Object.entries({cleave:-1,spear:-1,palm:-1,poison:-1})){
+ const atlas=ENEMY_MARTIAL_ATLASES['bandit-'+style];if(atlas)atlas.facing=facing;
+}
 function closeCombatDetails(except){
  document.querySelectorAll('.cbt-side').forEach(panel=>{if(panel!==except){panel.classList.remove('show');panel.setAttribute('aria-expanded','false');}});
 }
@@ -1845,7 +1850,7 @@ function playEnemyFrames(style){
  const data=enemyAtlas(style),img=document.querySelector('#stage-e img.hero-img');if(!data||!img)return false;
  const owner=C,start=performance.now(),times=[0,110,230,335,400,475,590,720];let previous=-1;
  let atlas=img.parentElement.querySelector('.enemy-atlas');if(!atlas){atlas=document.createElement('div');atlas.className='enemy-atlas';atlas.setAttribute('aria-hidden','true');img.parentElement.append(atlas);}
- atlas.style.backgroundImage='url('+data.src+')';atlas.style.aspectRatio=data.width+'/'+data.height;atlas.style.height=((data.scale||1)*100)+'%';atlas.hidden=false;img.style.visibility='hidden';
+ atlas.style.backgroundImage='url('+data.src+')';atlas.style.aspectRatio=data.width+'/'+data.height;atlas.style.height=((data.scale||1)*100)+'%';atlas.style.transform=data.facing===1?'scaleX(-1)':'';atlas.hidden=false;img.style.visibility='hidden';
  cancelAnimationFrame(owner.enemyFrameRequest);
  const tick=now=>{if(C!==owner||!owner.stage?.isConnected)return;
   const elapsed=(now-start)*combatSpeed/MOTION_PACE;
@@ -3658,6 +3663,164 @@ function renderEnding(){
     <div class="card"><div class="event-title" style="font-size:1em">你的一生</div><div id="log" style="max-height:400px">${logHTML()}</div></div>`;
   paintStory(STORY_ENDINGS[title]||'mountain',title,'ending-story');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -17738,19 +17901,22 @@ function combatBaseOf(state=S){
   state.combatBase={atk:old/4,mp:old/3,dodge:0,def:0};
   if(old){state.flags||={};state.flags.combatMigration={old,version:1};}
  }
- for(const key of Object.keys(COMBAT_BASE_NAMES))state.combatBase[key]=Math.max(0,Number(state.combatBase[key])||0);
+ // Preserve every earned fraction in older saves by completing it to one point.
+ // Ceil is idempotent, so repeated reads and save reloads never grant more points.
+ for(const key of Object.keys(COMBAT_BASE_NAMES))state.combatBase[key]=Math.max(0,Math.ceil(Number((Number(state.combatBase[key])||0).toFixed(6))));
  delete state.wuxue;return state.combatBase;
 }
 // Read-only conversion for pre-existing composite story requirements; never a fifth stored stat.
 function combatMastery(state=S){const b=combatBaseOf(state);return Math.round((b.atk*4+b.mp*3+b.dodge*6+b.def*6)/2);}
 function combatBaseChange(changes,state=S){
  const b=combatBaseOf(state),actual={};
- for(const [key,value]of Object.entries(changes)){if(!(key in COMBAT_BASE_NAMES))continue;const before=b[key];b[key]=Math.max(0,Number((before+value).toFixed(2)));actual[key]=Number((b[key]-before).toFixed(2));}
+ for(const [key,value]of Object.entries(changes)){if(!(key in COMBAT_BASE_NAMES))continue;const before=b[key],delta=value?Math.sign(value)*Math.max(1,Math.round(Math.abs(value))):0;b[key]=Math.max(0,before+delta);actual[key]=b[key]-before;}
  return actual;
 }
 function combatGainText(changes){return Object.entries(changes).filter(([,v])=>v).map(([k,v])=>COMBAT_BASE_NAMES[k]+(v>0?'+':'')+v+(k==='dodge'?'%':'')).join('，');}
 function trainCombat(amount){
- // General practice develops attack and breathing; specialized manuals provide dodge and armor.
+ // Round each award once; even a small practice earns a visible whole point.
+ // Larger awards retain their existing relative budgets, and losses remain slower.
  const pace=amount>0?2:1;return combatBaseChange({atk:amount*.25*pace,mp:amount/3*pace});
 }
 function martialTraining(id,full=true){
@@ -19371,12 +19537,12 @@ showEnemyMove(false,false);
 
 </script>
 <script src="bonus-art/atlases.js?v=1"></script><script src="bonus-art/effects.js?v=2"></script>
-<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260918-tournament-roster"></script>
-<script src="phaser-trial/hero-v2/atlases.js?v=production-20260918-tournament-roster"></script>
-<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260918-tournament-roster"></script>
-<script src="phaser-trial/hero-appearance.js?v=production-20260918-tournament-roster"></script>
-<script src="phaser-trial/idle-v3/atlases.js?v=production-20260918-tournament-roster"></script>
-<script src="phaser-trial/production.js?v=production-20260918-tournament-roster"></script>
-<script src="phaser-trial/production-ui.js?v=production-20260918-tournament-roster"></script>
+<script src="phaser-trial/phaser-3.90.0.min.js?v=production-20260919-facing-integer"></script>
+<script src="phaser-trial/hero-v2/atlases.js?v=production-20260919-facing-integer"></script>
+<script src="phaser-trial/hero-female-v1/atlases.js?v=production-20260919-facing-integer"></script>
+<script src="phaser-trial/hero-appearance.js?v=production-20260919-facing-integer"></script>
+<script src="phaser-trial/idle-v3/atlases.js?v=production-20260919-facing-integer"></script>
+<script src="phaser-trial/production.js?v=production-20260919-facing-integer"></script>
+<script src="phaser-trial/production-ui.js?v=production-20260919-facing-integer"></script>
 </body>
 </html>

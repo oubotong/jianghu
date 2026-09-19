@@ -160,3 +160,6 @@ body.classic-stage-page{background:#101c20!important;background-image:radial-gra
  .classic-stage-page #lab-log-brief p,.classic-stage-page #lab-chronicle-feed p{font-size:15px!important;line-height:1.8!important}
  .classic-stage-page .lab-chronicle header{padding:7px 9px!important}
 }
+
+/* Battle narration uses the same readable sans as event prose. */
+.classic-stage-page .lab-chronicle,.classic-stage-page .lab-chronicle *,#combat-log,#combat-log *{font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif!important;font-synthesis:weight!important}

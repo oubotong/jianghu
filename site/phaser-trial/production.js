@@ -85,7 +85,7 @@
   for(const style of ['sword','cleave','spear','palm','finger','cast','claw','kick','step','guard','heal','poison','pounce','charge','coil','bite']){const a=enemyAtlas(style);if(a){const key=Object.keys(ENEMY_MARTIAL_ATLASES).find(k=>ENEMY_MARTIAL_ATLASES[k]===a);atlas.e[style]={...a,bodyHeight:sizePack?.enemy?.[key]||a.height};}}
   if(!Object.keys(atlas.e).length){fail('Enemy animation missing');host.remove();owner.busy=wasBusy;delete owner._trialLoading;return;}
   if(owner.companion){const a=COMPANION_ATLASES[owner.companion.id];atlas.c=window.COMPANION_ACTION_ATLASES?.[owner.companion.id]||{attack:{...a,bodyHeight:sizePack?.companion?.[owner.companion.id]||a.height}};}
-  if(idlePack?.['e-'+enemyIdentity])atlas.e.idle=idlePack['e-'+enemyIdentity];
+  if(idlePack?.['e-'+enemyIdentity])atlas.e.idle={...idlePack['e-'+enemyIdentity],facing:enemyIdentity==='bandit'?1:-1};
   if(atlas.c&&idlePack?.['c-'+owner.companion.id])atlas.c.idle=idlePack['c-'+owner.companion.id];
   const rival=owner.e.tournamentHero;
   if(rival){const a=COMPANION_ATLASES[rival];atlas.e={...(window.COMPANION_ACTION_ATLASES?.[rival]||{attack:{...a,bodyHeight:sizePack?.companion?.[rival]||a.height}})};atlas.e.special||=atlas.e.attack;if(idlePack?.['c-'+rival])atlas.e.idle=idlePack['c-'+rival];}
@@ -124,11 +124,12 @@
      const x=width*(classicStage?(width<600?(side==='e'?.14:side==='c'?.86:.81):(side==='e'?.22:side==='c'?.84:.78)):(side==='e'?.77:side==='c'?.14:.27)),ground=classicStage?height*(side==='e'?.70:side==='c'?.54:.84):y-(side==='c'?12:0);
      const shadow=this.add.ellipse(x,ground-2,size*.56,12,0x03110e,.42).setDepth(2);
      const sprite=this.add.sprite(x,ground,key,0).setOrigin(.5,1).setDepth(side==='c'?3:4);
-     // Enemy atlases are authored facing left; hero/companion atlases face right.
-     const a=atlas[side][style];sprite.setScale(size/(a.bodyHeight||a.height)).setFlipX(classicStage);
+     // Use each clip's authored facing; mixed-source enemies have both directions.
+     const a=atlas[side][style],nativeFacing=a.facing||(side==='e'?-1:1),homeFacing=classicStage?(side==='e'?1:-1):(side==='e'?-1:1),homeFlip=homeFacing!==nativeFacing;
+     sprite.setScale(size/(a.bodyHeight||a.height)).setFlipX(homeFlip);
      // Actor sprites are presentation only; details open from HP/MP panels.
      // Canvas events must not reach the game's document-level detail dismissal listener.
-     this.actors[side]={sprite,shadow,aura:this.add.sprite(x,ground-size*.52,'fx-guard',0).setDepth(5).setTintFill(0xaedfff).setVisible(false),home:x,ground,visualGround:ground,homeFlip:classicStage,scale:size/(a.bodyHeight||a.height),size,idle:key,nativeFacing:side==='e'?-1:1,action:null,react:null,style};
+     this.actors[side]={sprite,shadow,aura:this.add.sprite(x,ground-size*.52,'fx-guard',0).setDepth(5).setTintFill(0xaedfff).setVisible(false),home:x,ground,visualGround:ground,homeFacing,homeFlip,scale:size/(a.bodyHeight||a.height),size,idle:key,nativeFacing,action:null,react:null,style};
      Object.assign(this.actors[side],{idleFrames:a.frames||1,idleSince:null,idleInterval:side==='p'?400:side==='c'?660:730,bodyHeight:a.bodyHeight||a.height,identity:side==='c'?owner.companion.id:side==='e'?enemyIdentity:'hero'});
      if(side==='e'&&bonusActor){Object.assign(this.actors[side],{bonus:true,nativeFacing:1,homeFlip:!classicStage,idleInterval:240,identity:owner.e.bonusActor});sprite.setFlipX(!classicStage);}
      if(side==='e'&&rival){Object.assign(this.actors[side],{namedRival:true,nativeFacing:1,homeFlip:!classicStage,idleInterval:660,identity:rival});sprite.setFlipX(!classicStage);}
@@ -180,7 +181,7 @@
      const elapsed=(now-f.start)*combatSpeed/MOTION_PACE;if(elapsed<0)continue;
      if(elapsed>=f.duration||!richEffects){f.g.destroy();this.spells.splice(this.spells.indexOf(f),1);continue;}
      const a=this.actors[f.side],b=this.actors[f.target];if(!a)continue;
-     const t=elapsed/f.duration,data=FX_ASSETS[f.key],sign=b?(b.home<a.home?-1:1):(classicStage?-a.nativeFacing:a.nativeFacing),size=a.size;
+     const t=elapsed/f.duration,data=FX_ASSETS[f.key],sign=b?(b.home<a.home?-1:1):a.homeFacing,size=a.size;
      // Follow the wind-up; anchor the slash at contact so it does not slide home with the actor.
      if(!f.anchor&&elapsed>=190)f.anchor={x:a.sprite.x,y:(a.visualGround??a.ground)-size*.56};
      const ax=f.anchor?.x??a.sprite.x,ay=f.anchor?.y??(a.visualGround??a.ground)-size*.56;
@@ -216,7 +217,7 @@
     a.sprite.setTexture(found,0);const data=atlas[side][style]||atlas[side][Object.keys(atlas[side])[0]];
     a.sprite.setScale(a.size/(data.bodyHeight||data.height));
     const remote=['finger','cast','poison'].includes(meta.style||style),sign=other.home>a.home?1:-1;
-    a.sprite.setFlipX(sign!==a.nativeFacing);const reach=a.size*(style==='spear'?1.0:.64);
+    a.sprite.setFlipX(sign!==(data.facing||a.nativeFacing));const reach=a.size*(style==='spear'?1.0:.64);
     a.action={start:performance.now(),style,key:found,sign,target,end:remote?a.home+sign*6:other.home-sign*reach,endY:classicStage&&!remote?other.ground+(side==='e'?-1:1)*height*.035:a.ground,remote,support:false};
     a.action.frameCount=data.frames||8;
     if(a.bonus){a.action.frameCount=data.frames;a.action.bonus=true;a.action.bonusFX=meta.bonusFX;}
@@ -229,6 +230,7 @@
     this.stopIdle(a);
     a.sprite.setTexture(this.textures.exists(key)?key:a.idle,0);
     const data=atlas[side][clip];if(data)a.sprite.setScale(a.size/(data.bodyHeight||data.height));
+    a.sprite.setFlipX(a.homeFacing!==(data?.facing||a.nativeFacing));
     a.action={start:performance.now(),style,key:a.sprite.texture.key,frameCount:data?.frames||(a.sprite.texture.key===a.idle?a.idleFrames:8),sign:classicStage?(side==='e'?1:-1):(side==='e'?-1:1),end:a.home,support:true};
     if(a.bonus){a.action.bonus=true;a.sprite.setFlipX(a.homeFlip);if(meta.bonusFX==='charge'){a.sprite.setTexture(side+'-cast',0);a.action.key=side+'-cast';a.action.frameCount=2;}if(meta.bonusFX&&richEffects)window.BonusBattleFX?.begin(this,a,meta.bonusFX,null,a.action.start);}
     states.actions++;this.burst(a.home,a.ground-a.size*.45,style==='heal'?0x9ae3b5:0xa8daeb,TIERS[a.tier].particles);
@@ -304,6 +306,9 @@
 
      a.visualGround=y;a.sprite.setPosition(Math.round(x),Math.round(y)).setAlpha(dead?.45:1);if(classicStage)a.sprite.setDepth(4+y/height);a.shadow.setPosition(Math.round(x),classicStage?y-2:a.ground-2);if(dead&&!a.action)a.sprite.angle=side==='e'?12:-12;
      this.playIdle(a,now,dead);
+     // Re-evaluate after texture changes (including hurt and return-to-idle frames).
+     const facing=atlas[side][a.sprite.texture.key.slice(side.length+1)]?.facing||a.nativeFacing;
+     a.sprite.setFlipX((a.action?.sign||a.homeFacing)!==facing);
      this.updateProtection(side,a,now,dead);
     }
     this.updateSpells(now);
