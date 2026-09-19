@@ -779,6 +779,8 @@ dialog::backdrop{background:#061a22cf;}
 
 .tournament-draw{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;font-size:14px;line-height:1.7;overflow-wrap:anywhere}
 
+.hero-growth-panel{margin:12px 0 20px;padding:14px;border:1px solid #ad985e88;background:#203a34;color:#e3d2ab;line-height:1.8}.hero-growth-panel h3{font-size:17px;margin:0 0 8px}.hero-growth-panel p{font-size:15px;margin:6px 0}.hero-growth-panel summary{cursor:pointer;min-height:36px;font-size:14px}.hero-growth-panel ul{padding-left:20px;font-size:14px}.hero-growth-panel small{display:block;color:#aebfb7;font-size:12px;margin-top:10px}
+
 .birth-inheritance,.rebirth-summary{border:1px solid var(--gold);background:#122728;padding:16px;margin:16px 0;line-height:1.8;border-radius:3px}.birth-inheritance h3{color:var(--gold);margin:8px 0}.birth-inheritance p{margin:0}.award-grid{display:grid;grid-template-columns:1fr auto;gap:8px}.award-grid b{color:#a1d8ac}.merchant-goods{display:grid;gap:10px}.merchant-resale{border:1px solid var(--border);padding:12px;min-width:0}.merchant-resale summary{cursor:pointer;min-height:44px;line-height:1.8}.merchant-wallet,.merchant-note,.merchant-goods,.merchant-resale{grid-column:1/-1}.merchant-note .result-story{line-height:1.8}.merchant-goods .shop-row,.rebirth-summary .shop-row{margin:0}.shop-row .s-info{min-width:0}.shop-row .s-info p{margin:6px 0;line-height:1.6}.shop-row>button{display:flex!important;align-items:center;justify-content:center;min-width:76px;text-align:center;padding:10px!important;flex:none}.shop-row>button::before{display:none!important}.lab-toolbar{max-width:1000px;margin:0 auto 18px;padding:12px;border:1px solid #caad65;background:#14292b;color:#f0dca4;line-height:1.8}.lab-toolbar nav{display:flex;flex-wrap:wrap;gap:8px}.lab-toolbar a{color:#bfe6cb;padding:8px;border:1px solid #59736b;text-decoration:none}.lab-toolbar select{max-width:100%;font:inherit;padding:8px;background:#162c2c;color:#eee1b6}.local-test-label{text-align:center;padding:8px;color:#d8c494;font-size:14px}@media(max-width:600px){.shop-row{gap:8px}.shop-row>button{min-width:66px}.birth-inheritance,.rebirth-summary{padding:12px}.lab-toolbar{margin:0 8px 12px}}
 
 #event-card .choices .s-info .catalog-name.gr1{color:#cfccb9}#event-card .choices .s-info .catalog-name.gr2{color:#9ac8e5}#event-card .choices .s-info .catalog-name.gr3{color:#cbb0ed}#event-card .choices .s-info .catalog-name.gr4{color:#eed18a}
@@ -1282,9 +1284,9 @@ function die(text){
 
 /* ---------------- 对战系统 ---------------- */
 let C = null;
-const pMaxHp = ()=> 30 + S.stats.genggu*6 + eqStat("hp");
-const pMaxMp = ()=> 12 + S.stats.dingli*3 + Math.floor(combatBaseOf().mp) + eqStat("mp");
-const pAtk   = ()=> S.stats.liuli + Math.floor(combatBaseOf().atk) + eqStat("atk");
+const pMaxHp = ()=> 30 + S.stats.genggu*6 + eqStat("hp") + heroGrowthBonus().hp;
+const pMaxMp = ()=> 12 + S.stats.dingli*3 + Math.floor(combatBaseOf().mp) + eqStat("mp") + heroGrowthBonus().mp;
+const pAtk   = ()=> S.stats.liuli + Math.floor(combatBaseOf().atk) + eqStat("atk") + heroGrowthBonus().atk;
 const pDodge = ()=> Math.min(65, Math.max(0, Math.round(40*S.stats.shenfa/(S.stats.shenfa+25)) + eqStat("dodge") + combatBaseOf().dodge));
 const pCrit  = ()=> Math.min(55, Math.round(30*S.stats.fuyuan/(S.stats.fuyuan+30)) + eqStat("crit") + (hasTalent("crit")?15:0));
 function playerMoves(){
@@ -14237,6 +14239,162 @@ function renderEnding(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Equipment illustrations: display only; equipment bonuses remain in the game rules. */
 const EQUIPMENT_ART={
  chaidao:'cleaver',tiejian:'iron-sword',lagan:'spear',tiechi:'ruler',yanling:'saber',qingfeng:'sword',diangang:'spear',bintie:'staff',bailian:'saber',longquan:'sword',hutou:'spear',xuantie:'heavy-sword',zhanlu:'zhanlu',xuemo:'xuemo',pojun:'pojun',
@@ -16003,7 +16161,7 @@ function formatEventResult(html){
  const story=document.createElement('div');story.className='result-story';story.innerHTML=(html||'').replace(/(〔获得装备：[^〕]*?) · 查看详情/g,'$1');
  const plain=story.textContent;root.dataset.sourceText=plain;
  // Locate complete reward annotations in text, preserving links and rarity markup.
- const pattern=/〔[^〕]*〕|（(?:根骨|悟性|身法|膂力|定力|福缘|银两|声望|侠义|善恶|武学|武功|内功|闪避|护体)[^（）]*[+\-]\d[^（）]*）/g;
+ const pattern=/〔[^〕]*〕|（(?:根骨|悟性|身法|膂力|定力|福缘|银两|声望|侠义|善恶|武学|武功|内功|闪避|护体|气血上限|内力上限|攻击)[^（）]*[+\-]\d[^（）]*）/g;
  const matches=[...plain.matchAll(pattern)],rewards=[],failures=[],followups=[],records=[],notes=[],seenNotes=new Set();
  for(const match of matches.reverse()){
   const nodes=[],walker=document.createTreeWalker(story,NodeFilter.SHOW_TEXT);let offset=0,node;
@@ -16020,7 +16178,7 @@ function formatEventResult(html){
    failures.unshift(list);continue;
   }else if(annotation&&/奔忙占去了练功时日|本年不再获得日常修为/.test(annotation)){
    if(!seenNotes.has('practice')){line.classList.add('reward-loss');line.textContent='精力消耗：本年不获得日常练功收益';rewards.unshift(line);seenNotes.add('practice');}continue;
-  }else if(annotation&&!/^(?:习得武学|获得装备|伙伴加入|伙伴离队|成就达成|师门贡献|同门情分|战后奖赏)/.test(annotation)){
+  }else if(annotation&&!/^(?:习得武学|获得装备|伙伴加入|伙伴离队|成就达成|师门贡献|同门情分|战后奖赏|境界突破)/.test(annotation)){
    const clean=annotation.replace(/^后续[：:]\s*/,'').replace(/(留下[^，]+)，\1，/g,'$1，');
    if(!seenNotes.has(clean)){
     seenNotes.add(clean);
@@ -16595,7 +16753,7 @@ showEquipmentDetail=function(id){growthEquipmentDetail(id);const d=document.getE
 };
 function lifeGrowthScale(age=S?.age||0){return age<6?1:age<30?2:3;}
 const growthMod=mod;
-mod=function(changes){const scaled={...changes};for(const [key,value]of Object.entries(scaled)){if(STAT_KEYS.includes(key)){const pace=value>0?(S.stats[key]>=70?.4:S.stats[key]>=40?.65:1):1;scaled[key]=value?Math.sign(value)*Math.max(1,Math.round(Math.min(9,Math.abs(value)*lifeGrowthScale())*pace)):0;}else if(key==='wuxue'&&S?.age>=12)scaled[key]=Math.sign(value)*Math.ceil(Math.abs(value)*1.5);}
+mod=function(changes){const scaled={...changes};for(const [key,value]of Object.entries(scaled)){if(STAT_KEYS.includes(key)){const pace=value>0?(S.stats[key]>=100?.4:S.stats[key]>=70?.7:S.stats[key]>=40?.85:1):1;scaled[key]=value?Math.sign(value)*Math.max(1,Math.round(Math.min(9,Math.abs(value)*lifeGrowthScale())*pace)):0;}else if(key==='wuxue'&&S?.age>=12)scaled[key]=Math.sign(value)*Math.ceil(Math.abs(value)*1.5);}
  // Show actual losses at zero instead of claiming a deduction that never happened.
  for(const key of [...STAT_KEYS,'money','wuxue'])if(scaled[key]<0)scaled[key]=Math.max(scaled[key],-(STAT_KEYS.includes(key)?S.stats[key]:key==='wuxue'?combatMastery():S[key]));
  return growthMod(scaled);};
@@ -17428,7 +17586,7 @@ function combatBaseChange(changes,state=S){
 function combatGainText(changes){return Object.entries(changes).filter(([,v])=>v).map(([k,v])=>COMBAT_BASE_NAMES[k]+(v>0?'+':'')+v+(k==='dodge'?'%':'')).join('，');}
 function trainCombat(amount){
  // General practice develops attack and breathing; specialized manuals provide dodge and armor.
- return combatBaseChange({atk:amount*.25,mp:amount/3});
+ const pace=amount>0?2:1;return combatBaseChange({atk:amount*.25*pace,mp:amount/3*pace});
 }
 function martialTraining(id,full=true){
  const a=ARTS[id],m=a?.move;if(!a||!m)return {};
@@ -18957,6 +19115,59 @@ renderEnding=function(){const result=decisionEnding.apply(this,arguments),r=S?.f
 /* END EVENT DECISIONS */
 
 /* END EVENT READING */
+
+/* Hero progression: earned breakthroughs, first-life power and varied rebirths. */
+const HERO_REALMS=[
+ {name:'初涉江湖',age:0,mastery:0,arts:0,hp:0,atk:0,mp:0,def:0},
+ {name:'初窥门径',age:12,mastery:25,arts:1,hp:80,atk:10,mp:20,def:0},
+ {name:'小有所成',age:20,mastery:70,arts:3,hp:230,atk:35,mp:60,def:3},
+ {name:'登堂入室',age:30,mastery:140,arts:4,rare:1,hp:500,atk:90,mp:140,def:8},
+ {name:'一方名家',age:40,mastery:230,arts:5,rare:2,hp:900,atk:170,mp:250,def:13},
+ {name:'宗师之境',age:50,mastery:340,arts:6,gold:1,deeds:1,hp:1400,atk:260,mp:400,def:20},
+ {name:'登峰造极',age:60,mastery:480,arts:8,gold:2,deeds:2,hp:1900,atk:360,mp:550,def:26}
+];
+function heroGrowthEvidence(){
+ const arts=(S?.arts||[]).filter(id=>ARTS[id]),rank=Math.max(0,...Object.values(S?.flags?.schoolExams||{}).map(r=>r.rank||0));
+ const wins=Math.max(0,...Object.values(S?.flags?.tournaments||{}).filter(t=>t.settled&&!t.spectator).map(t=>t.wins||0));
+ return {mastery:combatMastery(),arts:arts.length,rare:arts.filter(id=>['绝学','神功'].includes(ARTS[id].grade)).length,gold:arts.filter(id=>ARTS[id].grade==='神功').length,deeds:rank>=4||wins>=4?2:rank>=3||wins>=2||(S?.fame||0)>=40?1:0};
+}
+function heroGrowthMissing(realm){const e=heroGrowthEvidence(),missing=[];
+ for(const [key,label]of [['mastery','功底积累'],['arts','掌握武学'],['rare','紫色或金色武学'],['gold','金色武学']])if((e[key]||0)<(realm[key]||0))missing.push(label+' '+e[key]+' / '+realm[key]);
+ if(S.age<realm.age)missing.push('阅历达到'+realm.age+'岁');
+ if(e.deeds<(realm.deeds||0))missing.push(realm.deeds===2?'完成师门终考或取得大会亚军':'晋升师门护法、取得大会八强，或声望达到40');
+ return missing;
+}
+function heroGrowthBonus(state=S){return HERO_REALMS[Math.max(0,Math.min(HERO_REALMS.length-1,Math.floor(state?.flags?.heroRealm?.level||0)))];}
+function advanceHeroGrowth(){
+ if(!S||S.dead||S.age>100)return '';const before=heroGrowthBonus();let level=HERO_REALMS.indexOf(before);
+ while(level+1<HERO_REALMS.length&&!heroGrowthMissing(HERO_REALMS[level+1]).length)level++;
+ if(level===HERO_REALMS.indexOf(before))return '';
+ const after=HERO_REALMS[level];S.flags.heroRealm={level,age:S.age,version:1};
+ // Bonuses stay separate from earned foundations: they cannot qualify themselves for the next realm.
+ const text='〔境界突破：'+after.name+'〕（气血上限+'+(after.hp-before.hp)+'，攻击+'+(after.atk-before.atk)+'，内力上限+'+(after.mp-before.mp)+(after.def>before.def?'，护体+'+(after.def-before.def):'')+'）';
+ S.log.push({age:S.age,text:'多年所学终于贯通，举手投足之间，自有从容。'+text});return text;
+}
+const realmPractice=annualPractice;
+annualPractice=function(){const result=realmPractice();advanceHeroGrowth();return result;};
+const realmNextEvent=nextEvent;
+nextEvent=function(){advanceHeroGrowth();return realmNextEvent.apply(this,arguments);};
+const realmMartialGrant=martialGrant;
+martialGrant=function(){const result=realmMartialGrant.apply(this,arguments);return result+advanceHeroGrowth();};
+const realmArmor=playerArmor;
+playerArmor=function(){return realmArmor()+heroGrowthBonus().def;};
+function heroGrowthHTML(){const r=heroGrowthBonus(),next=HERO_REALMS[HERO_REALMS.indexOf(r)+1];
+ return '<section class="hero-growth-panel"><h3>修行境界 · '+r.name+'</h3><p>'+(r.hp?'气血上限 +'+r.hp+'　攻击 +'+r.atk+'<br>内力上限 +'+r.mp+'　护体 +'+r.def:'积累功底与武学，逐步打通修行关隘。')+'</p>'+(next?'<details><summary>下一境界 · '+next.name+'</summary><ul>'+heroGrowthMissing(next).map(x=>'<li>'+storyEscape(x)+'</li>').join('')+'</ul></details>':'<p>已登峰造极；天下第一，仍需亲自战胜江湖中的顶尖高手。</p>')+'<small>境界加成已计入战斗面板，突破后保留至本世结束。日常练功与事件获得的正向功底收益提高为原来的2倍；奔忙停练的代价仍然有效。</small></section>';
+}
+const realmCharacterSheet=openCharacterSheet;
+openCharacterSheet=function(){realmCharacterSheet();const d=document.getElementById('character-sheet');if(d&&!d.querySelector('.hero-growth-panel'))d.querySelector('h2').insertAdjacentHTML('afterend',heroGrowthHTML());};
+const realmPlayerTip=pTipHTML;
+pTipHTML=function(){return realmPlayerTip()+'<section class="status-summary"><b>修行境界 · '+heroGrowthBonus().name+'</b><div>境界带来的气血、攻击、内力与护体已计入上方数值。</div></section>';};
+function heroNewSchools(){return Object.entries(S.flags.schoolExams||{}).filter(([id,r])=>r.rank>=4&&!(META.exploredSchools||[]).includes(id)).map(([id])=>id);}
+const explorationRebirthScore=rebirthScore;
+rebirthScore=function(title){return [...explorationRebirthScore(title),['首次结局探索',S.age>=20&&!META.endings.includes(title)&&!['英年早逝','壮志未酬','驾鹤西去'].includes(title)?10:0],['新门派传承',Math.min(2,heroNewSchools().length)*8]];};
+const explorationSettle=settleLegacy;
+settleLegacy=function(title){const schools=heroNewSchools(),result=explorationSettle(title);if(S.metaDone){META.exploredSchools=[...new Set([...(META.exploredSchools||[]),...schools])];saveMeta();}return result;};
+/* END HERO PROGRESSION */
 
 renderStart();
 </script>
