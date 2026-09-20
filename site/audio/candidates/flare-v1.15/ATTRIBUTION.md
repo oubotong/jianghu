@@ -19,4 +19,4 @@ OGG 文件未经修改。MP3 文件由对应 OGG 以 libmp3lame q2 转码，仅�
 
 官方逐项署名表仍使用旧位置 soundfx/heal.ogg；1.15 发布包中的文件已位于 soundfx/powers/heal.ogg。Block 标注为游戏包随附素材，不声称它在特定版本中绑定某个技能。
 
-本目录同时保留 Flare 1.15 的 CREDITS.txt 和 LICENSE.txt。作品作者与 Flare 团队不代表对江湖浮生录的背书。此页为独立试听，当前没有更换正式游戏音效。
+本目录同时保留 Flare 1.15 的 CREDITS.txt 和 LICENSE.txt。作品作者与 Flare 团队不代表对江湖浮生录的背书。2026-09-20 经用户试听确认后接入：shield 用于护体，heal 用于治疗、回气及吸血回流，block 用于格挡命中。运行文件为 audio/sfx/flare-shield-v1.mp3、flare-heal-v1.mp3、flare-block-v1.mp3，与此目录 MP3 字节一致。仅由播放器调整音量，播放速度与音高保持原样。

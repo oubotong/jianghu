@@ -37,9 +37,23 @@
 
 下载核实日期：2026-09-09。原始素材包保存在 `sources/`。网页使用的 `sfx/` 衍生 WAV 经单声道转换、起止静音裁剪、响度调整和极短淡入淡出。完整文件映射见源项目的 `audio-manifest.js`。感谢以上作者分享素材。
 
-## 当前护体、疗伤与回气（2026-09-20 替换）
+## 当前护体、治疗、回气与格挡：Flare 原版（2026-09-20）
 
-当前播放使用以下 CC0 1.0 素材；不再播放上一版的三个魔法音效。运行文件使用 v2 新文件名，避免浏览器沿用旧音频缓存。
+经用户试听确认，采用 [Flare 1.15](https://github.com/flareteam/flare-game/tree/v1.15) 的三段原版音效。运行 MP3 与试听页 MP3 字节一致，未裁剪、拼接、变调或混音；只通过播放器调整音量，播放速率为1。
+
+| 运行文件 | 用途 | 作者 | 许可 |
+|---|---|---|---|
+| sfx/flare-shield-v1.mp3 | 护体施展 | Brandon Morris (Augmentality) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+| sfx/flare-heal-v1.mp3 | 治疗、回气、吸血回流 | remaxim | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) |
+| sfx/flare-block-v1.mp3 | 格挡命中 | Brandon Morris (Augmentality) | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/) |
+
+OGG 原文件、MP3 兼容转码、Flare 的作者名单及许可全文保存在 [candidates/flare-v1.15/](candidates/flare-v1.15/ATTRIBUTION.md)。治疗 MP3 转码文件继续使用 CC BY-SA 3.0。请参见 [官方逐项素材署名](https://github.com/flareteam/flare-game/wiki/Credits) 及 [文件对应和实际技能调用](candidates/flare-v1.15/ATTRIBUTION.md)。作者及 Flare 团队不代表对本项目的背书。
+
+回气复用用户批准的治疗原声，音量稍轻。主角、伙伴、敌人共用；仅动作或命中时播放，状态栏刷新不重复发声。
+
+## 已停用的风声与铃音版本（2026-09-20，保留供回退）
+
+这一历史版本使用以下 CC0 1.0 素材，当前不播放。运行文件使用 v2 新文件名，避免浏览器沿用旧音频缓存。
 
 | 文件 | 原作品及作者 | 编辑方式 |
 |---|---|---|

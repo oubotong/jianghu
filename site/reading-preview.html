@@ -15215,6 +15215,87 @@ function renderEnding(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Equipment illustrations: display only; equipment bonuses remain in the game rules. */
 const EQUIPMENT_ART={
  chaidao:'cleaver',tiejian:'iron-sword',lagan:'spear',tiechi:'ruler',yanling:'saber',qingfeng:'sword',diangang:'spear',bintie:'staff',bailian:'saber',longquan:'sword',hutou:'spear',xuantie:'heavy-sword',zhanlu:'zhanlu',xuemo:'xuemo',pojun:'pojun',
@@ -17828,7 +17909,7 @@ for (const [id,text] of Object.entries(REPLAY_PROSE)) {
 /* END EVENT PROSE */
 
 /* Game audio: presentation-only; never consumes the gameplay random stream. */
-const GAME_AUDIO_ASSETS={"version":3,"music":{"battle":{"name":"江湖交锋","src":"audio/runtime/battle.mp3","duration":50.76,"source":"audio/music/江湖交锋.wav","sourceSha256":"0e46c2c11b540cb492d9699fd7795ddd865f47a941b323064b76357aeb54f08c","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1069351},"sparring":{"name":"同门切磋","src":"audio/runtime/sparring.mp3","duration":104.4,"source":"audio/music/同门切磋.wav","sourceSha256":"84cbffe33f948816fec8bf1fd98c09c9ea9e8f321a271621368132ecee5f08c7","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2231195},"tournament":{"name":"群雄争鼎","src":"audio/runtime/tournament.mp3","duration":102.68,"source":"audio/music/群雄争鼎.wav","sourceSha256":"7e5741bd10011c65db50e98d19e12bf495e6450df87b0fde71ce15e7a69617c9","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2145092},"master":{"name":"宗师对决","src":"audio/runtime/master.mp3","duration":59.8,"source":"audio/music/宗师对决.wav","sourceSha256":"2f1ced2db55cb724e5d14da5eb7131cacac0f17cc5e615cd2f620b67a920e9da","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1277102},"dark":{"name":"魔影来袭","src":"audio/runtime/dark.mp3","duration":59.44,"source":"audio/music/魔影来袭.wav","sourceSha256":"f94e601e4ccfec82e61d86d9307f49e8d3446a034e325571889124925cc14ead","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1263104},"beast":{"name":"荒野搏命","src":"audio/runtime/beast.mp3","duration":91.64,"source":"audio/music/荒野搏命.wav","sourceSha256":"81960bb4e983a545d4b81799dc90b2be9a58ab8335b3a3dadf623a8bb7a473a7","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2005167},"event":{"name":"江湖闲云","src":"audio/runtime/event.mp3","duration":86.082,"source":"audio/music/江湖闲云.wav","sourceSha256":"a13cb902c5b62c2ece4c1f52bddb1e56318b5c077355366ac9a38195ee70e411","trimLead":0,"trimTail":2.438,"seamOverlap":0.12,"bytes":1684648}},"sfx":{"sword1":{"src":"audio/sfx/sword1.wav","duration":0.8818,"source":"audio/sources/sword/sword - StarNinjas/sword.1.ogg","license":"CC0-1.0"},"sword3":{"src":"audio/sfx/sword3.wav","duration":0.6226,"source":"audio/sources/sword/sword - StarNinjas/sword.3.ogg","license":"CC0-1.0"},"sword4":{"src":"audio/sfx/sword4.wav","duration":0.5406,"source":"audio/sources/sword/sword - StarNinjas/sword.4.ogg","license":"CC0-1.0"},"block1":{"src":"audio/sfx/block1.wav","duration":0.8792,"source":"audio/sources/clash/sword_clash.1.ogg","license":"CC0-1.0"},"block2":{"src":"audio/sfx/block2.wav","duration":0.4672,"source":"audio/sources/clash/sword_clash.2.ogg","license":"CC0-1.0"},"hit1":{"src":"audio/sfx/hit1.wav","duration":0.4072,"source":"audio/sources/punch/qubodupPunch/qubodupPunch01.flac","license":"CC0-1.0"},"hit2":{"src":"audio/sfx/hit2.wav","duration":0.3903,"source":"audio/sources/punch/qubodupPunch/qubodupPunch02.flac","license":"CC0-1.0"},"hit3":{"src":"audio/sfx/hit3.wav","duration":0.4002,"source":"audio/sources/punch/qubodupPunch/qubodupPunch03.flac","license":"CC0-1.0"},"swish2":{"src":"audio/sfx/swish2.wav","duration":0.202,"source":"audio/sources/swish/battle_sound_effects/swish_2.wav","license":"CC0-1.0"},"swish3":{"src":"audio/sfx/swish3.wav","duration":0.5333,"source":"audio/sources/swish/battle_sound_effects/swish_3.wav","license":"CC0-1.0"},"swish4":{"src":"audio/sfx/swish4.wav","duration":0.2639,"source":"audio/sources/swish/battle_sound_effects/swish_4.wav","license":"CC0-1.0"},"dart":{"src":"audio/sfx/dart.wav","duration":0.2897,"source":"audio/sources/swish/battle_sound_effects/Bow.wav","license":"CC0-1.0"},"guard":{"src":"audio/sfx/guard-v2.wav","duration":0.82,"bytes":72402,"license":"CC0-1.0","sources":[{"author":"remaxim","page":"https://opengameart.org/content/short-wind-sound","file":"wind.wav","source":"audio/sources/support-20260920/wind.wav","sourceSha256":"4435f5ad1baf171f21f876f778d0a8a7447becea0c4955bb2566e0c63ab20f41"}]},"heal":{"src":"audio/sfx/heal-v2.wav","duration":1.18,"bytes":104154,"license":"CC0-1.0","sources":[{"author":"PWL","page":"https://opengameart.org/content/bell-dingschimes","file":"bell2.wav","source":"audio/sources/support-20260920/bell2.wav","sourceSha256":"e4a764a1e0a6284f5a5ec80caf3d44c76d3ff8db17ddab8b42abb6b143e83529"}]},"restore":{"src":"audio/sfx/restore-v2.wav","duration":1.04,"bytes":91806,"license":"CC0-1.0","sources":[{"author":"remaxim","page":"https://opengameart.org/content/short-wind-sound","file":"wind.wav","source":"audio/sources/support-20260920/wind.wav","sourceSha256":"4435f5ad1baf171f21f876f778d0a8a7447becea0c4955bb2566e0c63ab20f41"},{"author":"PWL","page":"https://opengameart.org/content/bell-dingschimes","file":"bell1.wav","source":"audio/sources/support-20260920/bell1.wav","sourceSha256":"8ce40f49cd211125303df59db0da4fe911e8b2f34d3847011b15137c6b5850de"}]}}};
+const GAME_AUDIO_ASSETS={"version":4,"music":{"battle":{"name":"江湖交锋","src":"audio/runtime/battle.mp3","duration":50.76,"source":"audio/music/江湖交锋.wav","sourceSha256":"0e46c2c11b540cb492d9699fd7795ddd865f47a941b323064b76357aeb54f08c","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1069351},"sparring":{"name":"同门切磋","src":"audio/runtime/sparring.mp3","duration":104.4,"source":"audio/music/同门切磋.wav","sourceSha256":"84cbffe33f948816fec8bf1fd98c09c9ea9e8f321a271621368132ecee5f08c7","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2231195},"tournament":{"name":"群雄争鼎","src":"audio/runtime/tournament.mp3","duration":102.68,"source":"audio/music/群雄争鼎.wav","sourceSha256":"7e5741bd10011c65db50e98d19e12bf495e6450df87b0fde71ce15e7a69617c9","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2145092},"master":{"name":"宗师对决","src":"audio/runtime/master.mp3","duration":59.8,"source":"audio/music/宗师对决.wav","sourceSha256":"2f1ced2db55cb724e5d14da5eb7131cacac0f17cc5e615cd2f620b67a920e9da","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1277102},"dark":{"name":"魔影来袭","src":"audio/runtime/dark.mp3","duration":59.44,"source":"audio/music/魔影来袭.wav","sourceSha256":"f94e601e4ccfec82e61d86d9307f49e8d3446a034e325571889124925cc14ead","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":1263104},"beast":{"name":"荒野搏命","src":"audio/runtime/beast.mp3","duration":91.64,"source":"audio/music/荒野搏命.wav","sourceSha256":"81960bb4e983a545d4b81799dc90b2be9a58ab8335b3a3dadf623a8bb7a473a7","trimLead":0,"trimTail":0,"seamOverlap":0.12,"bytes":2005167},"event":{"name":"江湖闲云","src":"audio/runtime/event.mp3","duration":86.082,"source":"audio/music/江湖闲云.wav","sourceSha256":"a13cb902c5b62c2ece4c1f52bddb1e56318b5c077355366ac9a38195ee70e411","trimLead":0,"trimTail":2.438,"seamOverlap":0.12,"bytes":1684648}},"sfx":{"sword1":{"src":"audio/sfx/sword1.wav","duration":0.8818,"source":"audio/sources/sword/sword - StarNinjas/sword.1.ogg","license":"CC0-1.0"},"sword3":{"src":"audio/sfx/sword3.wav","duration":0.6226,"source":"audio/sources/sword/sword - StarNinjas/sword.3.ogg","license":"CC0-1.0"},"sword4":{"src":"audio/sfx/sword4.wav","duration":0.5406,"source":"audio/sources/sword/sword - StarNinjas/sword.4.ogg","license":"CC0-1.0"},"block1":{"src":"audio/sfx/block1.wav","duration":0.8792,"source":"audio/sources/clash/sword_clash.1.ogg","license":"CC0-1.0"},"block2":{"src":"audio/sfx/block2.wav","duration":0.4672,"source":"audio/sources/clash/sword_clash.2.ogg","license":"CC0-1.0"},"hit1":{"src":"audio/sfx/hit1.wav","duration":0.4072,"source":"audio/sources/punch/qubodupPunch/qubodupPunch01.flac","license":"CC0-1.0"},"hit2":{"src":"audio/sfx/hit2.wav","duration":0.3903,"source":"audio/sources/punch/qubodupPunch/qubodupPunch02.flac","license":"CC0-1.0"},"hit3":{"src":"audio/sfx/hit3.wav","duration":0.4002,"source":"audio/sources/punch/qubodupPunch/qubodupPunch03.flac","license":"CC0-1.0"},"swish2":{"src":"audio/sfx/swish2.wav","duration":0.202,"source":"audio/sources/swish/battle_sound_effects/swish_2.wav","license":"CC0-1.0"},"swish3":{"src":"audio/sfx/swish3.wav","duration":0.5333,"source":"audio/sources/swish/battle_sound_effects/swish_3.wav","license":"CC0-1.0"},"swish4":{"src":"audio/sfx/swish4.wav","duration":0.2639,"source":"audio/sources/swish/battle_sound_effects/swish_4.wav","license":"CC0-1.0"},"dart":{"src":"audio/sfx/dart.wav","duration":0.2897,"source":"audio/sources/swish/battle_sound_effects/Bow.wav","license":"CC0-1.0"},"guard":{"src":"audio/sfx/flare-shield-v1.mp3","duration":0.458594,"author":"Brandon Morris (Augmentality)","license":"CC-BY-3.0","source":"audio/candidates/flare-v1.15/shield.mp3","sourceSha256":"60b610a73131e0b36cc5cde2c2694531c510566e88f46f35dd4d25f987d20800","bytes":3893,"page":"https://github.com/flareteam/flare-game/wiki/Credits"},"heal":{"src":"audio/sfx/flare-heal-v1.mp3","duration":1.959184,"author":"remaxim","license":"CC-BY-SA-3.0","source":"audio/candidates/flare-v1.15/heal.mp3","sourceSha256":"00fcc0c14d04acba4ccc1170f596de93badf28077cb40619655133078cc9dd7a","bytes":11202,"page":"https://github.com/flareteam/flare-game/wiki/Credits"},"restore":{"src":"audio/sfx/flare-heal-v1.mp3","duration":1.959184,"author":"remaxim","license":"CC-BY-SA-3.0","source":"audio/candidates/flare-v1.15/heal.mp3","sourceSha256":"00fcc0c14d04acba4ccc1170f596de93badf28077cb40619655133078cc9dd7a","bytes":11202,"page":"https://github.com/flareteam/flare-game/wiki/Credits"},"block":{"src":"audio/sfx/flare-block-v1.mp3","duration":0.738413,"author":"Brandon Morris (Augmentality)","license":"CC-BY-3.0","source":"audio/candidates/flare-v1.15/block.mp3","sourceSha256":"957bc130616f65380525a5d663b538c1a9253ebdfe10b16a0dfdd93f3da0427b","bytes":5171,"page":"https://github.com/flareteam/flare-game/wiki/Credits"}}};
 
 const GameAudio=(()=>{
  const assets=GAME_AUDIO_ASSETS,cache=new Map(),effects=new Map(),pendingEffects=new Map(),voices=new Set();
@@ -17952,7 +18033,7 @@ const GameAudio=(()=>{
   if(voices.size>=6)return;
   const source=ctx.createBufferSource(),volume=ctx.createGain();source.buffer=buffer;source.playbackRate.value=rate;volume.gain.value=gain;source.connect(volume);
   let pan;if(ctx.createStereoPanner){pan=ctx.createStereoPanner();pan.pan.value=side==='e'?.15:-.15;volume.connect(pan);pan.connect(sfxBus);}else volume.connect(sfxBus);
-  voices.add(source);source.onended=()=>{voices.delete(source);source.disconnect();volume.disconnect();pan?.disconnect();};source.start();trace('sfx',{key,side});
+  voices.add(source);source.onended=()=>{voices.delete(source);source.disconnect();volume.disconnect();pan?.disconnect();};source.start();trace('sfx',{key,side,gain,rate});
  }
  function variant(keys){return keys[(serial++)%keys.length];}
  function strike(style,side){
@@ -17961,13 +18042,13 @@ const GameAudio=(()=>{
  }
  function contact(f){
   if(f.miss){effect('swish2',f.side,.34,1.12);return;}
-  if(f.blocked){effect(variant(['block1','block2']),f.side,.78);return;}
+  if(f.blocked){effect('block',f.side,.72);return;}
   effect(variant(['hit1','hit2','hit3']),f.side,f.cls==='crit'?1:.8,f.cls==='crit'?.92:1);
  }
  function support(style,side,cue){
   if(style==='step'){effect('swish2',side,.58,1.08);return;}
   const key=cue==='restore'?'restore':style==='guard'?'guard':'heal';
-  effect(key,side,key==='guard'?.8:key==='heal'?.65:.7);
+  effect(key,side,key==='restore'?.6:.72);
  }
  // One audio entry for both renderers. Only consume presented animation packets,
  // never stat calculations or HUD redraws (which can run before the animation).
@@ -17976,7 +18057,7 @@ const GameAudio=(()=>{
   const side=f.companionAction?'c':f.side;
   if(f.dash||f.companionAction)motionLater(()=>strike(f.motion||'palm',side),220);
   else if(['step','heal','guard'].includes(f.motion))support(f.motion,side,f.audioCue);
-  else if(f.audioCue==='drain')effect('heal',side,.4,1.12);
+  else if(f.audioCue==='drain')effect('heal',side,.4);
   else if(f.audioCue==='poison')effect('dart',side,.17,.9);
   else if(f.audioCue==='stun')effect('block2',side,.2,.95);
   if(f.shake||f.miss)contact(f);
@@ -17991,8 +18072,8 @@ const GameAudio=(()=>{
  function settings(){
   let dialog=document.getElementById('sound-dialog');if(dialog){dialog.showModal();return;}
   dialog=document.createElement('dialog');dialog.id='sound-dialog';dialog.className='sound-dialog';dialog.setAttribute('aria-labelledby','sound-heading');
-  dialog.innerHTML='<div class="sound-dialog-heading"><h2 id="sound-heading">江湖声韵</h2><button type="button" id="sound-close" aria-label="关闭声音设置">关闭 ×</button></div><p class="sound-note">音乐随场景切换；出招、受击与界面操作都有声音反馈。</p>'+['music','sfx','ui'].map(k=>'<label class="sound-slider" for="sound-'+k+'"><span>'+({music:'背景音乐',sfx:'战斗音效',ui:'界面音效'})[k]+'</span><output id="sound-'+k+'-value"></output><input id="sound-'+k+'" type="range" min="0" max="100" step="1" value="'+Math.round(prefs[k]*100)+'"></label>').join('')+'<div class="sound-previews"><button type="button" id="sound-ui-preview">界面试听</button><button type="button" data-sound-preview="guard">护体试听</button><button type="button" data-sound-preview="heal">疗伤试听</button><button type="button" data-sound-preview="restore">回气试听</button></div><p class="sound-note">新版轻柔音效 · 音量设置保存在本机，切到后台时暂停声音。</p><p class="sound-credit">交锋音效：StarNinjas、qubodup、artisticdude · CC0<br>护体、疗伤与回气：remaxim、PWL · CC0<br>界面音效：本游戏原创合成<br><a href="audio/CREDITS.md" target="_blank" rel="noopener">查看素材来源</a></p>';
-  document.body.append(dialog);for(const button of dialog.querySelectorAll('[data-sound-preview]'))button.onclick=async()=>{const key=button.dataset.soundPreview;await unlock();await pendingEffects.get(key);if(!dialog.open)return;stopEffects(false);support(key==='guard'?'guard':'heal','p',key);};dialog.querySelector('#sound-close').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
+  dialog.innerHTML='<div class="sound-dialog-heading"><h2 id="sound-heading">江湖声韵</h2><button type="button" id="sound-close" aria-label="关闭声音设置">关闭 ×</button></div><p class="sound-note">音乐随场景切换；出招、受击与界面操作都有声音反馈。</p>'+['music','sfx','ui'].map(k=>'<label class="sound-slider" for="sound-'+k+'"><span>'+({music:'背景音乐',sfx:'战斗音效',ui:'界面音效'})[k]+'</span><output id="sound-'+k+'-value"></output><input id="sound-'+k+'" type="range" min="0" max="100" step="1" value="'+Math.round(prefs[k]*100)+'"></label>').join('')+'<div class="sound-previews"><button type="button" id="sound-ui-preview">界面试听</button><button type="button" data-sound-preview="guard">护体试听</button><button type="button" data-sound-preview="heal">疗伤试听</button><button type="button" data-sound-preview="restore">回气试听</button><button type="button" data-sound-preview="block">格挡试听</button></div><p class="sound-note">Flare 原版音效 · 音量设置保存在本机，切到后台时暂停声音。</p><p class="sound-credit">交锋音效：StarNinjas、qubodup、artisticdude · CC0<br>护体、格挡：Brandon Morris · CC BY 3.0<br>疗伤、回气：remaxim · CC BY-SA 3.0<br>界面音效：本游戏原创合成<br><a href="audio/CREDITS.md" target="_blank" rel="noopener">查看素材来源</a></p>';
+  document.body.append(dialog);for(const button of dialog.querySelectorAll('[data-sound-preview]'))button.onclick=async()=>{const key=button.dataset.soundPreview;await unlock();await pendingEffects.get(key);if(!dialog.open)return;stopEffects(false);if(key==='block')contact({side:'p',blocked:true});else support(key==='guard'?'guard':'heal','p',key);};dialog.querySelector('#sound-close').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
   for(const k of ['music','sfx','ui'])dialog.querySelector('#sound-'+k).addEventListener('input',e=>{prefs[k]=Number(e.target.value)/100;save();});dialog.querySelector('#sound-ui-preview').onclick=()=>feedback('confirm');dialog.showModal();paint();
  }
  const bar=document.createElement('div');bar.id='sound-controls';bar.innerHTML='<span id="sound-now">江湖声韵</span><div><button type="button" id="sound-toggle" aria-pressed="false">开启声音</button><button type="button" id="sound-settings" aria-haspopup="dialog">声音设置</button></div>';document.getElementById('app').before(bar);
