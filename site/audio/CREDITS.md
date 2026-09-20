@@ -37,7 +37,24 @@
 
 下载核实日期：2026-09-09。原始素材包保存在 `sources/`。网页使用的 `sfx/` 衍生 WAV 经单声道转换、起止静音裁剪、响度调整和极短淡入淡出。完整文件映射见源项目的 `audio-manifest.js`。感谢以上作者分享素材。
 
-## 护体、疗伤与回气（2026-09-19 新增）
+## 当前护体、疗伤与回气（2026-09-20 替换）
+
+当前播放使用以下 CC0 1.0 素材；不再播放上一版的三个魔法音效。运行文件使用 v2 新文件名，避免浏览器沿用旧音频缓存。
+
+| 文件 | 原作品及作者 | 编辑方式 |
+|---|---|---|
+| sfx/guard-v2.wav | [Short wind sound — remaxim](https://opengameart.org/content/short-wind-sound) | 取0.16秒开始的0.82秒风声，95Hz高通、1.9kHz低通、70ms淡入、350ms淡出 |
+| sfx/heal-v2.wav | [Bell dings/chimes — PWL](https://opengameart.org/content/bell-dingschimes)，bell_ding2.wav | 降低音高至0.82倍、3.1kHz低通、柔化起音，1.18秒 |
+| sfx/restore-v2.wav | 上述 remaxim 风声及 PWL 的 bell_ding1.wav | 以风声为主，混入轻铃余韵，1.04秒；最高2.8kHz低通和渐入渐出 |
+
+许可：[CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)。统一转换44.1kHz单声道，录音目标RMS不高于0.06、峰值不高于0.55。疗伤在游戏中再以较轻音量播放；没有加入新合成器音源。中毒、眩晕继续使用原交锋素材，但降低音量，不再大幅压低音高。试听按钮不叠加点击提示音。
+
+原始下载保存在源项目 audio/sources/support-20260920，链接：
+- https://opengameart.org/sites/default/files/short%20wind%20sound.wav
+- https://opengameart.org/sites/default/files/bell_ding1.wav
+- https://opengameart.org/sites/default/files/bell_ding2.wav
+
+## 旧版护体、疗伤与回气（2026-09-19，文件保留供回退，当前不播放）
 
 以下作品与本游戏作者无从属或背书关系。CC BY 3.0 素材依该许可使用，保留作者、来源及改动说明；不改变整款游戏的代码许可。
 
