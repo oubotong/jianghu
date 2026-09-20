@@ -1,0 +1,34 @@
+(function(){'use strict';
+const images=new Map();function asset(src){if(!images.has(src)){const i=new Image();i.addEventListener('load',()=>portraits());i.src=src;images.set(src,i);}return images.get(src);}
+const atlas=asset('assets/actors.png');
+const cells={hero:[[50,0,200,265],[375,0,420,266],[824,0,232,266],[1160,0,249,266]],slime:[[20,285,310,235],[389,280,410,240],[803,284,322,237],[1130,260,308,270]],demon:[[25,523,285,245],[373,522,435,246],[824,520,275,246],[1150,520,277,244]],goddess:[[45,768,228,318],[375,770,428,314],[797,770,280,313],[1100,771,348,314]]};
+const poses={idle:0,attack:1,hurt:2,guard:3,heal:3,observe:3,charge:3};
+function sprite(ctx,id,x,y,height,pose='idle',flip=false,time=0,opacity=1){ctx.save();ctx.globalAlpha=opacity;ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.imageSmoothingEnabled=false;
+ if(cells[id]){const c=cells[id][poses[pose]??1],scale=height/(id==='goddess'?318:id==='slime'?230:260);if(atlas.complete&&atlas.naturalWidth){const anchor=pose==='attack'?(id==='hero'?115:id==='demon'?145:115):c[2]/2;ctx.drawImage(atlas,...c,-anchor*scale,-c[3]*scale,c[2]*scale,c[3]*scale);}}
+ else{const a=window.BONUS_ACTORS?.[id],m=a?.atlas[pose]||a?.atlas[(pose==='heal'||pose==='observe'||pose==='charge')?'guard':'idle'];if(m){const img=asset('../'+m.src);if(img.complete&&img.naturalWidth){const n=Math.floor(time/(pose==='idle'?210:155))%m.frames,scale=height/m.bodyHeight;ctx.drawImage(img,n*m.width,0,m.width,m.height,-m.width*scale/2,-m.height*scale+18*scale,m.width*scale,m.height*scale);}}}
+ ctx.restore();}
+function portrait(id){return `<canvas class="portrait" width="120" height="120" data-portrait="${id}" aria-hidden="true"></canvas>`;}
+function portraits(root=document){root.querySelectorAll('canvas[data-portrait]').forEach(c=>{const ctx=c.getContext('2d');ctx.clearRect(0,0,120,120);sprite(ctx,c.dataset.portrait,60,128,119);});}
+const fx={attack:{src:'impact-f489c09d.png',w:37,h:37,n:30},guard:{src:'guard-8449f9eb.png',w:34,h:34,n:61},heal:{src:'heal-1f5a9033.png',w:71,h:70,n:91},observe:{src:'cast-6e498c27.png',w:75,h:77,n:61},lava:{src:'lava-fire-cc0.png',w:25,h:51,n:61}};
+class Stage{
+ constructor(canvas,{scene='forest',chapter=0,enemy=null,ally=null,story=false}={}){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.enemy=enemy;this.ally=ally;this.story=story;this.chapter=Math.max(0,Math.min(5,chapter));this.bg=asset('assets/worlds.png');this.start=performance.now();this.motion=null;this.dead=false;this.draw=this.draw.bind(this);this.raf=requestAnimationFrame(this.draw);for(const id of [enemy,ally]){const a=window.BONUS_ACTORS?.[id];if(a)for(const v of Object.values(a.atlas))asset('../'+v.src);}for(const f of Object.values(fx))asset('../phaser-trial/fx/'+f.src);}
+ destroy(){this.dead=true;cancelAnimationFrame(this.raf);}
+ async play(action){const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;this.motion={...action,start:performance.now(),duration:reduce?300:1250};await new Promise(r=>setTimeout(r,this.motion.duration));this.motion=null;}
+ draw(t){if(this.dead)return;const mobile=this.canvas.clientWidth<540,c=this.ctx,w=this.story?640:mobile?640:960,h=this.story?600:mobile?500:460;if(this.canvas.width!==w||this.canvas.height!==h){this.canvas.width=w;this.canvas.height=h;}c.clearRect(0,0,w,h);c.imageSmoothingEnabled=false;const bg=this.bg;
+ if(bg.complete&&bg.naturalWidth){const cw=bg.width/3,ch=bg.height/2,scale=Math.max(w/cw,h/ch);c.drawImage(bg,this.chapter%3*cw,Math.floor(this.chapter/3)*ch,cw,ch,(w-cw*scale)/2,(h-ch*scale)*.7,cw*scale,ch*scale);}else{c.fillStyle='#283e43';c.fillRect(0,0,w,h);}
+ let grad=c.createLinearGradient(0,0,0,h);grad.addColorStop(0,'#11273265');grad.addColorStop(.5,'#11273212');grad.addColorStop(1,'#09161ccb');c.fillStyle=grad;c.fillRect(0,0,w,h);
+ c.fillStyle='#d7f582';for(let i=0;i<9;i++){const x=(i*137+t*.008)%w,y=95+(i*83%240)+Math.sin(t/1200+i)*8;c.globalAlpha=.25;c.fillRect(x,y,3,3);}c.globalAlpha=1;
+ const m=this.motion,p=m?Math.min(1,(t-m.start)/m.duration):0,breathe=matchMedia('(prefers-reduced-motion: reduce)').matches?0:Math.sin(t/620)*2;
+ const attacking=m&&m.kind!=='skip',active=attacking&&p>.13&&p<.72;let hx=w*.26,ex=w*.75,ax=w*.115,hy=this.story?475:mobile?425:388,ey=hy,heroPose='idle',enemyPose='idle',allyPose='idle';
+ if(active){const pose=['guard','heal','observe','charge'].includes(m.kind)?m.kind:'attack';if(m.side==='enemy')enemyPose=pose;else if(m.side==='ally')allyPose=pose;else heroPose=pose;const rush=pose==='attack'?Math.sin(Math.min(1,(p-.13)/.59)*Math.PI)*90:0;if(m.side==='enemy')ex-=rush;else if(m.side==='hero')hx+=rush;else ax+=rush;if(p>.43&&p<.7&&m.damage){if(m.side==='enemy'){heroPose='hurt';hx-=Math.sin(t/23)*5;}else{enemyPose='hurt';ex+=Math.sin(t/23)*5;}}}
+ const shadow=(x,size)=>{c.fillStyle='#05101677';c.beginPath();c.ellipse(x,hy+4,size,13,0,0,Math.PI*2);c.fill();};shadow(hx,72);if(this.enemy)shadow(ex,80);if(this.ally)shadow(ax,41);
+ if(this.ally)sprite(c,this.ally,ax,hy+breathe,118,allyPose,false,t);sprite(c,'hero',hx,hy+breathe,this.story?204:194,heroPose,false,t);
+ if(this.enemy)sprite(c,this.enemy,ex,ey-breathe,this.enemy==='kaiju'?221:this.enemy==='hakimi'?144:198,enemyPose,true,t);
+ if(m&&p>.32&&p<.92&&m.kind!=='skip'){const type=m.id==='kaiju'&&m.kind==='attack'?'lava':fx[m.kind]?m.kind:'attack',f=fx[type],img=asset('../phaser-trial/fx/'+f.src);if(img.complete&&img.naturalWidth){const cols=Math.floor(img.width/f.w),n=Math.min(f.n-1,Math.floor((p-.32)/.6*f.n)),self=['heal','guard','observe','charge'].includes(m.kind),x=self?(m.side==='enemy'?ex:m.side==='ally'?ax:hx):m.side==='enemy'?hx:ex,size=m.id==='bag'?100:type==='lava'?230:170;c.globalAlpha=Math.min(1,(.92-p)*8);c.drawImage(img,n%cols*f.w,Math.floor(n/cols)*f.h,f.w,f.h,x-size/2,270-size/2,size,size);c.globalAlpha=1;}}
+ if(m&&p>.42&&(m.damage||m.heal)){const x=m.heal?hx:m.side==='enemy'?hx:ex,y=203-(p-.42)*48;c.font='900 36px "Microsoft YaHei",sans-serif';c.textAlign='center';c.lineWidth=6;c.strokeStyle='#14232b';const text=m.heal?'＋'+m.heal:'−'+(m.damage+(m.breakDamage||0));c.strokeText(text,x,y);c.fillStyle=m.heal?'#b9f787':m.side==='enemy'?'#ffb4aa':'#ffe18a';c.fillText(text,x,y);}
+ this.raf=requestAnimationFrame(this.draw);
+ }
+}
+atlas.addEventListener('load',()=>portraits());window.MemeStage={Stage,sprite,portraits,portrait,ready:new Promise(resolve=>{if(atlas.complete&&atlas.naturalWidth)resolve();else atlas.addEventListener('load',resolve,{once:true});})};
+})();
+
