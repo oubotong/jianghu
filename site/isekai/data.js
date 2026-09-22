@@ -65,5 +65,7 @@ const events=[
 events.find(e=>e.id==='guildFiles').choices.push(O('number','用旧合同编号追查自己的档案','档案上的编号与你保留的那串数字完全一致。收据下面写着的不是报酬，而是你的转播收益。',{clue:['contract','契约要求勇者放弃人格使用权'],item:'badge',learn:'logic',flag:'tracedNumber'},{requires:'contractNumber',quip:'当时没读懂，不代表现在还会放过它。'}));
 events.find(e=>e.id==='clerk').choices.push(O('cycle','照着记下的复读周期抢先出手','你在「为你好」的「好」字出口前合上课本，主管的节奏彻底乱了。',{battle:'clerk',enemyNerf:24},{requires:'clerkPrep',quip:'笔记做得好，加班少一秒。'}));
 const endings={home:{title:'回去还要补作业',text:'你击败了魔王，选择回到自己的生活。不是所有英雄都想把冒险变成终身职业。'},guild:{title:'编制比回家重要',text:'你接管了勇者公会。第一条新规定：不得以拯救世界为由拖欠报酬。'},free:{title:'本节目停止更新',text:'魔王被击败，女神的剧本也失效了。这个世界终于可以发生没人预先写好的事情。'},goddess:{title:'她也想下班',text:'你追查到了最后，终止了召唤契约。女神归还所有勇者，和你一起踏出了剧本。'},lost:{title:'勇者申请补考',text:'这一次没有打赢最终战。你的经历已写入本作图鉴，下一次可以换一种打法。'}};
-return {stats,profiles,skills,items,allies,enemies,chapters,events,endings};
+const data={stats,profiles,skills,items,allies,enemies,chapters,events,endings};
+if(typeof module==='object'&&module.exports)require('./court-data.js')(data);else globalThis.applyCourtChapter(data);
+return data;
 });
