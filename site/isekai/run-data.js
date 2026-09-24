@@ -8,11 +8,11 @@ const cards={
  unread:{name:'已读不回',cost:1,block:9,kind:'guard',quip:'只要不回复，就没人能拉我开会。'},
  shrug:{name:'问题不大',cost:1,block:6,draw:1,kind:'guard',quip:'再抽一张看看。'},
  mute:{name:'老师来了',cost:1,damage:6,weak:2,kind:'attack',quip:'全体安静，攻击欲望下降。'},
- feint:{name:'假装下课',cost:1,damage:8,weak:1,kind:'attack',quip:'已经有人跑到门口了。'},
+ feint:{name:'假装下课',cost:1,damage:8,chainBonus:7,kind:'attack',quip:'前两招是铺垫，这一招才是真下课。'},
  v50:{name:'疯狂星期四',cost:1,heal:9,exhaust:true,kind:'heal',quip:'V我50，吃饱再拯救世界。'},
  rest:{name:'保温杯里泡枸杞',cost:2,heal:18,exhaust:true,kind:'heal',quip:'年轻人的第一口中场休息。'},
  bomb:{name:'你干嘛哎哟',cost:2,damage:23,hurt:3,kind:'attack',quip:'先把对方整不会，自己也扭到腰。'},
- repeat:{name:'重要的事说三遍',cost:2,damage:5,hits:3,kind:'attack',quip:'三遍都是物理攻击。'},
+ repeat:{name:'重要的事说三遍',cost:2,damage:5,hits:3,chainBonus:2,kind:'attack',quip:'三遍都是物理攻击。'},
  combo:{name:'接化发',cost:1,damage:9,fromBlock:true,kind:'attack',quip:'打完护体，再把道理送回去。'},
  charge:{name:'这把我C',cost:0,energy:2,exhaust:true,kind:'observe',quip:'立完旗，至少先把能量给足。'},
  big:{name:'大的要来了',cost:3,damage:34,exhaust:true,kind:'attack',quip:'这回不是标题党。'},
@@ -20,12 +20,17 @@ const cards={
  silence:{name:'别在这理发店',cost:1,block:5,dispel:true,kind:'guard',quip:'剪掉对方护盾，拒绝加工事实。'},
  boomerang:{name:'回旋镖',cost:1,damage:9,draw:1,kind:'attack',quip:'这句话怎么打到我自己了？'},
  lucky:{name:'欧皇附体',cost:0,draw:1,block:3,exhaust:true,kind:'guard',quip:'不掷骰子，保底给你一张牌。'},
- overtime:{name:'拒绝精神内耗',cost:1,block:12,exhaust:true,kind:'guard',quip:'今天的情绪预算已用完。'},
- refund:{name:'退退退',cost:1,damage:7,weak:2,kind:'attack',quip:'退下去的不只是音量。'},
- steel:{name:'钢筋混凝土之心',cost:2,block:17,kind:'guard',quip:'嘴硬不够，防御也得硬。'},
+ overtime:{name:'拒绝精神内耗',cost:1,block:12,retainBlock:8,exhaust:true,kind:'guard',quip:'今天的情绪预算，留一点给明天。'},
+ refund:{name:'退退退',cost:1,damage:5,detonate:true,kind:'attack',quip:'退不出去？脑内副歌再放一遍。'},
+ steel:{name:'钢筋混凝土之心',cost:2,block:17,counterRatio:.5,kind:'guard',quip:'嘴硬不够，防御也得硬。'},
  evidence:{name:'有图有真相',cost:1,damage:11,pierce:true,draw:1,kind:'attack',quip:'证据比弹幕长一点。'},
  evolve:{name:'版本答案',cost:2,damage:19,kind:'attack',quip:'下次更新前，先用着。'},
  guilt:{name:'沉重的甲方需求',cost:1,block:1,curse:true,kind:'guard',quip:'占一张手牌，还不好拒绝。'}
+};
+const styles={
+ bulwark:{name:'护盾反击',title:'先叠甲，再讲道理',icon:'block',core:['unread','combo'],pool:['unread','combo','steel','overtime','shrug'],hint:'已读不回攒护盾，接化发把护盾变成伤害。'},
+ chorus:{name:'洗脑循环',title:'副歌一响，谁也别走',icon:'poison',core:['honey','refund'],pool:['honey','refund','mute','silence'],hint:'南北绿豆叠洗脑，退退退立刻再结算一次。'},
+ rush:{name:'低费连招',title:'铺两招，一套带走',icon:'energy',core:['boomerang','feint'],pool:['boomerang','feint','repeat','charge','lucky','insight'],hint:'回旋镖边打边抽，第3张起用连招牌收尾。'}
 };
 const relics={
  uniform:{name:'校服口袋',desc:'每场战斗开始时，获得3点护盾，可抵挡3点攻击伤害。'},
@@ -187,5 +192,5 @@ E('godlike','主播说这局随便赢','主播身后挂着十三张补考通知�
  ['学会这道大题我来压轴','名字很长，消耗也确实是3。',{card:'big'}],['买一次实战指导，花14','他总算认真教了一招。',{coins:-14,upgrade:true}],['留一句问题不大','至少失败时还有防守办法。',{card:'shrug'}]]),
 ]
 ];
-return {cards,relics,enemies,chapters,pools};
+return {cards,styles,relics,enemies,chapters,pools};
 });
