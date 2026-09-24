@@ -41,3 +41,44 @@
 }
 @media(max-width:360px){.run-arena{height:250px}.run-hand .run-card{flex-basis:140px;min-height:228px}.run-energy{min-width:65px}.pile-count{font-size:9px;padding:4px}.end-turn{padding:7px 8px}.run-combat-controls{padding-left:6px;padding-right:6px}.deck-grid .card-art{height:90px}}
 @media(prefers-reduced-motion:reduce){.run-card:hover:not(:disabled),.run-card:active:not(:disabled){transform:none}}
+
+/* Read effects as actions, with consistent symbols across cards and combat. */
+.effect-icon{width:17px;height:17px;flex:0 0 17px;vertical-align:-3px;display:inline-block}
+.card-effect{justify-content:center;gap:7px;padding:10px;font-size:12px}
+.effect-item{display:flex;flex-direction:column;gap:3px}
+.effect-line{display:flex;align-items:center;gap:5px;white-space:normal;line-height:1.55}
+.effect-line b{white-space:nowrap;font-size:17px}
+.effect-item.damage .effect-icon,.effect-item.damage b,.effect-item.hurt .effect-icon,.effect-item.hurt b{color:#9e3527}
+.effect-item.block .effect-icon,.effect-item.block b{color:#1d6382}
+.effect-item.heal .effect-icon,.effect-item.heal b{color:#296537}
+.effect-item.weak .effect-icon,.effect-item.weak b,.effect-item.poison .effect-icon,.effect-item.poison b{color:#754d8c}
+.effect-item.energy .effect-icon,.effect-item.energy b,.effect-item.draw .effect-icon,.effect-item.draw b{color:#735011}
+.effect-rule{font-size:11px;line-height:1.55;text-align:left;color:#5a6051;padding-left:22px}
+.run-card,.run-hand .run-card{min-height:295px}.run-hand .card-art{height:121px}
+.run-arena{height:clamp(275px,calc(100dvh - 505px),390px)}
+.status-row{display:flex;gap:4px 8px;flex-wrap:wrap;margin-top:6px;color:#b7dfe9;line-height:1.5;font-size:11px}
+.status-chip{display:inline-flex;align-items:center;gap:3px}.status-chip .effect-icon{width:14px;height:14px;flex-basis:14px}.status-chip b{font-size:14px}.status-chip.weak{color:#e7c7ff}.status-chip.poison{color:#badf8e}
+.run-intent{max-width:245px;top:26%;padding:8px 12px}.run-intent>small{display:block;color:#aabdb6;font-size:9px;letter-spacing:1px;margin-bottom:2px}.run-intent>span{font-size:12px}.run-intent>b{display:block;margin-top:4px;font-size:12px;line-height:1.7}.run-intent>em{display:block;font-size:10px;font-style:normal;border-top:1px solid #b6bd8c25;margin-top:4px;padding-top:4px}.run-intent .intent-danger{color:#ffb19a}.run-intent .intent-safe{color:#c1dda0}
+.run-feedback b,.log-list b{color:#f0d290;font-size:1.13em}.run-feedback{line-height:1.65}.run-feedback:empty{display:none}
+.effect-help{min-height:30px;padding:2px 8px;margin-left:8px;font-size:10px;background:none;border:0;color:#e1d5a4;text-decoration:underline;text-underline-offset:3px}
+.effect-glossary{display:grid;gap:14px}.effect-glossary article{display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid #acb39425;padding-bottom:12px}.effect-glossary .effect-icon{width:22px;height:22px;flex-basis:22px;color:#d5c58d}.effect-glossary h3{font-size:14px;color:#e4d9b1;margin:0 0 5px}.effect-glossary p{margin:0;font-size:13px;color:#c0cbbd}
+.run-choices small{display:flex;flex-direction:column;gap:4px}.outcome-line{display:flex;align-items:flex-start;gap:6px;line-height:1.6}.outcome-line .effect-icon{width:15px;height:15px;flex-basis:15px;margin-top:1px}.outcome-line.loss{color:#efa590}.outcome-line.heal{color:#abd79b}.outcome-line.coin:not(.loss){color:#e1cc84}.outcome-line.draw,.outcome-line.upgrade{color:#b9dce0}
+.run-rewards{flex-direction:column;align-items:flex-start;gap:7px}.run-rewards>.outcome-line{display:flex;padding:5px 9px;font-size:12px}.run-rewards .outcome-line>span{padding:0;background:none;color:inherit;font-size:inherit}
+.run-card:disabled{opacity:.75}.run-hand .run-card:disabled .card-cost{background:#514b43;color:#ded4ba;border-color:#bbaa84}
+.card-unavailable{position:absolute;bottom:5px;right:5px;z-index:1;color:#fff0d5;background:#522e29ed;padding:2px 6px;font-size:10px;border-radius:3px}
+@media(max-width:600px){
+ .run-hand .run-card{flex-basis:166px;min-height:274px}.run-hand .card-art{height:100px}.card-effect{font-size:12px;padding:9px 8px;gap:6px}.effect-rule{font-size:10px;line-height:1.55;padding-left:21px}.effect-line{gap:4px}.effect-line b{font-size:16px}
+ .run-arena{height:clamp(245px,calc(100dvh - 500px),365px)}.run-intent{right:4%;top:26%;max-width:181px;padding:6px 9px}.run-intent>b{font-size:11px}.run-intent>span{font-size:11px}.run-intent>em{font-size:10px}.run-intent .effect-icon{width:13px;height:13px}.status-row{font-size:10px;gap:3px 6px}.status-chip b{font-size:12px}.enemy .status-row{justify-content:flex-end}.run-vital{padding:7px 6px}.run-hud{gap:12px;top:10px}
+ .run-hand{align-items:stretch}.hand-tip{display:flex;align-items:center;justify-content:center;text-align:left;font-size:9px}.effect-help{flex:none;margin-left:3px;font-size:10px;min-height:32px}.pile-count{font-size:9px;padding:5px}.deck-grid .card-effect{font-size:11px;padding:8px 6px}.deck-grid .effect-line{gap:3px}.deck-grid .effect-icon{width:14px;flex-basis:14px}.deck-grid .effect-rule{padding-left:17px}.run-choices .outcome-line{font-size:11px}
+}
+@media(max-width:360px){.run-hand .run-card{flex-basis:158px}.run-arena{height:245px}.run-intent{top:35%;max-width:167px}.run-intent>small{display:none}.run-intent>span{font-size:10px}.run-intent>b{font-size:10px}.run-intent>em{font-size:9px}.run-intent .effect-icon{width:12px;height:12px}.deck-grid .effect-rule{padding-left:0}.run-energy{min-width:64px}.run-energy span{font-size:9px}}
+
+/* Intent is a dedicated battle strip: it never covers actors or status badges. */
+.run-battle>.run-intent{position:relative;inset:auto;max-width:none;border:0;border-top:1px solid #ac9b6138;border-radius:0;padding:8px 20px;display:grid;grid-template-columns:1fr auto;gap:1px 18px;background:#14292f;box-shadow:none;min-height:55px}
+.run-battle>.run-intent:after{display:none}.run-battle>.run-intent>small{display:none}
+.run-battle>.run-intent>span{grid-column:1;grid-row:1;font-size:10px;color:#b8c3b6}.run-battle>.run-intent>span:before{content:'敌人下一步 · '}
+.run-battle>.run-intent>b{grid-column:1;grid-row:2;display:block;margin:0;font-size:12px}.run-battle>.run-intent>b br{display:none}.run-battle>.run-intent>b .effect-icon:not(:first-child){margin-left:10px}
+.run-battle>.run-intent>em{grid-column:2;grid-row:1/3;align-self:center;border:0;margin:0;padding:0;font-size:12px;max-width:240px}
+.run-arena{height:clamp(275px,calc(100dvh - 560px),365px)}
+@media(max-width:600px){.run-arena{height:clamp(245px,calc(100dvh - 555px),345px)}.run-battle>.run-intent{padding:7px 10px;gap:1px 10px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.run-battle>.run-intent>span{font-size:9px}.run-battle>.run-intent>b{font-size:10px}.run-battle>.run-intent>em{font-size:10px;text-align:right}.run-battle>.run-intent>b br{display:block}.run-battle>.run-intent>b .effect-icon:not(:first-child){margin-left:0}}
+@media(max-width:360px){.status-row{font-size:9px;gap:3px}.status-chip{gap:2px}.status-chip .effect-icon{width:10px;height:10px;flex-basis:10px}.status-chip b{font-size:11px}}
